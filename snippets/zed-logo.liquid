@@ -8,6 +8,28 @@
   endif
 %}
 <span class="{{ mark_class }}" aria-label="ZED">
-  <svg viewBox="0 0 300 126" role="img" aria-hidden="true" focusable="false">
-    <g class="zed-mark__letters">
-      <path class="zed-mark__bed
+  <svg viewBox="0 0 320 132" role="img" aria-hidden="true" focusable="false">
+    <defs>
+      <filter id="zed-thread-shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="2" stdDeviation="1.4" flood-opacity=".24"/>
+      </filter>
+    </defs>
+    <g class="zed-mark__underlay" filter="url(#zed-thread-shadow)">
+      <path pathLength="1" d="M18 22H101L25 108H108"/>
+      <path pathLength="1" d="M126 22H205M126 22V108M126 65H194M126 108H205"/>
+      <path pathLength="1" d="M229 22V108H261C291 108 304 91 304 65C304 39 291 22 261 22H229Z"/>
+    </g>
+    <g class="zed-mark__thread">
+      <path pathLength="1" d="M18 22H101L25 108H108"/>
+      <path pathLength="1" d="M126 22H205M126 22V108M126 65H194M126 108H205"/>
+      <path pathLength="1" d="M229 22V108H261C291 108 304 91 304 65C304 39 291 22 261 22H229Z"/>
+    </g>
+    <g class="zed-mark__stitches">
+      <path pathLength="1" d="M18 22H101L25 108H108"/>
+      <path pathLength="1" d="M126 22H205M126 22V108M126 65H194M126 108H205"/>
+      <path pathLength="1" d="M229 22V108H261C291 108 304 91 304 65C304 39 291 22 261 22H229Z"/>
+    </g>
+    <circle class="zed-mark__needle-eye" cx="307" cy="65" r="3.5"/>
+    <path class="zed-mark__loose-thread" pathLength="1" d="M307 65C335 52 333 98 311 110"/>
+  </svg>
+</span>

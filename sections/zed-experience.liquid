@@ -5,145 +5,68 @@
 {% assign moire_src = 'https://cdn.shopify.com/s/files/1/0804/7735/6217/files/zed-moire-in-motion.png?v=1784256706' %}
 {% assign jalair_src = 'https://cdn.shopify.com/s/files/1/0804/7735/6217/files/zed-jalair.png?v=1784256721' %}
 {% assign cable_src = 'https://cdn.shopify.com/s/files/1/0804/7735/6217/files/zed-air-cable.png?v=1784256736' %}
-
 {% if section.settings.hero_image != blank %}{% assign hero_src = section.settings.hero_image | image_url: width: 2200 %}{% endif %}
 {% if section.settings.moire_image != blank %}{% assign moire_src = section.settings.moire_image | image_url: width: 1800 %}{% endif %}
 {% if section.settings.jalair_image != blank %}{% assign jalair_src = section.settings.jalair_image | image_url: width: 1800 %}{% endif %}
 {% if section.settings.cable_image != blank %}{% assign cable_src = section.settings.cable_image | image_url: width: 1800 %}{% endif %}
 
+<div class="zed-loader" data-zed-loader aria-hidden="true">
+  <div class="zed-loader__cloth"></div>
+  <div class="zed-loader__mark">{% render 'zed-logo', animated: true, class: 'zed-mark--loader' %}</div>
+  <div class="zed-loader__needle"><span></span></div>
+  <p>Threading the first drop</p>
+</div>
+
 <section class="zed-home" data-zed-home>
-  <div class="zed-thread" aria-hidden="true">
-    <svg viewBox="0 0 1440 900" preserveAspectRatio="none">
-      <path data-zed-thread-path d="M-40 90 C 220 20, 250 300, 520 230 S 820 50, 940 330 S 1160 720, 1480 590" />
-    </svg>
+  <div class="zed-site-thread" aria-hidden="true">
+    <svg viewBox="0 0 100 100" preserveAspectRatio="none"><path pathLength="1" data-zed-thread-path d="M2 2 C18 8 10 28 29 31 S52 21 58 45 S72 76 98 91"/></svg>
+    <span class="zed-site-thread__needle" data-zed-needle></span>
   </div>
 
   <section class="zed-hero" data-zed-hero>
-    <div class="zed-hero__wash" aria-hidden="true"></div>
-    <div class="zed-navline">
-      <span>Contemporary Indian menswear</span>
-      <span>Drop 001</span>
-    </div>
-
+    <div class="zed-hero__fabric" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="zed-navline"><span>Contemporary Indian menswear</span><span>Drop 001</span></div>
     <div class="zed-hero__copy">
-      <p class="zed-kicker">India, re-threaded</p>
-      <h1><span>ZED</span><em>Everyday texture.</em></h1>
-      <p class="zed-intro">Embroidery that behaves like design, not decoration. Shirts made to feel normal everywhere and unforgettable up close.</p>
-      <a class="zed-cta" href="{{ section.settings.primary_link | default: routes.all_products_collection_url }}">
-        <span>Enter the first drop</span><span aria-hidden="true">↗</span>
-      </a>
+      <p class="zed-kicker" data-zed-stitch-text>India, re-threaded</p>
+      <h1>{% render 'zed-logo', animated: true, class: 'zed-mark--hero' %}<em data-zed-stitch-text>Everyday texture.</em></h1>
+      <p class="zed-intro" data-zed-stitch-text>Embroidery that behaves like design, not decoration. Shirts made to feel normal everywhere and unforgettable up close.</p>
+      <a class="zed-cta zed-cta--stitched" href="{{ section.settings.primary_link | default: routes.all_products_collection_url }}"><span>Enter the first drop</span><span aria-hidden="true">↗</span></a>
     </div>
-
     <figure class="zed-hero__art" data-zed-tilt>
-      <div class="zed-hero__frame">
-        <img src="{{ hero_src }}" alt="ZED Self-Contour embroidered shirt" width="1536" height="2304" loading="eager" fetchpriority="high">
-      </div>
+      <div class="zed-hero__frame"><img src="{{ hero_src }}" alt="ZED Self-Contour embroidered shirt" width="1536" height="2304" loading="eager" fetchpriority="high"><span class="zed-frame-stitch" aria-hidden="true"></span></div>
       <figcaption><span>09</span><span>Self-Contour</span><span>Thread study</span></figcaption>
     </figure>
-
-    <div class="zed-scroll-note">Scroll to pull the thread</div>
+    <div class="zed-scroll-note"><span></span>Pull the thread</div>
   </section>
 
-  <section class="zed-statement" data-zed-reveal>
+  <section class="zed-statement zed-panel" data-zed-reveal>
     <p class="zed-index">01 / Premise</p>
-    <h2>Not ethnic wear.<br>Not a plain shirt.<br><span>The space between.</span></h2>
+    <h2 data-zed-stitch-text>Not ethnic wear.<br>Not a plain shirt.<br><span>The space between.</span></h2>
     <p>India’s textile language, translated into shirts for cafés, offices, dates, galleries, airports and ordinary Tuesdays.</p>
   </section>
 
   <section class="zed-detail-stage" data-zed-detail>
     <div class="zed-detail-stage__sticky">
-      <div class="zed-detail-stage__copy">
-        <p class="zed-index">02 / The double take</p>
-        <h2>Quiet from across the room.<br><span>Impossible to ignore up close.</span></h2>
-        <p>The design does not sit on the shirt. It travels through the body, changes with light and reveals itself only when you move.</p>
-      </div>
-      <div class="zed-detail-stage__visual">
-        <img src="{{ hero_src }}" alt="Macro and full view of ZED Self-Contour shirt" width="1536" height="2304" loading="lazy">
-        <div class="zed-lens" aria-hidden="true"></div>
-      </div>
+      <div class="zed-detail-stage__copy"><p class="zed-index">02 / The double take</p><h2 data-zed-stitch-text>Quiet from across the room.<br><span>Impossible to ignore up close.</span></h2><p>The design does not sit on the shirt. It travels through the body, changes with light and reveals itself only when you move.</p></div>
+      <div class="zed-detail-stage__visual"><img src="{{ hero_src }}" alt="Macro and full view of ZED Self-Contour shirt" width="1536" height="2304" loading="lazy"><div class="zed-lens" aria-hidden="true"></div><svg class="zed-detail-embroidery" viewBox="0 0 500 700" aria-hidden="true"><path pathLength="1" d="M36 110C160 20 220 130 305 95S440 80 470 190M20 248C135 160 225 285 345 205S460 250 485 340M10 410C150 305 260 470 420 360M45 570C160 480 245 590 455 510"/></svg></div>
     </div>
   </section>
 
-  <section class="zed-horizontal" data-zed-horizontal>
-    <div class="zed-horizontal__track">
-      <article class="zed-card zed-card--intro">
-        <p class="zed-index">03 / Studies in thread</p>
-        <h2>A first collection with no repeated idea.</h2>
-        <p>Each shirt explores one behavior of embroidery: contour, air, shadow, structure and disappearance.</p>
-      </article>
-      <article class="zed-card">
-        <img src="{{ moire_src }}" alt="Moiré in Motion black embroidered shirt" width="1024" height="1536" loading="lazy">
-        <div><span>04</span><h3>Moiré in Motion</h3><p>Lines that bend as the body moves.</p></div>
-      </article>
-      <article class="zed-card">
-        <img src="{{ jalair_src }}" alt="Jalair olive cutwork embroidered shirt" width="1024" height="1536" loading="lazy">
-        <div><span>06</span><h3>Jalair</h3><p>Air becomes the pattern.</p></div>
-      </article>
-      <article class="zed-card">
-        <img src="{{ cable_src }}" alt="Air Cable ivory embroidered shirt" width="1024" height="1536" loading="lazy">
-        <div><span>01</span><h3>Air Cable</h3><p>A cable-knit instinct, translated into thread.</p></div>
-      </article>
-      <article class="zed-card zed-card--outro">
-        <p class="zed-index">Drop 001</p>
-        <h2>One detail.<br>One second look.</h2>
-        <a class="zed-cta zed-cta--dark" href="{{ section.settings.primary_link | default: routes.all_products_collection_url }}"><span>Shop the studies</span><span>↗</span></a>
-      </article>
-    </div>
-  </section>
+  <section class="zed-horizontal" data-zed-horizontal><div class="zed-horizontal__track">
+    <article class="zed-card zed-card--intro zed-panel"><p class="zed-index">03 / Studies in thread</p><h2 data-zed-stitch-text>A first collection with no repeated idea.</h2><p>Each shirt explores one behavior of embroidery: contour, air, shadow, structure and disappearance.</p></article>
+    <article class="zed-card zed-card--image"><img src="{{ moire_src }}" alt="Moiré in Motion black embroidered shirt" width="1024" height="1536" loading="lazy"><div><span>04</span><h3>Moiré in Motion</h3><p>Lines that bend as the body moves.</p></div><span class="zed-card-stitch"></span></article>
+    <article class="zed-card zed-card--image"><img src="{{ jalair_src }}" alt="Jalair olive cutwork embroidered shirt" width="1024" height="1536" loading="lazy"><div><span>06</span><h3>Jalair</h3><p>Air becomes the pattern.</p></div><span class="zed-card-stitch"></span></article>
+    <article class="zed-card zed-card--image"><img src="{{ cable_src }}" alt="Air Cable ivory embroidered shirt" width="1024" height="1536" loading="lazy"><div><span>01</span><h3>Air Cable</h3><p>A cable-knit instinct, translated into thread.</p></div><span class="zed-card-stitch"></span></article>
+    <article class="zed-card zed-card--outro zed-panel"><p class="zed-index">Drop 001</p><h2 data-zed-stitch-text>One detail.<br>One second look.</h2><a class="zed-cta zed-cta--dark zed-cta--stitched" href="{{ section.settings.primary_link | default: routes.all_products_collection_url }}"><span>Shop the studies</span><span>↗</span></a></article>
+  </div></section>
 
-  <section class="zed-fit" data-zed-reveal>
-    <div class="zed-fit__headline">
-      <p class="zed-index">04 / Proportion</p>
-      <h2>Designed around Indian bodies, not resized from somewhere else.</h2>
-    </div>
-    <div class="zed-fit__grid">
-      <article><span>Regular</span><strong>5′5″—5′8″</strong><p>More presence through the shoulder, without the unwanted extra length.</p></article>
-      <article><span>Tall</span><strong>5′9″+</strong><p>The same intentional silhouette, proportioned for a longer frame.</p></article>
-      <article class="zed-fit__silhouette"><div aria-hidden="true"></div><p>Broader line. Controlled length. A cleaner frame.</p></article>
-    </div>
-  </section>
+  <section class="zed-fit zed-panel" data-zed-reveal><div class="zed-fit__headline"><p class="zed-index">04 / Proportion</p><h2 data-zed-stitch-text>Designed around Indian bodies, not resized from somewhere else.</h2></div><div class="zed-fit__grid"><article><span>Regular</span><strong>5′5″—5′8″</strong><p>More presence through the shoulder, without the unwanted extra length.</p></article><article><span>Tall</span><strong>5′9″+</strong><p>The same intentional silhouette, proportioned for a longer frame.</p></article><article class="zed-fit__silhouette"><div aria-hidden="true"><i></i></div><p>Broader line. Controlled length. A cleaner frame.</p></article></div></section>
 
-  <section class="zed-commerce" data-zed-reveal>
-    <div>
-      <p class="zed-index">05 / Available now</p>
-      <h2>The first ZED shirt.</h2>
-      <p>Premium fabric, considered proportions and embroidery designed to live in your regular wardrobe.</p>
-    </div>
-    {% assign featured_product = all_products[section.settings.product] %}
-    {% if featured_product != blank %}
-      <a class="zed-product" href="{{ featured_product.url }}">
-        {% if featured_product.featured_image %}
-          {{ featured_product.featured_image | image_url: width: 1200 | image_tag: loading: 'lazy', alt: featured_product.title }}
-        {% else %}
-          <img src="{{ hero_src }}" alt="{{ featured_product.title | escape }}" width="1024" height="1536" loading="lazy">
-        {% endif %}
-        <div><h3>{{ featured_product.title }}</h3><span>{{ featured_product.price | money }}</span><em>View product ↗</em></div>
-      </a>
-    {% else %}
-      <a class="zed-product" href="{{ routes.all_products_collection_url }}">
-        <img src="{{ hero_src }}" alt="Explore ZED shirts" width="1024" height="1536" loading="lazy">
-        <div><h3>Drop 001</h3><span>Quietly iconic shirts</span><em>Explore the collection ↗</em></div>
-      </a>
-    {% endif %}
-  </section>
+  <section class="zed-commerce zed-panel" data-zed-reveal><div><p class="zed-index">05 / Available now</p><h2 data-zed-stitch-text>The first ZED shirt.</h2><p>Premium fabric, considered proportions and embroidery designed to live in your regular wardrobe.</p></div>{% assign featured_product = all_products[section.settings.product] %}{% if featured_product != blank %}<a class="zed-product" href="{{ featured_product.url }}">{% if featured_product.featured_image %}{{ featured_product.featured_image | image_url: width: 1200 | image_tag: loading: 'lazy', alt: featured_product.title }}{% else %}<img src="{{ hero_src }}" alt="{{ featured_product.title | escape }}" width="1024" height="1536" loading="lazy">{% endif %}<div><h3>{{ featured_product.title }}</h3><span>{{ featured_product.price | money }}</span><em>View product ↗</em></div><span class="zed-product__stitch"></span></a>{% else %}<a class="zed-product" href="{{ routes.all_products_collection_url }}"><img src="{{ hero_src }}" alt="Explore ZED shirts" width="1024" height="1536" loading="lazy"><div><h3>Drop 001</h3><span>Quietly iconic shirts</span><em>Explore the collection ↗</em></div><span class="zed-product__stitch"></span></a>{% endif %}</section>
 
-  <section class="zed-final" data-zed-reveal>
-    <p>Wearable normally.<br><span>Remembered unusually.</span></p>
-    <a href="{{ section.settings.primary_link | default: routes.all_products_collection_url }}">ZED / Shop now ↗</a>
-  </section>
+  <section class="zed-final" data-zed-reveal>{% render 'zed-logo', animated: true, class: 'zed-mark--final' %}<p data-zed-stitch-text>Wearable normally.<br><span>Remembered unusually.</span></p><a href="{{ section.settings.primary_link | default: routes.all_products_collection_url }}">Shop now ↗</a></section>
 </section>
 
 {% schema %}
-{
-  "name": "ZED immersive experience",
-  "settings": [
-    { "type": "url", "id": "primary_link", "label": "Primary shop link" },
-    { "type": "product", "id": "product", "label": "Featured product" },
-    { "type": "image_picker", "id": "hero_image", "label": "Self-Contour hero" },
-    { "type": "image_picker", "id": "moire_image", "label": "Moiré image" },
-    { "type": "image_picker", "id": "jalair_image", "label": "Jalair image" },
-    { "type": "image_picker", "id": "cable_image", "label": "Air Cable image" }
-  ],
-  "presets": [{ "name": "ZED immersive experience" }]
-}
+{"name":"ZED immersive experience","settings":[{"type":"url","id":"primary_link","label":"Primary shop link"},{"type":"product","id":"product","label":"Featured product"},{"type":"image_picker","id":"hero_image","label":"Self-Contour hero"},{"type":"image_picker","id":"moire_image","label":"Moiré image"},{"type":"image_picker","id":"jalair_image","label":"Jalair image"},{"type":"image_picker","id":"cable_image","label":"Air Cable image"}],"presets":[{"name":"ZED immersive experience"}]}
 {% endschema %}

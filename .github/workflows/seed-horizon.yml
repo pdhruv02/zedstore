@@ -1,0 +1,41 @@
+name: Seed Shopify Horizon
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/seed-horizon.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  seed:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out zedstore
+        uses: actions/checkout@v4
+
+      - name: Download official Shopify Horizon
+        run: git clone --depth 1 https://github.com/Shopify/horizon.git /tmp/horizon
+
+      - name: Copy Horizon theme files
+        run: |
+          shopt -s dotglob
+          rm -rf /tmp/horizon/.git /tmp/horizon/.github
+          cp -R /tmp/horizon/* .
+
+      - name: Remove seeding workflow
+        run: rm -f .github/workflows/seed-horizon.yml
+
+      - name: Commit Horizon theme
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Initialize store with Shopify Horizon" || exit 0
+          git push

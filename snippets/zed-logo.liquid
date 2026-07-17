@@ -1,0 +1,13 @@
+{% liquid
+  assign mark_class = 'zed-mark'
+  if class != blank
+    assign mark_class = mark_class | append: ' ' | append: class
+  endif
+  if animated
+    assign mark_class = mark_class | append: ' zed-mark--animated'
+  endif
+%}
+<span class="{{ mark_class }}" aria-label="ZED">
+  <svg viewBox="0 0 300 126" role="img" aria-hidden="true" focusable="false">
+    <g class="zed-mark__letters">
+      <path class="zed-mark__bed

@@ -1,0 +1,148 @@
+{{ 'zed-needle-experience.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'zed-needle-experience.js' | asset_url }}" defer="defer"></script>
+
+{% assign air_cable = 'https://cdn.shopify.com/s/files/1/0804/7735/6217/files/zed-air-cable-campaign.png?v=1784260027' %}
+{% assign jalair = 'https://cdn.shopify.com/s/files/1/0804/7735/6217/files/zed-jalair-campaign.png?v=1784260051' %}
+{% assign body_map = 'https://cdn.shopify.com/s/files/1/0804/7735/6217/files/zed-body-map-campaign.png?v=1784260068' %}
+{% assign self_contour = 'https://cdn.shopify.com/s/files/1/0804/7735/6217/files/zed-self-contour-campaign.png?v=1784260088' %}
+
+<section class="zed-x" data-zed-experience>
+  <div class="zed-x__loader" data-zed-loader aria-hidden="true">
+    <div class="zed-x__loader-glow"></div>
+    {% render 'zed-needle-logo', class: 'zed-x__loader-logo', show_wordmark: false %}
+    <p>Threading ZED</p>
+  </div>
+
+  <nav class="zed-x__nav" aria-label="ZED navigation">
+    <a href="#zed-door" class="zed-x__brand">{% render 'zed-needle-logo', class: 'zed-x__nav-logo', show_wordmark: true %}</a>
+    <div class="zed-x__nav-links">
+      <button type="button" data-zed-jump="0">Premise</button>
+      <button type="button" data-zed-jump="1">Thread</button>
+      <button type="button" data-zed-jump="2">Studies</button>
+      <button type="button" data-zed-jump="3">Fit</button>
+      <button type="button" data-zed-jump="4">Shop</button>
+    </div>
+    <a href="{{ routes.cart_url }}" class="zed-x__cart">Cart <span>{{ cart.item_count }}</span></a>
+  </nav>
+
+  <div class="zed-x__progress" aria-hidden="true"><span data-zed-progress></span></div>
+
+  <div class="zed-x__scroll" data-zed-scroll>
+    <div class="zed-x__sticky">
+      <div class="zed-x__track" data-zed-track>
+        <article class="zed-x__panel zed-x__panel--door" id="zed-door" data-zed-panel>
+          <div class="zed-x__door zed-x__door--left"></div>
+          <div class="zed-x__door zed-x__door--right"></div>
+          <div class="zed-x__ambient zed-x__ambient--one"></div>
+          <div class="zed-x__ambient zed-x__ambient--two"></div>
+          <div class="zed-x__hero-logo" data-zed-hero-logo>
+            {% render 'zed-needle-logo', class: 'zed-x__hero-mark', show_wordmark: false %}
+          </div>
+          <div class="zed-x__hero-copy">
+            <p class="zed-x__eyebrow">Contemporary Indian menswear</p>
+            <h1>Not ethnic wear.<br>Not a plain shirt.<br><em>The space between.</em></h1>
+            <p>India’s textile language, re-cut into everyday shirts that feel restrained from a distance and unforgettable up close.</p>
+            <a href="#zed-shop" class="zed-x__cta" data-zed-jump="4">Enter the first drop <span>↗</span></a>
+          </div>
+          <div class="zed-x__scroll-cue"><span></span>Scroll to pull the thread</div>
+        </article>
+
+        <article class="zed-x__panel zed-x__panel--thread" data-zed-panel>
+          <div class="zed-x__thread-stage" data-zed-thread-stage>
+            <svg viewBox="0 0 1200 760" class="zed-x__thread-svg" aria-hidden="true">
+              <path class="zed-x__thread-shadow" d="M70 145 C225 20 310 190 445 180 C620 165 610 430 800 405 C975 382 950 620 1150 590" />
+              <path class="zed-x__thread-main" data-zed-thread pathLength="1" d="M70 145 C225 20 310 190 445 180 C620 165 610 430 800 405 C975 382 950 620 1150 590" />
+            </svg>
+            <div class="zed-x__needle" data-zed-needle aria-hidden="true"></div>
+            <div class="zed-x__thread-copy">
+              <span>01 / The double take</span>
+              <h2>Quiet from across the room.<br><em>Impossible to ignore up close.</em></h2>
+              <p>Embroidery is not placed on the shirt. It travels through the body, follows movement and changes with light.</p>
+            </div>
+            <figure class="zed-x__thread-figure" data-zed-depth>
+              <img src="{{ air_cable }}" alt="ZED Air Cable embroidered shirt" width="1536" height="2304" loading="eager">
+              <figcaption><b>01</b><span>Air Cable</span><small>Thread becomes structure</small></figcaption>
+            </figure>
+          </div>
+        </article>
+
+        <article class="zed-x__panel zed-x__panel--studies" data-zed-panel>
+          <header class="zed-x__studies-head">
+            <span>02 / Studies in thread</span>
+            <h2>One collection.<br>Four different behaviours.</h2>
+          </header>
+          <div class="zed-x__rail" data-zed-rail>
+            <a class="zed-x__study zed-x__study--jalair" href="{{ routes.all_products_collection_url }}">
+              <img src="{{ jalair }}" alt="Jalair olive cutwork shirt" width="1536" height="2304" loading="lazy">
+              <div><b>06</b><h3>Jalair</h3><p>Air becomes the pattern.</p></div>
+            </a>
+            <a class="zed-x__study zed-x__study--body" href="{{ routes.all_products_collection_url }}">
+              <img src="{{ body_map }}" alt="Body Map charcoal stitched shirt" width="1536" height="2304" loading="lazy">
+              <div><b>07</b><h3>Body Map</h3><p>Seams redraw the torso.</p></div>
+            </a>
+            <a class="zed-x__study zed-x__study--contour" href="{{ routes.all_products_collection_url }}">
+              <img src="{{ self_contour }}" alt="Self-Contour navy embroidered shirt" width="1536" height="2304" loading="lazy">
+              <div><b>09</b><h3>Self-Contour</h3><p>One line refuses to disappear.</p></div>
+            </a>
+          </div>
+        </article>
+
+        <article class="zed-x__panel zed-x__panel--fit" data-zed-panel>
+          <div class="zed-x__fit-copy">
+            <span>03 / Proportion</span>
+            <h2>Made around Indian bodies.<br><em>Not resized from somewhere else.</em></h2>
+            <p>More visual presence through the shoulder, without adding the unwanted shirt length that usually comes with sizing up.</p>
+          </div>
+          <div class="zed-x__fit-stage" data-zed-fit-stage>
+            <div class="zed-x__mirror">
+              <div class="zed-x__silhouette zed-x__silhouette--regular"><i></i><span>Regular<br><b>5′5″–5′8″</b></span></div>
+              <div class="zed-x__silhouette zed-x__silhouette--tall"><i></i><span>Tall<br><b>5′9″+</b></span></div>
+              <div class="zed-x__fit-line"></div>
+            </div>
+            <ul>
+              <li>Broader shoulder line</li>
+              <li>Controlled shirt length</li>
+              <li>Sharper everyday frame</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="zed-x__panel zed-x__panel--shop" id="zed-shop" data-zed-panel>
+          {% assign featured_product = all_products[section.settings.product] %}
+          <div class="zed-x__shop-image" data-zed-depth>
+            {% if featured_product != blank and featured_product.featured_image %}
+              {{ featured_product.featured_image | image_url: width: 1600 | image_tag: loading: 'lazy', alt: featured_product.title }}
+            {% else %}
+              <img src="{{ air_cable }}" alt="ZED first drop" width="1536" height="2304" loading="lazy">
+            {% endif %}
+            <div class="zed-x__shop-lens" aria-hidden="true"></div>
+          </div>
+          <div class="zed-x__shop-copy">
+            <span>04 / The first drop</span>
+            {% if featured_product != blank %}
+              <h2>{{ featured_product.title }}</h2>
+              <p>{{ featured_product.description | strip_html | truncate: 170 }}</p>
+              <strong>{{ featured_product.price | money }}</strong>
+              <a class="zed-x__cta zed-x__cta--light" href="{{ featured_product.url }}">View the shirt <span>↗</span></a>
+            {% else %}
+              <h2>Wearable normally.<br><em>Remembered unusually.</em></h2>
+              <p>The first drop is intentionally small. Every shirt begins with one idea worth looking at twice.</p>
+              <a class="zed-x__cta zed-x__cta--light" href="{{ routes.all_products_collection_url }}">Explore the first drop <span>↗</span></a>
+            {% endif %}
+          </div>
+          <div class="zed-x__final-mark">{% render 'zed-needle-logo', class: 'zed-x__final-logo', show_wordmark: true %}</div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "ZED needle experience",
+  "settings": [
+    { "type": "product", "id": "product", "label": "Featured product" }
+  ],
+  "presets": [{ "name": "ZED needle experience" }]
+}
+{% endschema %}

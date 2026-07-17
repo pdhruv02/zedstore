@@ -1,0 +1,5 @@
+{{ 'zed-home.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'zed-home.js' | asset_url }}" defer="defer"></script>
+
+{% capture hero_src %}{% if section.settings.hero_image != blank %}{{ section.settings.hero_image | image_url: width: 2200 }}{% else %}https://cdn.shopify.com/s/files/1/0804/7735/6217/files/zed-self-contour-hero.png?v=1784256683{% endif %}{% endcapture %}
+{% capture moire_src %}{% if section.settings.moire_image != blank %}{{ section.settings.moire_image | image_url: width: 1800 }}{% else %}https

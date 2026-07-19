@@ -1,0 +1,282 @@
+{% liquid
+  assign air_product = section.settings.air_product
+  assign air_url = routes.all_products_collection_url
+  if air_product != blank
+    assign air_url = air_product.url
+  endif
+%}
+
+<section class="nabz-air" id="AirCable-{{ section.id }}">
+  <div class="nabz-air__visual" data-nabz-reveal>
+    <div class="nabz-air__editorial" role="img" aria-label="{{ 'nabz.air.editorial_alt' | t }}"></div>
+    <div class="nabz-air__shoulder" role="img" aria-label="{{ 'nabz.air.shoulder_alt' | t }}"></div>
+    <div class="nabz-air__index"><span>01</span><i></i><span>AIR CABLE</span></div>
+  </div>
+
+  <div class="nabz-air__content" data-nabz-reveal>
+    <p class="nabz-kicker">{{ 'nabz.air.eyebrow' | t }}</p>
+    <h2>{{ 'nabz.air.headline' | t }}</h2>
+    <p class="nabz-air__body">{{ 'nabz.air.body' | t }}</p>
+
+    <ul class="nabz-air__proofs">
+      <li><span>01</span>{{ 'nabz.air.proof_1' | t }}</li>
+      <li><span>02</span>{{ 'nabz.air.proof_2' | t }}</li>
+      <li><span>03</span>{{ 'nabz.air.proof_3' | t }}</li>
+    </ul>
+
+    <div class="nabz-air__product">
+      <div>
+        <span>{% if air_product != blank %}{{ air_product.title | escape }}{% else %}{{ 'nabz.air.name' | t }}{% endif %}</span>
+        <small>{{ 'nabz.air.price_note' | t }}</small>
+      </div>
+      <strong>{% if air_product != blank %}{{ air_product.price | money_without_trailing_zeros }}{% else %}{{ 'nabz.air.fallback_price' | t }}{% endif %}</strong>
+    </div>
+
+    <a class="nabz-button" href="{{ air_url }}">{{ 'nabz.air.cta' | t }}</a>
+
+    <div class="nabz-air__material">
+      <div role="img" aria-label="{{ 'nabz.air.cord_alt' | t }}"></div>
+      <p>{{ 'nabz.air.proof_2' | t }}</p>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .nabz-air .nabz-kicker {
+    position: relative;
+  }
+
+  .nabz-air .nabz-button {
+    width: fit-content;
+  }
+
+  .nabz-air {
+    display: grid;
+    grid-template-columns: minmax(520px, 1.05fr) minmax(420px, .95fr);
+    gap: clamp(60px, 9vw, 160px);
+    align-items: center;
+    min-height: 100svh;
+    padding: clamp(90px, 11vw, 170px) max(24px, calc((100vw - 1480px) / 2));
+    overflow: hidden;
+    background: var(--nabz-cloth);
+  }
+
+  .nabz-air__visual {
+    position: relative;
+    min-height: min(80vw, 920px);
+  }
+
+  .nabz-air__editorial,
+  .nabz-air__shoulder,
+  .nabz-air__material > div {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .nabz-air__editorial {
+    position: absolute;
+    inset: 0 16% 0 0;
+    background-image: url('nabz-air-cable-editorial.webp');
+    background-position: center 28%;
+  }
+
+  .nabz-air__shoulder {
+    position: absolute;
+    right: 0;
+    bottom: 7%;
+    width: 39%;
+    aspect-ratio: .74;
+    background-image: url('nabz-air-cable-shoulder.webp');
+    background-position: center 28%;
+    border: 8px solid var(--nabz-cloth);
+    box-shadow: 0 28px 60px rgb(23 18 15 / 18%);
+  }
+
+  .nabz-air__index {
+    position: absolute;
+    top: 22px;
+    left: 22px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--nabz-ink);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .16em;
+  }
+
+  .nabz-air__index i {
+    width: 42px;
+    height: 1px;
+    background: currentColor;
+  }
+
+  .nabz-air__content {
+    position: relative;
+    z-index: 2;
+    max-width: 640px;
+  }
+
+  .nabz-air__content h2 {
+    margin: 0 0 28px;
+    color: var(--nabz-ink);
+    font-size: clamp(58px, 6.7vw, 106px);
+    line-height: .88;
+  }
+
+  .nabz-air__body {
+    max-width: 600px;
+    margin: 0;
+    color: rgb(23 18 15 / 72%);
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  .nabz-air__proofs {
+    display: grid;
+    gap: 0;
+    margin: 34px 0;
+    padding: 0;
+    border-top: 1px solid var(--nabz-line);
+    list-style: none;
+  }
+
+  .nabz-air__proofs li {
+    display: grid;
+    grid-template-columns: 42px 1fr;
+    gap: 10px;
+    padding: 15px 0;
+    color: var(--nabz-ink);
+    border-bottom: 1px solid var(--nabz-line);
+    font-family: var(--nabz-serif);
+    font-size: 18px;
+  }
+
+  .nabz-air__proofs span {
+    color: var(--nabz-copper);
+    font: 700 9px/2.2 var(--nabz-sans);
+    letter-spacing: .1em;
+  }
+
+  .nabz-air__product {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 22px;
+  }
+
+  .nabz-air__product div {
+    display: grid;
+    gap: 5px;
+  }
+
+  .nabz-air__product span {
+    font-family: var(--nabz-serif);
+    font-size: 30px;
+  }
+
+  .nabz-air__product small {
+    color: rgb(23 18 15 / 56%);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+
+  .nabz-air__product strong {
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  .nabz-air__material {
+    position: absolute;
+    right: -32%;
+    bottom: -52px;
+    display: grid;
+    grid-template-columns: 108px 1fr;
+    align-items: center;
+    gap: 14px;
+    width: 270px;
+    padding: 10px;
+    color: var(--nabz-cloth);
+    background: var(--nabz-ink);
+  }
+
+  .nabz-air__material > div {
+    aspect-ratio: 1;
+    background-image: url('nabz-air-cable-cord.webp');
+  }
+
+  .nabz-air__material p {
+    margin: 0;
+    font-family: var(--nabz-serif);
+    font-size: 15px;
+    line-height: 1.25;
+  }
+
+  @media (max-width: 1100px) {
+    .nabz-air {
+      grid-template-columns: 1fr;
+    }
+
+    .nabz-air__visual {
+      min-height: min(115vw, 900px);
+    }
+
+    .nabz-air__content {
+      max-width: 760px;
+    }
+
+    .nabz-air__material {
+      position: static;
+      width: 100%;
+      max-width: 340px;
+      margin-top: 34px;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .nabz-air {
+      gap: 70px;
+      padding: 100px 22px;
+    }
+
+    .nabz-air__visual {
+      min-height: 650px;
+    }
+
+    .nabz-air__editorial {
+      right: 9%;
+    }
+
+    .nabz-air__shoulder {
+      right: -8px;
+      width: 43%;
+      border-width: 5px;
+    }
+
+    .nabz-air__content h2 {
+      font-size: clamp(54px, 16vw, 76px);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:nabz.sections.air",
+  "settings": [
+    {
+      "type": "product",
+      "id": "air_product",
+      "label": "t:nabz.settings.air_product"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:nabz.sections.air"
+    }
+  ]
+}
+{% endschema %}

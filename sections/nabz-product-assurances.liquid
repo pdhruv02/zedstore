@@ -1,0 +1,138 @@
+<section class="nabz-assurances">
+  <header data-nabz-reveal>
+    <p class="nabz-kicker">{{ 'nabz.product.eyebrow' | t }}</p>
+    <h2>{{ 'nabz.product.headline' | t }}</h2>
+  </header>
+  <div class="nabz-assurances__grid">
+    <article data-nabz-reveal>
+      <span>01</span>
+      <svg viewBox="0 0 120 90" aria-hidden="true"><path d="M9 68 32 25 60 15l28 10 23 43M32 25l28 21 28-21"/></svg>
+      <h3>{{ 'nabz.product.shoulder_title' | t }}</h3>
+      <p>{{ 'nabz.product.shoulder_body' | t }}</p>
+    </article>
+    <article data-nabz-reveal>
+      <span>02</span>
+      <svg viewBox="0 0 120 90" aria-hidden="true"><path d="M30 12v66M21 12h18M21 78h18M80 25v53M71 25h18M71 78h18"/></svg>
+      <h3>{{ 'nabz.product.length_title' | t }}</h3>
+      <p>{{ 'nabz.product.length_body' | t }}</p>
+    </article>
+    <article data-nabz-reveal>
+      <span>03</span>
+      <svg viewBox="0 0 120 90" aria-hidden="true"><path d="M8 58h29l10-17 16 34 20-62 14 45h15"/></svg>
+      <h3>{{ 'nabz.product.embroidery_title' | t }}</h3>
+      <p>{{ 'nabz.product.embroidery_body' | t }}</p>
+    </article>
+  </div>
+</section>
+
+{% stylesheet %}
+  .nabz-assurances .nabz-kicker {
+    position: relative;
+  }
+
+  .nabz-assurances {
+    padding: clamp(80px, 10vw, 150px) max(24px, calc((100vw - 1480px) / 2));
+    color: var(--nabz-cloth);
+    background: var(--nabz-ink);
+  }
+
+  .nabz-assurances header {
+    display: grid;
+    grid-template-columns: .6fr 1.4fr;
+    gap: 40px;
+    align-items: start;
+    margin-bottom: clamp(54px, 8vw, 110px);
+  }
+
+  .nabz-assurances h2 {
+    max-width: 850px;
+    margin: 0;
+    color: var(--nabz-cloth);
+    font-size: clamp(48px, 6vw, 92px);
+    line-height: .9;
+  }
+
+  .nabz-assurances__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid rgb(238 227 210 / 18%);
+    border-bottom: 1px solid rgb(238 227 210 / 18%);
+  }
+
+  .nabz-assurances article {
+    position: relative;
+    padding: clamp(28px, 4vw, 58px);
+    border-right: 1px solid rgb(238 227 210 / 18%);
+  }
+
+  .nabz-assurances article:last-child {
+    border-right: 0;
+  }
+
+  .nabz-assurances article > span {
+    color: var(--nabz-copper);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .14em;
+  }
+
+  .nabz-assurances svg {
+    display: block;
+    width: 94px;
+    margin: 44px 0;
+    fill: none;
+    stroke: var(--nabz-copper);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .nabz-assurances h3 {
+    margin: 0 0 16px;
+    color: var(--nabz-cloth);
+    font-size: clamp(27px, 2.5vw, 40px);
+    line-height: 1;
+  }
+
+  .nabz-assurances article p {
+    margin: 0;
+    color: rgb(238 227 210 / 62%);
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 749px) {
+    .nabz-assurances {
+      padding: 90px 22px;
+    }
+
+    .nabz-assurances header {
+      grid-template-columns: 1fr;
+    }
+
+    .nabz-assurances__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .nabz-assurances article {
+      border-right: 0;
+      border-bottom: 1px solid rgb(238 227 210 / 18%);
+    }
+
+    .nabz-assurances article:last-child {
+      border-bottom: 0;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:nabz.sections.product_assurances",
+  "settings": [],
+  "presets": [
+    {
+      "name": "t:nabz.sections.product_assurances"
+    }
+  ]
+}
+{% endschema %}

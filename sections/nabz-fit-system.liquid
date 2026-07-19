@@ -1,0 +1,432 @@
+<section
+  class="nabz-fit"
+  data-nabz-fit
+  data-fit-measurement-template="{{ 'nabz.fit.inches' | t: value: '__VALUE__' }}"
+>
+  <div class="nabz-fit__copy" data-nabz-reveal>
+    <p class="nabz-kicker">{{ 'nabz.fit.eyebrow' | t }}</p>
+    <h2>{{ 'nabz.fit.headline' | t }}</h2>
+    <p>{{ 'nabz.fit.body' | t }}</p>
+    <p class="nabz-fit__guidance">{{ 'nabz.fit.guidance' | t }}</p>
+    <details class="nabz-fit__details" id="NabzFitDetails-{{ section.id }}">
+      <summary>{{ 'nabz.fit.measurements' | t }}</summary>
+      <div>
+        <h3>{{ 'nabz.fit.chart_heading' | t }}</h3>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">{{ 'nabz.fit.chart_size' | t }}</th>
+              <th scope="col">{{ 'nabz.fit.chart_standard' | t }}</th>
+              <th scope="col">{{ 'nabz.fit.chart_extended' | t }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">S</th><td>26.75 in</td><td>{{ 'nabz.fit.not_available' | t }}</td></tr>
+            <tr><th scope="row">M</th><td>27 in</td><td>28.5 in</td></tr>
+            <tr><th scope="row">L</th><td>27.75 in</td><td>29.25 in</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </div>
+
+  <div class="nabz-fit__tool" data-nabz-reveal>
+    <div class="nabz-fit__diagram" style="--room-scale: 1; --length-scale: 1;">
+      <svg viewBox="0 0 650 760" role="img" aria-labelledby="NabzFitTitle-{{ section.id }}">
+        <title id="NabzFitTitle-{{ section.id }}">{{ 'nabz.fit.headline' | t }}</title>
+        <g class="nabz-fit__shirt">
+          <path class="nabz-fit__shirt-outline" d="M211 136 316 84 334 84 439 136 568 224 510 328 466 281 466 650 184 650 184 281 140 328 82 224Z"/>
+          <path class="nabz-fit__collar" d="M250 116 270 190 325 226 380 190 400 116M270 190l55-55 55 55"/>
+          <path class="nabz-fit__placket" d="M325 226v424"/>
+          <path class="nabz-fit__yoke" d="M211 136q114 105 228 0"/>
+          <path class="nabz-fit__shoulder" d="m211 136 105-52M334 84l105 52"/>
+        </g>
+        <g class="nabz-fit__measure nabz-fit__measure--room">
+          <path d="M184 405h282M184 390v30M466 390v30"/>
+          <rect x="270" y="379" width="110" height="52" rx="26"/>
+          <text x="325" y="412" text-anchor="middle">{{ 'nabz.fit.room' | t }}</text>
+        </g>
+        <g class="nabz-fit__measure nabz-fit__measure--length">
+          <path d="M527 226v424M512 226h30M512 650h30"/>
+          <text x="562" y="438" transform="rotate(90 562 438)" text-anchor="middle">{{ 'nabz.fit.length' | t }}</text>
+        </g>
+        <path class="nabz-fit__extended-line" d="M184 696h282"/>
+      </svg>
+    </div>
+
+    <div class="nabz-fit__controls">
+      <fieldset>
+        <legend><span>01</span>{{ 'nabz.fit.room' | t }}</legend>
+        <div class="nabz-fit__choices" data-fit-sizes>
+          <button type="button" data-fit-size="S" data-standard="26.75" data-extended="" aria-pressed="false">S</button>
+          <button type="button" data-fit-size="M" data-standard="27" data-extended="28.5" aria-pressed="true">M</button>
+          <button type="button" data-fit-size="L" data-standard="27.75" data-extended="29.25" aria-pressed="false">L</button>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><span>02</span>{{ 'nabz.fit.length' | t }}</legend>
+        <div class="nabz-fit__choices nabz-fit__choices--length" data-fit-lengths>
+          <button type="button" data-fit-length="standard" aria-pressed="true">{{ 'nabz.fit.standard' | t }}</button>
+          <button type="button" data-fit-length="extended" aria-pressed="false" aria-describedby="NabzFitUnavailable-{{ section.id }}">{{ 'nabz.fit.extended' | t }}</button>
+        </div>
+        <span class="visually-hidden" id="NabzFitUnavailable-{{ section.id }}">{{ 'nabz.fit.unavailable' | t }}</span>
+      </fieldset>
+
+      <div class="nabz-fit__result" aria-live="polite">
+        <span data-fit-selection>M / {{ 'nabz.fit.standard' | t }}</span>
+        <strong data-fit-measurement>{{ 'nabz.fit.inches' | t: value: '27' }}</strong>
+      </div>
+    </div>
+
+    <div class="nabz-fit__proof">
+      <span>{{ 'nabz.fit.natural_shoulder' | t }}</span>
+      <span>{{ 'nabz.fit.stable_yoke' | t }}</span>
+      <span>{{ 'nabz.fit.controlled_proportion' | t }}</span>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .nabz-fit {
+    display: grid;
+    grid-template-columns: minmax(320px, .78fr) minmax(620px, 1.22fr);
+    gap: clamp(60px, 8vw, 150px);
+    align-items: center;
+    min-height: 100svh;
+    padding: clamp(90px, 12vw, 180px) max(24px, calc((100vw - 1480px) / 2));
+    color: var(--nabz-cloth);
+    background: var(--nabz-ink);
+  }
+
+  .nabz-fit__copy {
+    max-width: 620px;
+  }
+
+  .nabz-fit__copy h2 {
+    margin: 0 0 30px;
+    color: var(--nabz-cloth);
+    font-size: clamp(54px, 6vw, 94px);
+    line-height: .91;
+  }
+
+  .nabz-fit__copy > p:not(.nabz-kicker) {
+    max-width: 560px;
+    color: rgb(238 227 210 / 72%);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .nabz-fit__guidance {
+    margin-top: 24px;
+    padding-left: 18px;
+    border-left: 1px solid var(--nabz-copper);
+  }
+
+  .nabz-fit__details {
+    margin-top: 30px;
+    border-top: 1px solid rgb(238 227 210 / 20%);
+    border-bottom: 1px solid rgb(238 227 210 / 20%);
+  }
+
+  .nabz-fit__details summary {
+    padding: 18px 0;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+  }
+
+  .nabz-fit__details > div {
+    padding: 6px 0 24px;
+  }
+
+  .nabz-fit__details h3 {
+    margin: 0 0 18px;
+    color: var(--nabz-cloth);
+    font-size: 24px;
+  }
+
+  .nabz-fit__details table {
+    width: 100%;
+    border-collapse: collapse;
+    color: rgb(238 227 210 / 74%);
+    font-size: 12px;
+    text-align: left;
+  }
+
+  .nabz-fit__details th,
+  .nabz-fit__details td {
+    padding: 10px 6px 10px 0;
+    border-bottom: 1px solid rgb(238 227 210 / 12%);
+  }
+
+  .nabz-fit__tool {
+    position: relative;
+    padding: clamp(24px, 4vw, 58px);
+    background: #1d1713;
+    border: 1px solid rgb(238 227 210 / 15%);
+  }
+
+  .nabz-fit__tool::before {
+    position: absolute;
+    inset: 18px;
+    content: '';
+    border: 1px solid rgb(238 227 210 / 6%);
+    pointer-events: none;
+  }
+
+  .nabz-fit__diagram {
+    position: relative;
+    width: min(100%, 500px);
+    margin: 0 auto;
+  }
+
+  .nabz-fit__diagram svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .nabz-fit__shirt {
+    fill: none;
+    stroke: var(--nabz-cloth);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transform: scaleX(var(--room-scale)) scaleY(var(--length-scale));
+    transform-box: fill-box;
+    transform-origin: 50% 20%;
+    transition: transform .65s cubic-bezier(.2,.7,.2,1);
+  }
+
+  .nabz-fit__yoke {
+    opacity: .55;
+  }
+
+  .nabz-fit__shoulder {
+    stroke: var(--nabz-copper);
+    stroke-width: 5;
+  }
+
+  .nabz-fit__measure {
+    fill: none;
+    stroke: var(--nabz-copper);
+    stroke-width: 3;
+  }
+
+  .nabz-fit__measure rect {
+    fill: #1d1713;
+  }
+
+  .nabz-fit__measure text {
+    fill: var(--nabz-cloth);
+    stroke: none;
+    font: 700 14px var(--nabz-sans);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+
+  .nabz-fit__extended-line {
+    fill: none;
+    stroke: rgb(238 227 210 / 30%);
+    stroke-width: 2;
+    stroke-dasharray: 8 10;
+    opacity: calc((var(--length-scale) - 1) * 12.5);
+  }
+
+  .nabz-fit__controls {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 30px 40px;
+    align-items: end;
+    margin-top: 20px;
+  }
+
+  .nabz-fit__controls fieldset {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .nabz-fit__controls legend {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 14px;
+    color: rgb(238 227 210 / 62%);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+  }
+
+  .nabz-fit__controls legend span {
+    color: var(--nabz-copper);
+  }
+
+  .nabz-fit__choices {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .nabz-fit__choices--length {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .nabz-fit__choices button {
+    min-height: 44px;
+    padding: 10px 12px;
+    color: var(--nabz-cloth);
+    background: transparent;
+    border: 1px solid rgb(238 227 210 / 25%);
+    border-radius: 0;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+
+  .nabz-fit__choices button[aria-pressed='true'] {
+    color: var(--nabz-cloth);
+    background: var(--nabz-copper);
+    border-color: var(--nabz-copper);
+  }
+
+  .nabz-fit__choices button:disabled {
+    cursor: not-allowed;
+    opacity: .28;
+  }
+
+  .nabz-fit__result {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding-top: 22px;
+    border-top: 1px solid rgb(238 227 210 / 18%);
+    color: rgb(238 227 210 / 68%);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+
+  .nabz-fit__result strong {
+    color: var(--nabz-cloth);
+  }
+
+  .nabz-fit__proof {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin-top: 32px;
+    padding-top: 20px;
+    color: rgb(238 227 210 / 50%);
+    border-top: 1px solid rgb(238 227 210 / 10%);
+    font-size: 9px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 1100px) {
+    .nabz-fit {
+      grid-template-columns: 1fr;
+    }
+
+    .nabz-fit__copy {
+      max-width: 760px;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .nabz-fit {
+      padding: 100px 22px;
+    }
+
+    .nabz-fit__copy h2 {
+      font-size: clamp(50px, 15vw, 70px);
+    }
+
+    .nabz-fit__tool {
+      padding: 24px 16px;
+    }
+
+    .nabz-fit__controls {
+      grid-template-columns: 1fr;
+    }
+
+    .nabz-fit__result {
+      grid-column: auto;
+    }
+
+    .nabz-fit__proof {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  document.querySelectorAll('[data-nabz-fit]').forEach((section) => {
+    const diagram = section.querySelector('.nabz-fit__diagram');
+    const sizeButtons = Array.from(section.querySelectorAll('[data-fit-size]'));
+    const lengthButtons = Array.from(section.querySelectorAll('[data-fit-length]'));
+    const selection = section.querySelector('[data-fit-selection]');
+    const measurement = section.querySelector('[data-fit-measurement]');
+    let activeSize = 'M';
+    let activeLength = 'standard';
+
+    const update = () => {
+      const sizeButton = sizeButtons.find((button) => button.dataset.fitSize === activeSize);
+      const extendedButton = lengthButtons.find((button) => button.dataset.fitLength === 'extended');
+      const canExtend = Boolean(sizeButton?.dataset.extended);
+
+      if (!canExtend && activeLength === 'extended') activeLength = 'standard';
+      if (extendedButton) extendedButton.disabled = !canExtend;
+
+      sizeButtons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.fitSize === activeSize)));
+      lengthButtons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.fitLength === activeLength)));
+
+      const roomScale = activeSize === 'S' ? .89 : activeSize === 'L' ? 1.11 : 1;
+      const lengthScale = activeLength === 'extended' ? 1.08 : 1;
+      diagram?.style.setProperty('--room-scale', roomScale);
+      diagram?.style.setProperty('--length-scale', lengthScale);
+
+      const selectedLength = activeLength === 'extended' ? sizeButton?.dataset.extended : sizeButton?.dataset.standard;
+      const lengthLabel = lengthButtons.find((button) => button.dataset.fitLength === activeLength)?.textContent.trim();
+      if (selection) selection.textContent = `${activeSize} / ${lengthLabel}`;
+      if (measurement) {
+        measurement.textContent = section.dataset.fitMeasurementTemplate.replace('__VALUE__', selectedLength);
+      }
+    };
+
+    sizeButtons.forEach((button) => button.addEventListener('click', () => {
+      activeSize = button.dataset.fitSize;
+      update();
+    }));
+
+    lengthButtons.forEach((button) => button.addEventListener('click', () => {
+      activeLength = button.dataset.fitLength;
+      update();
+    }));
+
+    update();
+  });
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "t:nabz.sections.fit",
+  "settings": [],
+  "presets": [
+    {
+      "name": "t:nabz.sections.fit"
+    }
+  ]
+}
+{% endschema %}

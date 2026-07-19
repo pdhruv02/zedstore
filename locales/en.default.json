@@ -352,6 +352,106 @@
     "blog_post_date": "Date",
     "blog_post_description": "An excerpt of your blog post's content"
   },
+  "nabz": {
+    "nav": {
+      "announcement": "First drop · Air Cable / Self-Contour",
+      "menu": "Menu",
+      "search": "Search",
+      "cart": "Bag",
+      "cart_count": "Bag, {{ count }} items"
+    },
+    "hero": {
+      "eyebrow": "NABZ / First drop",
+      "stage_1": "Start with the body.",
+      "stage_2": "Map the proportion.",
+      "stage_3": "Build the shirt.",
+      "stage_4": "Finish with a pulse.",
+      "headline": "Contemporary embroidery. Better-proportioned shirts.",
+      "body": "Everyday shirts shaped by Indian textile language, clean shoulders, and embroidery engineered into the cloth.",
+      "cta": "Shop the first drop",
+      "skip": "Skip construction",
+      "progress": "Construction progress",
+      "image_alt": "A NABZ Self-Contour shirt being constructed on a model"
+    },
+    "positioning": {
+      "eyebrow": "A new everyday language",
+      "line_1": "Not ethnic wear.",
+      "line_2": "Not a plain shirt.",
+      "line_3": "The space between.",
+      "body": "India’s textile language, re-cut into everyday shirts. Restrained from a distance. Unforgettable up close.",
+      "linear_alt": "Linear couching embroidery on dark cloth",
+      "cutwork_alt": "Geometric cutwork on olive cloth",
+      "counted_alt": "Dense counted stitching in copper and rose thread"
+    },
+    "fit": {
+      "eyebrow": "NABZ fit system",
+      "headline": "Choose the width you need. Then choose the length.",
+      "body": "Most shirts grow wider and longer together. NABZ separates the two. Choose S, M, or L for the room your body needs. Choose Standard or Extended where available.",
+      "room": "Body room",
+      "length": "Shirt length",
+      "standard": "Standard",
+      "extended": "Extended",
+      "measurement": "Back length",
+      "inches": "{{ value }} in",
+      "selected": "Selected",
+      "unavailable": "Extended length is available in M and L",
+      "guidance": "Up to 5′8″? Start with Standard. Above 5′8″? Start with Extended. Height is guidance, not a rule.",
+      "measurements": "View all measurements",
+      "chart_heading": "Launch length guide",
+      "chart_size": "Body size",
+      "chart_standard": "Standard length",
+      "chart_extended": "Extended length",
+      "not_available": "—",
+      "natural_shoulder": "Natural shoulder",
+      "stable_yoke": "Stable yoke",
+      "controlled_proportion": "Controlled untucked proportion"
+    },
+    "air": {
+      "eyebrow": "Air Cable / 01",
+      "headline": "Designed from the shoulder down.",
+      "body": "A clean shoulder line changes the whole shirt. Ours is built with a stable yoke, a controlled armhole, and room through the upper body—without a dropped seam or padded silhouette.",
+      "proof_1": "Structure without stiffness.",
+      "proof_2": "Embroidery that belongs to the fabric.",
+      "proof_3": "A shorter, controlled untucked proportion.",
+      "name": "Air Cable",
+      "fallback_price": "₹2,499",
+      "price_note": "Launch price",
+      "cta": "View Air Cable",
+      "editorial_alt": "Model wearing the ivory Air Cable shirt",
+      "shoulder_alt": "Air Cable shoulder construction and tonal embroidery",
+      "cord_alt": "Raised tonal cord embroidery on cotton-linen cloth"
+    },
+    "drop": {
+      "eyebrow": "The first drop",
+      "headline": "Two shirts. One clear point of view.",
+      "body": "Air Cable / Self-Contour",
+      "cta": "Shop NABZ",
+      "air": "Air Cable",
+      "contour": "Self-Contour",
+      "logo_alt": "NABZ embroidered wordmark on dark brown cloth"
+    },
+    "product": {
+      "eyebrow": "Built into every NABZ shirt",
+      "headline": "The details that change the whole silhouette.",
+      "shoulder_title": "A clean, natural shoulder",
+      "shoulder_body": "A stable yoke and controlled armhole create structure without padding or a dropped seam.",
+      "length_title": "Width and length, separated",
+      "length_body": "Choose the room your body needs, then choose Standard or Extended length where available.",
+      "embroidery_title": "Embroidery as construction",
+      "embroidery_body": "Stitch direction, density, and texture are designed with the cloth—not placed on top as an afterthought."
+    },
+    "footer": {
+      "headline": "Stay close to the stitch.",
+      "body": "New shirts, material notes, and the next NABZ drop. No noise.",
+      "email": "Email address",
+      "submit": "Join",
+      "success": "You’re on the list.",
+      "shop": "Shop",
+      "information": "Information",
+      "copyright": "© {{ year }} NABZ",
+      "made_in": "Designed in India"
+    }
+  },
   "products": {
     "product": {
       "add_to_cart": "Add to cart",

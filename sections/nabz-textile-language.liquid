@@ -1,0 +1,187 @@
+<section class="nabz-language">
+  <div class="nabz-language__copy" data-nabz-reveal>
+    <p class="nabz-kicker">{{ 'nabz.positioning.eyebrow' | t }}</p>
+    <h2>
+      <span>{{ 'nabz.positioning.line_1' | t }}</span>
+      <span>{{ 'nabz.positioning.line_2' | t }}</span>
+      <em>{{ 'nabz.positioning.line_3' | t }}</em>
+    </h2>
+    <p>{{ 'nabz.positioning.body' | t }}</p>
+  </div>
+
+  <div class="nabz-language__textiles" aria-label="{{ 'nabz.positioning.eyebrow' | t }}">
+    <div class="nabz-language__tile nabz-language__tile--linear" role="img" aria-label="{{ 'nabz.positioning.linear_alt' | t }}" data-nabz-reveal></div>
+    <div class="nabz-language__tile nabz-language__tile--cutwork" role="img" aria-label="{{ 'nabz.positioning.cutwork_alt' | t }}" data-nabz-reveal></div>
+    <div class="nabz-language__tile nabz-language__tile--counted" role="img" aria-label="{{ 'nabz.positioning.counted_alt' | t }}" data-nabz-reveal></div>
+    <svg class="nabz-language__thread" viewBox="0 0 900 620" aria-hidden="true" focusable="false">
+      <path pathLength="1" d="M-20 475C155 350 230 510 373 382S625 235 920 94"/>
+    </svg>
+  </div>
+</section>
+
+{% stylesheet %}
+  .nabz-language .nabz-kicker {
+    position: relative;
+  }
+
+  .nabz-language {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, .9fr) minmax(520px, 1.1fr);
+    gap: clamp(50px, 8vw, 140px);
+    align-items: center;
+    min-height: 100svh;
+    padding: clamp(90px, 12vw, 190px) max(24px, calc((100vw - 1480px) / 2));
+    overflow: hidden;
+    background: var(--nabz-paper);
+  }
+
+  .nabz-language::before {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 1px;
+    height: 70px;
+    content: '';
+    background: var(--nabz-copper);
+  }
+
+  .nabz-language__copy {
+    position: relative;
+    z-index: 3;
+    max-width: 650px;
+  }
+
+  .nabz-language__copy h2 {
+    margin: 0 0 34px;
+    color: var(--nabz-ink);
+    font-size: clamp(54px, 6.8vw, 108px);
+    line-height: .88;
+  }
+
+  .nabz-language__copy h2 span,
+  .nabz-language__copy h2 em {
+    display: block;
+  }
+
+  .nabz-language__copy h2 em {
+    color: var(--nabz-copper);
+    font-weight: 400;
+  }
+
+  .nabz-language__copy > p:last-child {
+    max-width: 590px;
+    margin: 0;
+    color: rgb(23 18 15 / 72%);
+    font-family: var(--nabz-serif);
+    font-size: clamp(22px, 2.2vw, 34px);
+    line-height: 1.35;
+  }
+
+  .nabz-language__textiles {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr .72fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 10px;
+    min-height: min(72vw, 760px);
+  }
+
+  .nabz-language__tile {
+    position: relative;
+    overflow: hidden;
+    background-position: center;
+    background-size: cover;
+  }
+
+  .nabz-language__tile::after {
+    position: absolute;
+    inset: 0;
+    content: '';
+    border: 1px solid rgb(238 227 210 / 16%);
+    box-shadow: inset 0 0 60px rgb(0 0 0 / 12%);
+  }
+
+  .nabz-language__tile--linear {
+    grid-row: 1 / 3;
+    background-image: url('nabz-textile-linear.webp');
+  }
+
+  .nabz-language__tile--cutwork {
+    background-image: url('nabz-textile-cutwork.webp');
+    transition-delay: .1s;
+  }
+
+  .nabz-language__tile--counted {
+    background-image: url('nabz-textile-counted.webp');
+    transition-delay: .2s;
+  }
+
+  .nabz-language__thread {
+    position: absolute;
+    z-index: 3;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .nabz-language__thread path {
+    fill: none;
+    stroke: var(--nabz-copper);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 1.8s cubic-bezier(.2,.7,.2,1) .3s;
+  }
+
+  .nabz-language:has(.nabz-language__tile.is-visible) .nabz-language__thread path {
+    stroke-dashoffset: 0;
+  }
+
+  @media (max-width: 989px) {
+    .nabz-language {
+      grid-template-columns: 1fr;
+      min-height: auto;
+    }
+
+    .nabz-language__textiles {
+      min-height: min(95vw, 720px);
+    }
+  }
+
+  @media (max-width: 749px) {
+    .nabz-language {
+      gap: 54px;
+      padding: 100px 22px;
+    }
+
+    .nabz-language__copy h2 {
+      font-size: clamp(52px, 16vw, 76px);
+    }
+
+    .nabz-language__copy > p:last-child {
+      font-size: 23px;
+    }
+
+    .nabz-language__textiles {
+      grid-template-columns: 1.2fr .8fr;
+      gap: 6px;
+      min-height: 520px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:nabz.sections.positioning",
+  "settings": [],
+  "presets": [
+    {
+      "name": "t:nabz.sections.positioning"
+    }
+  ]
+}
+{% endschema %}

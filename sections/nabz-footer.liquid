@@ -1,0 +1,269 @@
+{% assign current_year = 'now' | date: '%Y' %}
+
+<section class="nabz-footer">
+  <div class="nabz-footer__top">
+    <div class="nabz-footer__brand" data-nabz-reveal>
+      <a class="nabz-footer__wordmark" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }}">
+        <svg viewBox="0 0 360 92" aria-hidden="true" focusable="false">
+          <text x="4" y="76">N</text>
+          <text x="224" y="76">B</text>
+          <text x="294" y="76">Z</text>
+          <path d="M48 54H108L128 35 155 77 185 8 217 54H246"/>
+        </svg>
+      </a>
+      <p>{{ 'nabz.footer.made_in' | t }}</p>
+    </div>
+
+    <div class="nabz-footer__signup" data-nabz-reveal>
+      <h2>{{ 'nabz.footer.headline' | t }}</h2>
+      <p>{{ 'nabz.footer.body' | t }}</p>
+      {% form 'customer', class: 'nabz-footer__form' %}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        <label class="visually-hidden" for="NabzFooterEmail-{{ section.id }}">{{ 'nabz.footer.email' | t }}</label>
+        <input
+          id="NabzFooterEmail-{{ section.id }}"
+          type="email"
+          name="contact[email]"
+          value="{{ form.email }}"
+          placeholder="{{ 'nabz.footer.email' | t }}"
+          autocomplete="email"
+          autocapitalize="off"
+          required
+        >
+        <button type="submit">{{ 'nabz.footer.submit' | t }}</button>
+        {% if form.posted_successfully? %}
+          <p class="nabz-footer__success" role="status">{{ 'nabz.footer.success' | t }}</p>
+        {% endif %}
+        {{ form.errors | default_errors }}
+      {% endform %}
+    </div>
+
+    <div class="nabz-footer__links" data-nabz-reveal>
+      <div>
+        <p class="nabz-footer__label">{{ 'nabz.footer.shop' | t }}</p>
+        <nav aria-label="{{ 'nabz.footer.shop' | t }}">
+          {% for link in section.settings.footer_menu.links %}
+            <a href="{{ link.url }}">{{ link.title | escape }}</a>
+          {% endfor %}
+        </nav>
+      </div>
+      <div>
+        <p class="nabz-footer__label">{{ 'nabz.footer.information' | t }}</p>
+        <nav aria-label="{{ 'nabz.footer.information' | t }}">
+          {% for policy in shop.policies %}
+            {% if policy.url != blank %}
+              <a href="{{ policy.url }}">{{ policy.title | escape }}</a>
+            {% endif %}
+          {% endfor %}
+          {% if section.settings.instagram != blank %}
+            <a href="{{ section.settings.instagram }}" rel="noopener" target="_blank">Instagram</a>
+          {% endif %}
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <div class="nabz-footer__bottom">
+    <span>{{ 'nabz.footer.copyright' | t: year: current_year }}</span>
+    <span>{{ 'nabz.nav.announcement' | t }}</span>
+  </div>
+</section>
+
+{% stylesheet %}
+  .nabz-footer {
+    padding: clamp(70px, 9vw, 150px) clamp(20px, 5vw, 80px) 28px;
+    color: var(--nabz-cloth);
+    background: var(--nabz-ink);
+    border-top: 1px solid rgb(238 227 210 / 14%);
+  }
+
+  .nabz-footer__top {
+    display: grid;
+    grid-template-columns: .8fr 1.3fr 1fr;
+    gap: clamp(46px, 7vw, 120px);
+    width: min(100%, 1480px);
+    margin-inline: auto;
+  }
+
+  .nabz-footer__wordmark {
+    display: block;
+    width: min(260px, 100%);
+    color: var(--nabz-cloth);
+  }
+
+  .nabz-footer__wordmark svg {
+    display: block;
+    width: 100%;
+  }
+
+  .nabz-footer__wordmark text {
+    fill: currentColor;
+    font-family: var(--nabz-serif);
+    font-size: 82px;
+  }
+
+  .nabz-footer__wordmark path {
+    fill: none;
+    stroke: var(--nabz-copper);
+    stroke-width: 6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .nabz-footer__brand p,
+  .nabz-footer__signup > p {
+    color: rgb(238 227 210 / 66%);
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .nabz-footer__signup h2 {
+    max-width: 540px;
+    margin: 0 0 14px;
+    color: var(--nabz-cloth);
+    font-size: clamp(36px, 4vw, 64px);
+    line-height: .98;
+  }
+
+  .nabz-footer__signup > p {
+    max-width: 470px;
+    margin: 0 0 28px;
+  }
+
+  .nabz-footer__form {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    max-width: 560px;
+    border-bottom: 1px solid rgb(238 227 210 / 42%);
+  }
+
+  .nabz-footer__form input {
+    min-width: 0;
+    padding: 16px 2px;
+    color: var(--nabz-cloth);
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    font-size: 14px;
+  }
+
+  .nabz-footer__form input::placeholder {
+    color: rgb(238 227 210 / 45%);
+  }
+
+  .nabz-footer__form button {
+    padding: 16px 2px 16px 24px;
+    color: var(--nabz-cloth);
+    background: transparent;
+    border: 0;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+
+  .nabz-footer__success,
+  .nabz-footer__form .errors {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    color: var(--nabz-cloth);
+    font-size: 12px;
+  }
+
+  .nabz-footer__links {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 30px;
+  }
+
+  .nabz-footer__label {
+    margin: 0 0 20px;
+    color: var(--nabz-copper);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+
+  .nabz-footer__links nav {
+    display: grid;
+    gap: 12px;
+  }
+
+  .nabz-footer__links a {
+    width: fit-content;
+    color: rgb(238 227 210 / 72%);
+    font-size: 13px;
+    text-decoration: none;
+  }
+
+  .nabz-footer__links a:hover,
+  .nabz-footer__links a:focus-visible {
+    color: var(--nabz-cloth);
+  }
+
+  .nabz-footer__bottom {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    width: min(100%, 1480px);
+    margin: clamp(72px, 9vw, 140px) auto 0;
+    padding-top: 22px;
+    color: rgb(238 227 210 / 45%);
+    border-top: 1px solid rgb(238 227 210 / 14%);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 989px) {
+    .nabz-footer__top {
+      grid-template-columns: 1fr 1.5fr;
+    }
+
+    .nabz-footer__links {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .nabz-footer {
+      padding-inline: 22px;
+    }
+
+    .nabz-footer__top {
+      grid-template-columns: 1fr;
+    }
+
+    .nabz-footer__links {
+      grid-column: auto;
+    }
+
+    .nabz-footer__bottom {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:nabz.sections.footer",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "footer_menu",
+      "label": "t:nabz.settings.footer_menu",
+      "default": "footer"
+    },
+    {
+      "type": "url",
+      "id": "instagram",
+      "label": "t:nabz.settings.instagram"
+    }
+  ]
+}
+{% endschema %}

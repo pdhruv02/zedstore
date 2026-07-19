@@ -1,0 +1,395 @@
+{% liquid
+  assign hero_product = section.settings.contour_product
+  assign hero_url = routes.all_products_collection_url
+  if hero_product != blank
+    assign hero_url = hero_product.url
+  endif
+%}
+
+<section class="nabz-build" data-nabz-build id="NabzBuild-{{ section.id }}">
+  <div class="nabz-build__sticky">
+    <div class="nabz-build__media" role="img" aria-label="{{ 'nabz.hero.image_alt' | t }}">
+      {% for index in (1..15) %}
+        <div class="nabz-build__layer nabz-build__layer--{{ index }}" data-build-layer="{{ forloop.index0 }}"></div>
+      {% endfor %}
+      <div class="nabz-build__shade"></div>
+    </div>
+
+    <div class="nabz-build__content">
+      <p class="nabz-kicker">{{ 'nabz.hero.eyebrow' | t }}</p>
+      <div class="nabz-build__stages" data-build-stages>
+        <p data-build-copy="0">{{ 'nabz.hero.stage_1' | t }}</p>
+        <p data-build-copy="1">{{ 'nabz.hero.stage_2' | t }}</p>
+        <p data-build-copy="2">{{ 'nabz.hero.stage_3' | t }}</p>
+        <p data-build-copy="3">{{ 'nabz.hero.stage_4' | t }}</p>
+      </div>
+      <div class="nabz-build__resolution" data-build-resolution>
+        <h1>{{ 'nabz.hero.headline' | t }}</h1>
+        <p>{{ 'nabz.hero.body' | t }}</p>
+        <a class="nabz-button nabz-button--light" href="{{ hero_url }}">{{ 'nabz.hero.cta' | t }}</a>
+      </div>
+    </div>
+
+    <div class="nabz-build__rail" aria-label="{{ 'nabz.hero.progress' | t }}">
+      <span data-build-number>01</span>
+      <div><i data-build-progress></i></div>
+      <span>04</span>
+    </div>
+
+    <button class="nabz-build__skip" type="button" data-build-skip>{{ 'nabz.hero.skip' | t }}</button>
+  </div>
+</section>
+
+{% stylesheet %}
+  .nabz-build .nabz-kicker {
+    position: relative;
+  }
+
+  .nabz-build .nabz-button,
+  .nabz-build .nabz-button--light {
+    width: fit-content;
+  }
+
+  .nabz-build {
+    position: relative;
+    height: 390vh;
+    color: var(--nabz-cloth);
+    background: var(--nabz-ink);
+  }
+
+  .nabz-build__sticky {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    min-height: 680px;
+    overflow: hidden;
+    background: var(--nabz-ink);
+  }
+
+  .nabz-build__media,
+  .nabz-build__layer,
+  .nabz-build__shade {
+    position: absolute;
+    inset: 0;
+  }
+
+  .nabz-build__media {
+    background: #171310;
+  }
+
+  .nabz-build__layer {
+    opacity: 0;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    transition: opacity .42s cubic-bezier(.2,.7,.2,1);
+    will-change: opacity;
+  }
+
+  .nabz-build__layer--1 { background-image: url('nabz-build-01.webp'); }
+  .nabz-build__layer--2 { background-image: url('nabz-build-02.webp'); }
+  .nabz-build__layer--3 { background-image: url('nabz-build-03.webp'); }
+  .nabz-build__layer--4 { background-image: url('nabz-build-04.webp'); }
+  .nabz-build__layer--5 { background-image: url('nabz-build-05.webp'); }
+  .nabz-build__layer--6 { background-image: url('nabz-build-06.webp'); }
+  .nabz-build__layer--7 { background-image: url('nabz-build-07.webp'); }
+  .nabz-build__layer--8 { background-image: url('nabz-build-08.webp'); }
+  .nabz-build__layer--9 { background-image: url('nabz-build-09.webp'); }
+  .nabz-build__layer--10 { background-image: url('nabz-build-10.webp'); }
+  .nabz-build__layer--11 { background-image: url('nabz-build-11.webp'); }
+  .nabz-build__layer--12 { background-image: url('nabz-build-12.webp'); }
+  .nabz-build__layer--13 { background-image: url('nabz-build-13.webp'); }
+  .nabz-build__layer--14 { background-image: url('nabz-build-14.webp'); }
+  .nabz-build__layer--15 { background-image: url('nabz-build-15.webp'); }
+
+  .nabz-build__shade {
+    z-index: 20;
+    background:
+      linear-gradient(90deg, rgb(12 9 7 / 86%) 0%, rgb(12 9 7 / 50%) 34%, transparent 64%),
+      linear-gradient(0deg, rgb(12 9 7 / 46%) 0%, transparent 42%);
+    pointer-events: none;
+  }
+
+  .nabz-build__content {
+    position: absolute;
+    z-index: 22;
+    top: 50%;
+    left: max(48px, calc((100vw - 1480px) / 2));
+    width: min(510px, 38vw);
+    transform: translateY(-43%);
+  }
+
+  .nabz-build__stages {
+    position: relative;
+    min-height: clamp(118px, 11vw, 180px);
+  }
+
+  .nabz-build__stages p {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    font-family: var(--nabz-serif);
+    font-size: clamp(46px, 6.5vw, 104px);
+    letter-spacing: -.055em;
+    line-height: .9;
+    transform: translateY(24px);
+    transition: opacity .5s ease, transform .6s cubic-bezier(.2,.7,.2,1);
+  }
+
+  .nabz-build__stages p.is-active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .nabz-build__resolution {
+    position: absolute;
+    top: 35px;
+    left: 0;
+    width: min(520px, 38vw);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(24px);
+    transition: opacity .6s ease, transform .7s cubic-bezier(.2,.7,.2,1);
+  }
+
+  .nabz-build__resolution.is-active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .nabz-build__resolution h1 {
+    margin: 0 0 24px;
+    color: var(--nabz-cloth);
+    font-size: clamp(46px, 5.4vw, 86px);
+    line-height: .92;
+  }
+
+  .nabz-build__resolution > p {
+    max-width: 470px;
+    margin: 0 0 30px;
+    color: rgb(238 227 210 / 76%);
+    font-size: clamp(14px, 1.2vw, 18px);
+    line-height: 1.65;
+  }
+
+  .nabz-build__rail {
+    position: absolute;
+    z-index: 23;
+    right: max(30px, calc((100vw - 1480px) / 2));
+    bottom: 46px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: rgb(238 227 210 / 58%);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .15em;
+  }
+
+  .nabz-build__rail div {
+    position: relative;
+    width: 110px;
+    height: 1px;
+    overflow: hidden;
+    background: rgb(238 227 210 / 24%);
+  }
+
+  .nabz-build__rail i {
+    position: absolute;
+    inset: 0;
+    display: block;
+    background: var(--nabz-copper);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  .nabz-build__skip {
+    position: absolute;
+    z-index: 24;
+    right: max(30px, calc((100vw - 1480px) / 2));
+    top: 34px;
+    padding: 8px 0;
+    color: rgb(238 227 210 / 64%);
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid rgb(238 227 210 / 26%);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 749px) {
+    .nabz-build {
+      height: 420vh;
+    }
+
+    .nabz-build__sticky {
+      min-height: 620px;
+    }
+
+    .nabz-build__layer {
+      background-position: center top;
+    }
+
+    .nabz-build__layer--1 { background-image: url('nabz-build-01-mobile.webp'); }
+    .nabz-build__layer--2 { background-image: url('nabz-build-02-mobile.webp'); }
+    .nabz-build__layer--3 { background-image: url('nabz-build-03-mobile.webp'); }
+    .nabz-build__layer--4 { background-image: url('nabz-build-04-mobile.webp'); }
+    .nabz-build__layer--5 { background-image: url('nabz-build-05-mobile.webp'); }
+    .nabz-build__layer--6 { background-image: url('nabz-build-06-mobile.webp'); }
+    .nabz-build__layer--7 { background-image: url('nabz-build-07-mobile.webp'); }
+    .nabz-build__layer--8 { background-image: url('nabz-build-08-mobile.webp'); }
+    .nabz-build__layer--9 { background-image: url('nabz-build-09-mobile.webp'); }
+    .nabz-build__layer--10 { background-image: url('nabz-build-10-mobile.webp'); }
+    .nabz-build__layer--11 { background-image: url('nabz-build-11-mobile.webp'); }
+    .nabz-build__layer--12 { background-image: url('nabz-build-12-mobile.webp'); }
+    .nabz-build__layer--13 { background-image: url('nabz-build-13-mobile.webp'); }
+    .nabz-build__layer--14 { background-image: url('nabz-build-14-mobile.webp'); }
+    .nabz-build__layer--15 { background-image: url('nabz-build-15-mobile.webp'); }
+
+    .nabz-build__shade {
+      background:
+        linear-gradient(0deg, rgb(12 9 7 / 92%) 0%, rgb(12 9 7 / 64%) 30%, transparent 62%),
+        linear-gradient(90deg, rgb(12 9 7 / 22%), transparent 60%);
+    }
+
+    .nabz-build__content {
+      top: auto;
+      right: 22px;
+      bottom: 78px;
+      left: 22px;
+      width: auto;
+      transform: none;
+    }
+
+    .nabz-build__stages {
+      min-height: 92px;
+    }
+
+    .nabz-build__stages p {
+      font-size: clamp(44px, 14vw, 66px);
+    }
+
+    .nabz-build__resolution {
+      top: -34px;
+      width: 100%;
+    }
+
+    .nabz-build__resolution h1 {
+      margin-bottom: 16px;
+      font-size: clamp(44px, 12vw, 62px);
+    }
+
+    .nabz-build__resolution > p {
+      display: none;
+    }
+
+    .nabz-build__rail {
+      right: 22px;
+      bottom: 28px;
+    }
+
+    .nabz-build__skip {
+      top: 20px;
+      right: 22px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nabz-build {
+      height: 100svh;
+    }
+
+    .nabz-build__layer {
+      opacity: 0 !important;
+    }
+
+    .nabz-build__layer--15 {
+      opacity: 1 !important;
+    }
+
+    .nabz-build__stages,
+    .nabz-build__rail,
+    .nabz-build__skip {
+      display: none;
+    }
+
+    .nabz-build__resolution {
+      position: static;
+      opacity: 1;
+      pointer-events: auto;
+      transform: none;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  document.querySelectorAll('[data-nabz-build]').forEach((section) => {
+    const layers = Array.from(section.querySelectorAll('[data-build-layer]'));
+    const copies = Array.from(section.querySelectorAll('[data-build-copy]'));
+    const resolution = section.querySelector('[data-build-resolution]');
+    const progressBar = section.querySelector('[data-build-progress]');
+    const progressNumber = section.querySelector('[data-build-number]');
+    const skipButton = section.querySelector('[data-build-skip]');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let frameRequested = false;
+
+    const render = () => {
+      frameRequested = false;
+      if (reducedMotion) return;
+      const rect = section.getBoundingClientRect();
+      const distance = Math.max(section.offsetHeight - window.innerHeight, 1);
+      const progress = Math.min(Math.max(-rect.top / distance, 0), 1);
+      const layerIndex = Math.min(Math.floor(progress * layers.length), layers.length - 1);
+      const copyIndex = Math.min(Math.floor(progress * 4.15), 3);
+      const resolved = progress > .82;
+
+      layers.forEach((layer, index) => {
+        layer.style.opacity = index <= layerIndex ? '1' : '0';
+      });
+
+      copies.forEach((copy, index) => copy.classList.toggle('is-active', index === copyIndex && !resolved));
+      resolution?.classList.toggle('is-active', resolved);
+      if (progressBar) progressBar.style.transform = `scaleX(${progress})`;
+      if (progressNumber) progressNumber.textContent = String(copyIndex + 1).padStart(2, '0');
+    };
+
+    const requestRender = () => {
+      if (frameRequested) return;
+      frameRequested = true;
+      window.requestAnimationFrame(render);
+    };
+
+    skipButton?.addEventListener('click', () => {
+      const target = section.offsetTop + section.offsetHeight - window.innerHeight;
+      window.scrollTo({ top: target, behavior: 'smooth' });
+    });
+
+    layers[0].style.opacity = '1';
+    copies[0]?.classList.add('is-active');
+    render();
+    window.addEventListener('scroll', requestRender, { passive: true });
+    window.addEventListener('resize', requestRender, { passive: true });
+  });
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "t:nabz.sections.hero",
+  "settings": [
+    {
+      "type": "product",
+      "id": "contour_product",
+      "label": "t:nabz.settings.contour_product"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:nabz.sections.hero"
+    }
+  ]
+}
+{% endschema %}

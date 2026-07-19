@@ -1,0 +1,187 @@
+{% liquid
+  assign air_product = section.settings.air_product
+  assign contour_product = section.settings.contour_product
+  assign shop_url = routes.all_products_collection_url
+  assign air_url = shop_url
+  assign contour_url = shop_url
+  if air_product != blank
+    assign air_url = air_product.url
+  endif
+  if contour_product != blank
+    assign contour_url = contour_product.url
+  endif
+%}
+
+<section class="nabz-drop">
+  <div class="nabz-drop__image" role="img" aria-label="{{ 'nabz.drop.logo_alt' | t }}" data-nabz-reveal></div>
+  <div class="nabz-drop__content" data-nabz-reveal>
+    <p class="nabz-kicker">{{ 'nabz.drop.eyebrow' | t }}</p>
+    <h2>{{ 'nabz.drop.headline' | t }}</h2>
+    <p>{{ 'nabz.drop.body' | t }}</p>
+    <div class="nabz-drop__products">
+      <a href="{{ air_url }}"><span>01</span>{{ 'nabz.drop.air' | t }}</a>
+      <a href="{{ contour_url }}"><span>02</span>{{ 'nabz.drop.contour' | t }}</a>
+    </div>
+    <a class="nabz-button nabz-button--light" href="{{ shop_url }}">{{ 'nabz.drop.cta' | t }}</a>
+  </div>
+  <svg class="nabz-drop__pulse" viewBox="0 0 1200 240" aria-hidden="true" focusable="false">
+    <path pathLength="1" d="M-10 130H310l70-64 94 126L590 10l124 120h496"/>
+  </svg>
+</section>
+
+{% stylesheet %}
+  .nabz-drop .nabz-button,
+  .nabz-drop .nabz-button--light {
+    width: fit-content;
+  }
+
+  .nabz-drop {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(420px, .88fr) minmax(420px, 1.12fr);
+    gap: clamp(60px, 10vw, 180px);
+    align-items: center;
+    min-height: 100svh;
+    padding: clamp(90px, 11vw, 170px) max(24px, calc((100vw - 1480px) / 2));
+    overflow: hidden;
+    color: var(--nabz-cloth);
+    background: var(--nabz-ink);
+  }
+
+  .nabz-drop__image {
+    position: relative;
+    z-index: 2;
+    width: min(100%, 720px);
+    aspect-ratio: 1;
+    background-image: url('nabz-embroidered-closing.webp');
+    background-position: center;
+    background-size: cover;
+    box-shadow: 0 50px 100px rgb(0 0 0 / 28%);
+  }
+
+  .nabz-drop__content {
+    position: relative;
+    z-index: 3;
+    max-width: 680px;
+  }
+
+  .nabz-drop__content h2 {
+    margin: 0 0 26px;
+    color: var(--nabz-cloth);
+    font-size: clamp(58px, 7vw, 112px);
+    line-height: .87;
+  }
+
+  .nabz-drop__content > p:not(.nabz-kicker) {
+    margin: 0;
+    color: rgb(238 227 210 / 62%);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+  }
+
+  .nabz-drop__products {
+    display: grid;
+    margin: 38px 0;
+    border-top: 1px solid rgb(238 227 210 / 20%);
+  }
+
+  .nabz-drop__products a {
+    display: grid;
+    grid-template-columns: 54px 1fr auto;
+    align-items: center;
+    padding: 19px 0;
+    color: var(--nabz-cloth);
+    border-bottom: 1px solid rgb(238 227 210 / 20%);
+    font-family: var(--nabz-serif);
+    font-size: clamp(24px, 2.4vw, 38px);
+    text-decoration: none;
+  }
+
+  .nabz-drop__products a::after {
+    content: '↗';
+    color: var(--nabz-copper);
+    font-family: var(--nabz-sans);
+    font-size: 16px;
+  }
+
+  .nabz-drop__products a span {
+    color: var(--nabz-copper);
+    font: 700 9px/1 var(--nabz-sans);
+    letter-spacing: .14em;
+  }
+
+  .nabz-drop__pulse {
+    position: absolute;
+    z-index: 1;
+    right: -4vw;
+    bottom: 2vw;
+    width: 76vw;
+    opacity: .18;
+    pointer-events: none;
+  }
+
+  .nabz-drop__pulse path {
+    fill: none;
+    stroke: var(--nabz-copper);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 2s cubic-bezier(.2,.7,.2,1) .3s;
+  }
+
+  .nabz-drop:has(.nabz-drop__content.is-visible) .nabz-drop__pulse path {
+    stroke-dashoffset: 0;
+  }
+
+  @media (max-width: 989px) {
+    .nabz-drop {
+      grid-template-columns: 1fr;
+    }
+
+    .nabz-drop__image {
+      width: min(82vw, 680px);
+    }
+  }
+
+  @media (max-width: 749px) {
+    .nabz-drop {
+      gap: 70px;
+      padding: 100px 22px;
+    }
+
+    .nabz-drop__image {
+      width: 100%;
+    }
+
+    .nabz-drop__content h2 {
+      font-size: clamp(54px, 16vw, 78px);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:nabz.sections.drop",
+  "settings": [
+    {
+      "type": "product",
+      "id": "air_product",
+      "label": "t:nabz.settings.air_product"
+    },
+    {
+      "type": "product",
+      "id": "contour_product",
+      "label": "t:nabz.settings.contour_product"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:nabz.sections.drop"
+    }
+  ]
+}
+{% endschema %}

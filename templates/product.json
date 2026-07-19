@@ -272,6 +272,10 @@
         "padding-block-end": 0
       }
     },
+    "nabz_assurances": {
+      "type": "nabz-product-assurances",
+      "settings": {}
+    },
     "product_recommendations_qggXJq": {
       "type": "product-recommendations",
       "blocks": {
@@ -410,6 +414,7 @@
   },
   "order": [
     "main",
+    "nabz_assurances",
     "product_recommendations_qggXJq"
   ]
 }

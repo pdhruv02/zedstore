@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-labelledby="title description">
+  <title id="title">NABZ fit system</title>
+  <desc id="description">A shirt diagram showing body size and shirt length as two independent fit choices.</desc>
+  <defs>
+    <style>
+      .label{font:500 22px Arial,sans-serif;letter-spacing:.18em;fill:#b9ad9d}
+      .small{font:400 19px Arial,sans-serif;letter-spacing:.05em;fill:#b9ad9d}
+      .choice{font:500 28px Arial,sans-serif;letter-spacing:.12em;fill:#eee3d2}
+      .number{font:400 18px Arial,sans-serif;letter-spacing:.06em;fill:#eee3d2}
+      .line{fill:none;stroke:#e8dcc9;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+      .ghost{fill:none;stroke:#5c5147;stroke-width:2;stroke-dasharray:7 10}
+      .copper{fill:none;stroke:#b1522c;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+      .hairline{fill:none;stroke:#7d7063;stroke-width:1.5}
+    </style>
+  </defs>
+
+  <rect width="1600" height="1000" fill="#17120f"/>
+  <g id="background-thread" opacity=".22">
+    <path class="hairline" d="M40 210C270 80 430 340 650 200S1050 60 1280 210 1500 300 1580 230"/>
+    <path class="hairline" d="M20 820C270 700 455 930 700 800S1090 680 1340 840 1510 900 1600 830"/>
+  </g>
+
+  <text x="80" y="88" class="label">NABZ FIT SYSTEM</text>
+  <text x="80" y="128" class="small">Choose room. Then choose length.</text>
+
+  <g id="shirt-diagram" transform="translate(120 145)">
+    <g id="size-outlines">
+      <path id="outline-size-s" class="ghost" d="M205 185L330 105 405 68 478 105 603 185 555 265 520 225 520 675 88 675 88 225 53 265 5 185 130 105 205 68Z" opacity="0"/>
+      <path id="outline-size-m" class="line" d="M185 185L326 100 405 62 484 100 625 185 571 275 526 224 526 675 84 675 84 224 39 275-15 185 126 100 205 62Z"/>
+      <path id="outline-size-l" class="ghost" d="M165 185L322 95 405 56 488 95 645 185 587 285 532 223 532 675 78 675 78 223 23 285-35 185 122 95 205 56Z" opacity="0"/>
+    </g>
+
+    <path id="collar" class="line" d="M326 100L350 170 405 204 460 170 484 100M350 170L405 124 460 170"/>
+    <path id="placket" class="line" d="M405 204V675"/>
+    <path id="yoke" class="line" d="M205 62L246 147Q405 220 564 147L605 62" opacity=".72"/>
+    <path id="shoulder-stay-left" class="copper" d="M205 65L326 102"/>
+    <path id="shoulder-stay-right" class="copper" d="M484 102L605 65"/>
+
+    <g id="width-measurement">
+      <path class="copper" d="M85 390H525M85 373V407M525 373V407"/>
+      <rect x="242" y="362" width="126" height="56" rx="28" fill="#17120f" stroke="#b1522c" stroke-width="2"/>
+      <text x="305" y="399" text-anchor="middle" class="choice" style="font-size:21px">ROOM</text>
+    </g>
+
+    <g id="length-measurement">
+      <path class="copper" d="M670 185V675M652 185H688M652 675H688"/>
+      <path id="hem-extended" class="ghost" d="M84 740H526"/>
+      <path id="extended-drop" class="ghost" d="M670 675V740M652 740H688"/>
+      <text x="706" y="442" class="choice" transform="rotate(90 706 442)" style="font-size:21px">LENGTH</text>
+    </g>
+  </g>
+
+  <g id="fit-controls" transform="translate(975 225)">
+    <text x="0" y="0" class="label">01 / BODY ROOM</text>
+    <g id="size-options" transform="translate(0 38)">
+      <rect x="0" y="0" width="112" height="74" rx="37" class="hairline"/>
+      <text x="56" y="48" text-anchor="middle" class="choice">S</text>
+      <rect x="130" y="0" width="112" height="74" rx="37" fill="#b1522c"/>
+      <text x="186" y="48" text-anchor="middle" class="choice">M</text>
+      <rect x="260" y="0" width="112" height="74" rx="37" class="hairline"/>
+      <text x="316" y="48" text-anchor="middle" class="choice">L</text>
+    </g>
+
+    <text x="0" y="205" class="label">02 / SHIRT LENGTH</text>
+    <g id="length-options" transform="translate(0 242)">
+      <rect x="0" y="0" width="214" height="74" rx="37" fill="#b1522c"/>
+      <text x="107" y="48" text-anchor="middle" class="choice" style="font-size:22px">STANDARD</text>
+      <rect x="232" y="0" width="214" height="74" rx="37" class="hairline"/>
+      <text x="339" y="48" text-anchor="middle" class="choice" style="font-size:22px">EXTENDED</text>
+    </g>
+
+    <path class="hairline" d="M0 390H500"/>
+    <text x="0" y="438" class="small">M / STANDARD</text>
+    <text x="500" y="438" text-anchor="end" class="number">27 IN</text>
+    <text x="0" y="485" class="small">M / EXTENDED</text>
+    <text x="500" y="485" text-anchor="end" class="number">28.5 IN</text>
+    <path class="hairline" d="M0 520H500"/>
+
+    <text x="0" y="578" class="small">S is available in Standard.</text>
+    <text x="0" y="612" class="small">M and L are available in Standard or Extended.</text>
+    <text x="0" y="680" class="small" fill="#eee3d2">Height helps you start. Proportion decides the fit.</text>
+  </g>
+
+  <text x="80" y="940" class="small">Natural shoulder • stable yoke • controlled untucked proportion</text>
+</svg>

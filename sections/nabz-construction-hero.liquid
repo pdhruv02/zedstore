@@ -1,0 +1,410 @@
+{% liquid
+  assign hero_product = section.settings.contour_product
+  assign hero_url = routes.all_products_collection_url
+  if hero_product != blank
+    assign hero_url = hero_product.url
+  endif
+
+  assign desktop_frames = 'nabz-build-01.webp,nabz-build-02.webp,nabz-build-03.webp,nabz-build-04.webp,nabz-build-05.webp,nabz-build-06.webp,nabz-build-07.webp,nabz-build-08.webp,nabz-build-09.webp,nabz-build-10.webp,nabz-build-11.webp,nabz-build-12.webp,nabz-build-13.webp,nabz-build-14.webp,nabz-build-15.webp' | split: ','
+  assign mobile_frames = 'nabz-build-01-mobile.webp,nabz-build-02-mobile.webp,nabz-build-03-mobile.webp,nabz-build-04-mobile.webp,nabz-build-05-mobile.webp,nabz-build-06-mobile.webp,nabz-build-07-mobile.webp,nabz-build-08-mobile.webp,nabz-build-09-mobile.webp,nabz-build-10-mobile.webp,nabz-build-11-mobile.webp,nabz-build-12-mobile.webp,nabz-build-13-mobile.webp,nabz-build-14-mobile.webp,nabz-build-15-mobile.webp' | split: ','
+%}
+
+<section class="nabz-build" data-nabz-build id="NabzBuild-{{ section.id }}">
+  <div class="nabz-build__sticky">
+    <div class="nabz-build__media" role="img" aria-label="{{ 'nabz.hero.image_alt' | t }}">
+      {% for frame in desktop_frames %}
+        {% assign mobile_frame = mobile_frames[forloop.index0] %}
+        <picture class="nabz-build__layer" data-build-layer="{{ forloop.index0 }}">
+          <source media="(max-width: 749px)" srcset="{{ mobile_frame | asset_url }}">
+          <img
+            src="{{ frame | asset_url }}"
+            alt=""
+            width="2560"
+            height="1440"
+            loading="eager"
+            decoding="async"
+            {% if forloop.first %}fetchpriority="high"{% endif %}
+          >
+        </picture>
+      {% endfor %}
+      <div class="nabz-build__shade"></div>
+    </div>
+
+    <div class="nabz-build__content">
+      <p class="nabz-kicker">{{ 'nabz.hero.eyebrow' | t }}</p>
+      <div class="nabz-build__stages" data-build-stages>
+        <p data-build-copy="0">{{ 'nabz.hero.stage_1' | t }}</p>
+        <p data-build-copy="1">{{ 'nabz.hero.stage_2' | t }}</p>
+        <p data-build-copy="2">{{ 'nabz.hero.stage_3' | t }}</p>
+        <p data-build-copy="3">{{ 'nabz.hero.stage_4' | t }}</p>
+      </div>
+      <div class="nabz-build__resolution" data-build-resolution>
+        <h1>{{ 'nabz.hero.headline' | t }}</h1>
+        <p>{{ 'nabz.hero.body' | t }}</p>
+        <a class="nabz-button nabz-button--light" href="{{ hero_url }}">{{ 'nabz.hero.cta' | t }}</a>
+      </div>
+    </div>
+
+    <div class="nabz-build__status">
+      <span data-build-number>01</span>
+      <div aria-hidden="true"><i data-build-progress></i></div>
+      <span>15</span>
+    </div>
+
+    <button class="nabz-build__skip" type="button" data-build-skip>{{ 'nabz.hero.skip' | t }}</button>
+  </div>
+</section>
+
+{% stylesheet %}
+  .nabz-build .nabz-button,
+  .nabz-build .nabz-button--light {
+    position: relative;
+  }
+
+  .nabz-build {
+    position: relative;
+    height: 470vh;
+    color: var(--nabz-cloth);
+    background: var(--nabz-ink);
+  }
+
+  .nabz-build__sticky {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    min-height: 650px;
+    overflow: hidden;
+    background: var(--nabz-ink);
+  }
+
+  .nabz-build__media,
+  .nabz-build__layer,
+  .nabz-build__shade {
+    position: absolute;
+    inset: 0;
+  }
+
+  .nabz-build__media {
+    background: #13100e;
+  }
+
+  .nabz-build__layer {
+    display: block;
+    margin: 0;
+    opacity: 0;
+    transition: opacity .18s linear;
+    will-change: opacity;
+  }
+
+  .nabz-build__layer:first-child {
+    opacity: 1;
+  }
+
+  .nabz-build__layer img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .nabz-build__shade {
+    z-index: 20;
+    background:
+      linear-gradient(90deg, rgb(8 6 5 / 82%) 0%, rgb(8 6 5 / 50%) 31%, transparent 59%),
+      linear-gradient(0deg, rgb(8 6 5 / 25%) 0%, transparent 38%);
+    pointer-events: none;
+  }
+
+  .nabz-build__content {
+    position: absolute;
+    z-index: 22;
+    top: 50%;
+    left: max(32px, calc((100vw - 1480px) / 2));
+    width: min(470px, 36vw);
+    transform: translateY(-42%);
+  }
+
+  .nabz-build__content .nabz-kicker {
+    color: rgb(238 227 210 / 68%);
+  }
+
+  .nabz-build__stages {
+    position: relative;
+    min-height: 128px;
+  }
+
+  .nabz-build__stages p {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    color: var(--nabz-cloth);
+    font-family: var(--nabz-serif);
+    font-size: clamp(42px, 4.6vw, 72px);
+    letter-spacing: -.03em;
+    line-height: .98;
+    transform: translateY(14px);
+    transition: opacity .38s ease, transform .5s cubic-bezier(.2, .7, .2, 1);
+  }
+
+  .nabz-build__stages p.is-active {
+    opacity: 1;
+    transform: none;
+  }
+
+  .nabz-build__resolution {
+    position: absolute;
+    top: 24px;
+    left: 0;
+    width: min(490px, 38vw);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(18px);
+    transition: opacity .48s ease, transform .55s cubic-bezier(.2, .7, .2, 1);
+  }
+
+  .nabz-build__resolution.is-active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+
+  .nabz-build__resolution h1 {
+    margin: 0 0 20px;
+    color: var(--nabz-cloth);
+    font-size: clamp(42px, 4.6vw, 70px);
+    letter-spacing: -.03em;
+    line-height: .98;
+  }
+
+  .nabz-build__resolution > p {
+    max-width: 440px;
+    margin: 0 0 28px;
+    color: rgb(238 227 210 / 72%);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .nabz-build__status {
+    position: absolute;
+    z-index: 23;
+    right: max(32px, calc((100vw - 1480px) / 2));
+    bottom: 38px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    color: rgb(238 227 210 / 55%);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: .14em;
+  }
+
+  .nabz-build__status div {
+    position: relative;
+    width: 104px;
+    height: 1px;
+    overflow: hidden;
+    background: rgb(238 227 210 / 22%);
+  }
+
+  .nabz-build__status i {
+    position: absolute;
+    inset: 0;
+    display: block;
+    background: var(--nabz-copper);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  .nabz-build__skip {
+    position: absolute;
+    z-index: 24;
+    right: max(32px, calc((100vw - 1480px) / 2));
+    top: 94px;
+    padding: 6px 0;
+    color: rgb(238 227 210 / 58%);
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid rgb(238 227 210 / 26%);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 749px) {
+    .nabz-build {
+      height: 510vh;
+    }
+
+    .nabz-build__sticky {
+      min-height: 600px;
+    }
+
+    .nabz-build__layer img {
+      object-position: center;
+    }
+
+    .nabz-build__shade {
+      background:
+        linear-gradient(0deg, rgb(8 6 5 / 88%) 0%, rgb(8 6 5 / 38%) 32%, transparent 57%),
+        linear-gradient(270deg, rgb(8 6 5 / 40%) 0%, transparent 58%);
+    }
+
+    .nabz-build__content {
+      top: auto;
+      right: 20px;
+      bottom: 72px;
+      left: 20px;
+      width: auto;
+      transform: none;
+    }
+
+    .nabz-build__content .nabz-kicker {
+      margin-bottom: 12px;
+      font-size: 9px;
+    }
+
+    .nabz-build__stages {
+      min-height: 72px;
+    }
+
+    .nabz-build__stages p {
+      max-width: 300px;
+      font-size: clamp(34px, 10vw, 46px);
+      line-height: 1;
+    }
+
+    .nabz-build__resolution {
+      top: auto;
+      bottom: 0;
+      width: 100%;
+    }
+
+    .nabz-build__resolution h1 {
+      max-width: 350px;
+      margin-bottom: 14px;
+      font-size: clamp(38px, 10.5vw, 50px);
+      line-height: .98;
+    }
+
+    .nabz-build.is-resolved .nabz-build__content > .nabz-kicker {
+      opacity: 0;
+    }
+
+    .nabz-build__resolution > p {
+      display: none;
+    }
+
+    .nabz-build__status {
+      right: 20px;
+      bottom: 24px;
+    }
+
+    .nabz-build__status div {
+      width: 78px;
+    }
+
+    .nabz-build__skip {
+      top: 82px;
+      right: 20px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nabz-build {
+      height: 100svh;
+    }
+
+    .nabz-build__layer {
+      opacity: 0 !important;
+    }
+
+    .nabz-build__layer:last-of-type {
+      opacity: 1 !important;
+    }
+
+    .nabz-build__stages,
+    .nabz-build__status,
+    .nabz-build__skip {
+      display: none;
+    }
+
+    .nabz-build__resolution {
+      position: static;
+      opacity: 1;
+      pointer-events: auto;
+      transform: none;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  document.querySelectorAll('[data-nabz-build]').forEach((section) => {
+    const layers = Array.from(section.querySelectorAll('[data-build-layer]'));
+    const copies = Array.from(section.querySelectorAll('[data-build-copy]'));
+    const resolution = section.querySelector('[data-build-resolution]');
+    const progressBar = section.querySelector('[data-build-progress]');
+    const progressNumber = section.querySelector('[data-build-number]');
+    const skipButton = section.querySelector('[data-build-skip]');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let frameRequested = false;
+
+    const render = () => {
+      frameRequested = false;
+      if (reducedMotion) return;
+
+      const rect = section.getBoundingClientRect();
+      const distance = Math.max(section.offsetHeight - window.innerHeight, 1);
+      const progress = Math.min(Math.max(-rect.top / distance, 0), 1);
+      const copyIndex = Math.min(Math.floor(progress * 4.1), 3);
+      const resolved = progress >= .84;
+      const layerIndex = resolved
+        ? layers.length - 1
+        : Math.min(Math.floor(progress * layers.length), layers.length - 1);
+
+      layers.forEach((layer, index) => {
+        layer.style.opacity = index <= layerIndex ? '1' : '0';
+      });
+      copies.forEach((copy, index) => copy.classList.toggle('is-active', index === copyIndex && !resolved));
+      resolution?.classList.toggle('is-active', resolved);
+      section.classList.toggle('is-resolved', resolved);
+      if (progressBar) progressBar.style.transform = `scaleX(${progress})`;
+      if (progressNumber) progressNumber.textContent = String(layerIndex + 1).padStart(2, '0');
+    };
+
+    const requestRender = () => {
+      if (frameRequested) return;
+      frameRequested = true;
+      requestAnimationFrame(render);
+    };
+
+    skipButton?.addEventListener('click', () => {
+      const top = section.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: top + section.offsetHeight - window.innerHeight, behavior: 'smooth' });
+    });
+
+    render();
+    window.addEventListener('scroll', requestRender, { passive: true });
+    window.addEventListener('resize', requestRender);
+  });
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "t:nabz.sections.hero",
+  "settings": [
+    {
+      "type": "product",
+      "id": "contour_product",
+      "label": "t:nabz.settings.contour_product"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:nabz.sections.hero"
+    }
+  ]
+}
+{% endschema %}

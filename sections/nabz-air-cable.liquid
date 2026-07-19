@@ -1,0 +1,293 @@
+{% liquid
+  assign air_product = section.settings.air_product
+  assign air_url = routes.all_products_collection_url
+  if air_product != blank
+    assign air_url = air_product.url
+  endif
+%}
+
+<section class="nabz-air" id="air-cable">
+  <div class="nabz-air__visual" data-nabz-reveal>
+    <img
+      class="nabz-air__portrait"
+      src="{{ 'nabz-air-cable-editorial.webp' | asset_url }}"
+      alt="{{ 'nabz.air.editorial_alt' | t }}"
+      width="972"
+      height="1619"
+      loading="lazy"
+      decoding="async"
+    >
+    <img
+      class="nabz-air__shoulder"
+      src="{{ 'nabz-air-cable-shoulder.webp' | asset_url }}"
+      alt="{{ 'nabz.air.shoulder_alt' | t }}"
+      width="972"
+      height="1619"
+      loading="lazy"
+      decoding="async"
+    >
+    <div class="nabz-air__index" aria-hidden="true"><span>01</span><i></i><span>AIR CABLE</span></div>
+  </div>
+
+  <div class="nabz-air__content" data-nabz-reveal>
+    <p class="nabz-kicker">{{ 'nabz.air.eyebrow' | t }}</p>
+    <h2>{{ 'nabz.air.headline' | t }}</h2>
+    <p class="nabz-air__body">{{ 'nabz.air.body' | t }}</p>
+
+    <ul class="nabz-air__proofs">
+      <li><span>01</span>{{ 'nabz.air.proof_1' | t }}</li>
+      <li><span>02</span>{{ 'nabz.air.proof_2' | t }}</li>
+      <li><span>03</span>{{ 'nabz.air.proof_3' | t }}</li>
+    </ul>
+
+    <div class="nabz-air__purchase">
+      <div>
+        <span>{% if air_product != blank %}{{ air_product.title | escape }}{% else %}{{ 'nabz.air.name' | t }}{% endif %}</span>
+        <small>{{ 'nabz.air.price_note' | t }}</small>
+      </div>
+      <strong>{% if air_product != blank %}{{ air_product.price | money_without_trailing_zeros }}{% else %}{{ 'nabz.air.fallback_price' | t }}{% endif %}</strong>
+    </div>
+
+    <a class="nabz-button" href="{{ air_url }}">{{ 'nabz.air.cta' | t }}</a>
+
+    <div class="nabz-air__material">
+      <img
+        src="{{ 'nabz-air-cable-cord.webp' | asset_url }}"
+        alt="{{ 'nabz.air.cord_alt' | t }}"
+        width="1600"
+        height="1600"
+        loading="lazy"
+        decoding="async"
+      >
+      <p>{{ 'nabz.air.proof_2' | t }}</p>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .nabz-air .nabz-kicker,
+  .nabz-air .nabz-button {
+    position: relative;
+  }
+
+  .nabz-air {
+    display: grid;
+    grid-template-columns: minmax(520px, 1.08fr) minmax(390px, .78fr);
+    gap: clamp(70px, 10vw, 170px);
+    align-items: center;
+    padding: clamp(110px, 11vw, 170px) max(32px, calc((100vw - 1480px) / 2));
+    overflow: hidden;
+    color: var(--nabz-ink);
+    background: var(--nabz-cloth);
+  }
+
+  .nabz-air__visual {
+    position: relative;
+    min-height: min(78vw, 900px);
+  }
+
+  .nabz-air__portrait,
+  .nabz-air__shoulder {
+    position: absolute;
+    display: block;
+    object-fit: cover;
+  }
+
+  .nabz-air__portrait {
+    inset: 0 15% 0 0;
+    width: 85%;
+    height: 100%;
+    object-position: center 25%;
+  }
+
+  .nabz-air__shoulder {
+    right: 0;
+    bottom: 8%;
+    width: 38%;
+    height: 48%;
+    object-position: 62% 30%;
+    border: 6px solid var(--nabz-cloth);
+  }
+
+  .nabz-air__index {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--nabz-ink);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: .16em;
+  }
+
+  .nabz-air__index i {
+    width: 38px;
+    height: 1px;
+    background: currentColor;
+  }
+
+  .nabz-air__content {
+    max-width: 600px;
+  }
+
+  .nabz-air h2 {
+    margin: 0 0 26px;
+    color: var(--nabz-ink);
+    font-size: clamp(52px, 5.6vw, 82px);
+    line-height: .96;
+  }
+
+  .nabz-air__body {
+    margin: 0;
+    color: rgb(23 18 15 / 72%);
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  .nabz-air__proofs {
+    display: grid;
+    margin: 32px 0 34px;
+    padding: 0;
+    border-top: 1px solid var(--nabz-line);
+    list-style: none;
+  }
+
+  .nabz-air__proofs li {
+    display: grid;
+    grid-template-columns: 38px 1fr;
+    gap: 10px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--nabz-line);
+    font-family: var(--nabz-serif);
+    font-size: 17px;
+    line-height: 1.35;
+  }
+
+  .nabz-air__proofs span {
+    color: var(--nabz-copper);
+    font: 600 9px/2.4 var(--nabz-sans);
+    letter-spacing: .12em;
+  }
+
+  .nabz-air__purchase {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 22px;
+  }
+
+  .nabz-air__purchase > div {
+    display: grid;
+    gap: 4px;
+  }
+
+  .nabz-air__purchase span {
+    font-family: var(--nabz-serif);
+    font-size: 29px;
+  }
+
+  .nabz-air__purchase small {
+    color: rgb(23 18 15 / 54%);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+
+  .nabz-air__purchase strong {
+    font-size: 17px;
+    font-weight: 500;
+  }
+
+  .nabz-air__material {
+    display: grid;
+    grid-template-columns: 86px 1fr;
+    align-items: center;
+    gap: 15px;
+    max-width: 300px;
+    margin-top: 40px;
+    padding-top: 18px;
+    border-top: 1px solid var(--nabz-line);
+  }
+
+  .nabz-air__material img {
+    display: block;
+    width: 86px;
+    height: 86px;
+    object-fit: cover;
+  }
+
+  .nabz-air__material p {
+    margin: 0;
+    color: rgb(23 18 15 / 66%);
+    font-family: var(--nabz-serif);
+    font-size: 15px;
+    line-height: 1.35;
+  }
+
+  @media (max-width: 1080px) {
+    .nabz-air {
+      grid-template-columns: 1fr;
+    }
+
+    .nabz-air__visual {
+      min-height: min(118vw, 900px);
+    }
+
+    .nabz-air__content {
+      max-width: 720px;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .nabz-air {
+      gap: 70px;
+      padding: 92px 18px;
+    }
+
+    .nabz-air__visual {
+      min-height: 650px;
+    }
+
+    .nabz-air__portrait {
+      right: 8%;
+      width: 92%;
+    }
+
+    .nabz-air__shoulder {
+      right: -2px;
+      width: 41%;
+      height: 44%;
+      border-width: 4px;
+    }
+
+    .nabz-air__content {
+      padding-inline: 2px;
+    }
+
+    .nabz-air h2 {
+      font-size: clamp(46px, 12.5vw, 58px);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:nabz.sections.air",
+  "settings": [
+    {
+      "type": "product",
+      "id": "air_product",
+      "label": "t:nabz.settings.air_product"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:nabz.sections.air"
+    }
+  ]
+}
+{% endschema %}

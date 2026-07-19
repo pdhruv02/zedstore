@@ -1,0 +1,190 @@
+<section class="nabz-language" id="language">
+  <div class="nabz-language__copy" data-nabz-reveal>
+    <div>
+      <p class="nabz-kicker">{{ 'nabz.positioning.eyebrow' | t }}</p>
+      <h2>
+        <span>{{ 'nabz.positioning.line_1' | t }}</span>
+        <span>{{ 'nabz.positioning.line_2' | t }}</span>
+        <em>{{ 'nabz.positioning.line_3' | t }}</em>
+      </h2>
+    </div>
+    <p class="nabz-language__body">{{ 'nabz.positioning.body' | t }}</p>
+  </div>
+
+  <figure class="nabz-language__triptych">
+    <img
+      src="{{ 'nabz-textile-triptych.webp' | asset_url }}"
+      alt="{{ 'nabz.positioning.eyebrow' | t }}"
+      width="2400"
+      height="900"
+      loading="lazy"
+      decoding="async"
+    >
+  </figure>
+
+  <div class="nabz-language__mobile-textiles" aria-label="{{ 'nabz.positioning.eyebrow' | t }}">
+    <img
+      src="{{ 'nabz-textile-linear.webp' | asset_url }}"
+      alt="{{ 'nabz.positioning.linear_alt' | t }}"
+      width="1600"
+      height="1600"
+      loading="lazy"
+      decoding="async"
+    >
+    <img
+      src="{{ 'nabz-textile-cutwork.webp' | asset_url }}"
+      alt="{{ 'nabz.positioning.cutwork_alt' | t }}"
+      width="1600"
+      height="1600"
+      loading="lazy"
+      decoding="async"
+    >
+    <img
+      src="{{ 'nabz-textile-counted.webp' | asset_url }}"
+      alt="{{ 'nabz.positioning.counted_alt' | t }}"
+      width="1600"
+      height="1600"
+      loading="lazy"
+      decoding="async"
+    >
+  </div>
+</section>
+
+{% stylesheet %}
+  .nabz-language .nabz-kicker {
+    position: relative;
+  }
+
+  .nabz-language {
+    padding: clamp(110px, 11vw, 170px) 0 clamp(100px, 10vw, 150px);
+    overflow: hidden;
+    color: var(--nabz-ink);
+    background: var(--nabz-paper);
+  }
+
+  .nabz-language__copy {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(300px, .65fr);
+    gap: clamp(48px, 9vw, 150px);
+    align-items: end;
+    width: var(--nabz-page);
+    margin: 0 auto clamp(56px, 7vw, 96px);
+  }
+
+  .nabz-language h2 {
+    margin: 0;
+    color: var(--nabz-ink);
+    font-size: clamp(52px, 6.2vw, 92px);
+    line-height: .94;
+  }
+
+  .nabz-language h2 span,
+  .nabz-language h2 em {
+    display: block;
+  }
+
+  .nabz-language h2 em {
+    color: var(--nabz-copper);
+    font-weight: 400;
+  }
+
+  .nabz-language__body {
+    max-width: 500px;
+    margin: 0 0 5px;
+    color: rgb(23 18 15 / 72%);
+    font-size: clamp(16px, 1.35vw, 20px);
+    line-height: 1.65;
+  }
+
+  .nabz-language__triptych {
+    position: relative;
+    width: var(--nabz-page);
+    margin: 0 auto;
+    overflow: hidden;
+    background: var(--nabz-ink);
+  }
+
+  .nabz-language__triptych::before {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 1px;
+    content: '';
+    background: rgb(238 227 210 / 30%);
+  }
+
+  .nabz-language__triptych img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: transform 1.2s cubic-bezier(.2, .7, .2, 1);
+  }
+
+  .nabz-language__triptych:hover img {
+    transform: scale(1.012);
+  }
+
+  .nabz-language__mobile-textiles {
+    display: none;
+  }
+
+  @media (max-width: 749px) {
+    .nabz-language {
+      padding-block: 92px 88px;
+    }
+
+    .nabz-language__copy {
+      grid-template-columns: 1fr;
+      gap: 34px;
+      margin-bottom: 52px;
+    }
+
+    .nabz-language h2 {
+      font-size: clamp(45px, 13.2vw, 58px);
+      line-height: .96;
+    }
+
+    .nabz-language__body {
+      max-width: 350px;
+      font-size: 16px;
+    }
+
+    .nabz-language__triptych {
+      display: none;
+    }
+
+    .nabz-language__mobile-textiles {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      width: var(--nabz-page);
+      margin-inline: auto;
+    }
+
+    .nabz-language__mobile-textiles img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+    }
+
+    .nabz-language__mobile-textiles img:first-child {
+      grid-column: 1 / -1;
+      aspect-ratio: 1.45;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:nabz.sections.positioning",
+  "settings": [],
+  "presets": [
+    {
+      "name": "t:nabz.sections.positioning"
+    }
+  ]
+}
+{% endschema %}

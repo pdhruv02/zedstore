@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 180" role="img" aria-labelledby="title desc">
+  <title id="title">NABZ</title>
+  <desc id="desc">NABZ wordmark crossed by a copper pulse line.</desc>
+  <style>
+    .letters{font-family:"Bodoni Moda",Didot,"Times New Roman",serif;font-size:150px;font-weight:400;fill:#eee3d2}
+  </style>
+  <text class="letters" x="8" y="145">N</text>
+  <text class="letters" x="444" y="145">B</text>
+  <text class="letters" x="570" y="145">Z</text>
+  <path d="M96 103H210L248 65 298 140 356 16 417 103H482" fill="none" stroke="#b1522c" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

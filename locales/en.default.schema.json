@@ -1186,6 +1186,26 @@
     "bottom_row_background": "Bottom row background",
     "bottom_row_text": "Bottom row text"
   },
+  "nabz": {
+    "sections": {
+      "header": "NABZ header",
+      "footer": "NABZ footer",
+      "hero": "NABZ construction hero",
+      "positioning": "NABZ textile language",
+      "fit": "NABZ fit system",
+      "air": "NABZ Air Cable",
+      "drop": "NABZ closing drop",
+      "product_assurances": "NABZ product assurances"
+    },
+    "settings": {
+      "menu": "Menu",
+      "footer_menu": "Footer menu",
+      "instagram": "Instagram URL",
+      "air_product": "Air Cable product",
+      "contour_product": "Self-Contour product",
+      "show_announcement": "Show first-drop announcement"
+    }
+  },
   "text_defaults": {
     "accordion_heading": "Accordion heading",
     "are_purchases_final_sale": "Are any purchases final sale?",

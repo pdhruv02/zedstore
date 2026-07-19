@@ -140,10 +140,22 @@
     letter-spacing: -.025em;
   }
 
+  #header-group {
+    position: relative;
+    z-index: 1000;
+    isolation: isolate;
+  }
+
+  #header-group > .shopify-section:has(.nabz-header) {
+    position: relative;
+    z-index: 1000;
+  }
+
   .nabz-header {
     position: sticky;
     top: 0;
-    z-index: 60;
+    z-index: 1000;
+    isolation: isolate;
     width: 100%;
     color: var(--nabz-cloth);
     background: rgb(23 18 15 / 96%);
@@ -173,14 +185,18 @@
   }
 
   .nabz-wordmark {
-    display: block;
+    display: grid;
+    place-items: center;
     width: 122px;
+    height: 60px;
+    overflow: visible;
     line-height: 0;
   }
 
   .nabz-wordmark img {
     display: block;
-    width: 100%;
+    width: 118px;
+    max-width: none;
     height: auto;
   }
 
@@ -343,6 +359,11 @@
 
     .nabz-wordmark {
       width: 106px;
+      height: 52px;
+    }
+
+    .nabz-wordmark img {
+      width: 104px;
     }
 
     .nabz-desktop-nav,
@@ -438,9 +459,18 @@
   const nabzHeader = document.querySelector('[data-nabz-header]');
 
   if (nabzHeader) {
-    const updateHeader = () => nabzHeader.classList.toggle('is-scrolled', window.scrollY > 28);
+    const pageWrapperCandidate = document.querySelector('.page-wrapper');
+    const pageWrapper = pageWrapperCandidate && /(auto|scroll|overlay)/.test(getComputedStyle(pageWrapperCandidate).overflowY)
+      ? pageWrapperCandidate
+      : null;
+    const headerScrollTarget = pageWrapper || window;
+    const updateHeader = () => {
+      const scrollPosition = pageWrapper ? pageWrapper.scrollTop : window.scrollY;
+      nabzHeader.classList.toggle('is-scrolled', scrollPosition > 28);
+    };
+
     updateHeader();
-    window.addEventListener('scroll', updateHeader, { passive: true });
+    headerScrollTarget.addEventListener('scroll', updateHeader, { passive: true });
   }
 
   document.querySelectorAll('.nabz-mobile-menu a').forEach((link) => {

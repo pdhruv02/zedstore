@@ -4,7 +4,13 @@
   <div class="nabz-footer__top">
     <div class="nabz-footer__brand" data-nabz-reveal>
       <a class="nabz-footer__wordmark" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }}">
-        <img src="{{ 'nabz-wordmark.png' | asset_url }}" alt="NABZ" width="720" height="180" loading="lazy">
+        <img
+          src="{{ 'nabz-wordmark-embroidered-transparent.png' | asset_url }}"
+          alt="NABZ"
+          width="1050"
+          height="515"
+          loading="lazy"
+        >
       </a>
       <p>{{ 'nabz.footer.made_in' | t }}</p>
     </div>
@@ -82,7 +88,7 @@
 
   .nabz-footer__wordmark {
     display: block;
-    width: min(220px, 100%);
+    width: min(250px, 100%);
     line-height: 0;
   }
 

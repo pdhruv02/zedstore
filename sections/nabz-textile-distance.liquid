@@ -1,0 +1,189 @@
+{% liquid
+  assign hero = 'nabz-air-cable-editorial.webp' | asset_url
+  assign macro = 'nabz-air-cable-cord.webp' | asset_url
+  assign wordmark = 'nabz-wordmark.svg' | asset_url
+  assign surface_1 = 'nabz-textile-triptych.webp' | asset_url
+  assign surface_2 = 'nabz-textile-linear.webp' | asset_url
+  assign surface_3 = 'nabz-textile-cutwork.webp' | asset_url
+  assign surface_4 = 'nabz-textile-counted.webp' | asset_url
+  assign fit_system = 'nabz-fit-system.svg' | asset_url
+  assign closing = 'nabz-embroidered-closing.webp' | asset_url
+  assign gateway = 'nabz-air-cable-shoulder.webp' | asset_url
+%}
+
+{{ 'nabz-textile-distance.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'nabz-textile-distance.js' | asset_url }}" defer></script>
+<link rel="preload" as="image" href="{{ hero }}" fetchpriority="high">
+
+<script>
+  document.documentElement.classList.add('nabz-textile-home');
+  (function () {
+    var icon = document.querySelector('link[rel~="icon"]') || document.createElement('link');
+    icon.rel = 'icon';
+    icon.type = 'image/png';
+    icon.href = {{ 'nabz-pulse-mark-32.png' | asset_url | json }};
+    if (!icon.parentNode) document.head.appendChild(icon);
+  })();
+</script>
+
+<div class="ntd" data-ntd-root>
+  <div class="ntd-loader" data-loader aria-hidden="true">
+    <div class="ntd-loader__mark">
+      <img src="{{ wordmark }}" alt="" width="900" height="220" fetchpriority="high">
+      <span></span>
+    </div>
+    <i></i>
+  </div>
+
+  <header class="ntd-header" data-header>
+    <a class="ntd-header__brand" href="{{ routes.root_url }}" aria-label="NABZ home">
+      <img src="{{ wordmark }}" alt="NABZ" width="900" height="220">
+    </a>
+    <nav aria-label="Primary navigation">
+      <a data-seam-link href="{{ routes.all_products_collection_url }}">Shop</a>
+      <a href="#fit">Fit</a>
+      <a href="#story">Story</a>
+      <a data-seam-link href="{{ routes.cart_url }}">Bag <span>{{ cart.item_count }}</span></a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="ntd-hero" data-hero aria-labelledby="ntd-hero-title">
+      <div class="ntd-hero__sticky">
+        <img class="ntd-hero__portrait" src="{{ hero }}" alt="Model wearing a NABZ embroidered shirt" width="1920" height="1080" loading="eager" fetchpriority="high">
+        <img class="ntd-hero__macro" src="{{ macro }}" alt="" width="1200" height="1200" loading="eager" fetchpriority="high" aria-hidden="true">
+        <div class="ntd-hero__veil" aria-hidden="true"></div>
+        <span class="ntd-hero__thread" aria-hidden="true"></span>
+        <div class="ntd-hero__copy">
+          <p class="ntd-kicker">NABZ</p>
+          <h1 id="ntd-hero-title">Not ethnic wear.<br>Not a plain shirt.<br><em>The space between.</em></h1>
+          <p>India’s textile language, re-cut into everyday shirts. Clean from a distance. Unforgettable up close.</p>
+          <a class="ntd-link ntd-link--light" href="#surface">Enter NABZ</a>
+        </div>
+        <div class="ntd-scroll" aria-hidden="true"><span></span>Explore the cloth</div>
+      </div>
+    </section>
+
+    <section class="ntd-surface" id="surface" data-surface aria-labelledby="surface-title">
+      <div class="ntd-intro">
+        <p class="ntd-kicker">The surface</p>
+        <h2 id="surface-title">Made to be noticed twice.</h2>
+        <p>From across the room, a clean shirt. Up close, the work appears.</p>
+      </div>
+
+      <div class="ntd-surface__stage" data-surface-stage tabindex="0" aria-label="Explore four NABZ textile surfaces">
+        <div class="ntd-surface__images" aria-live="polite">
+          <img class="is-active" data-surface-image="0" src="{{ surface_1 }}" alt="NABZ embroidery viewed across a shirt" width="1800" height="1100" loading="lazy">
+          <img data-surface-image="1" src="{{ surface_2 }}" alt="Linear stitch detail" width="1200" height="1200" loading="lazy">
+          <img data-surface-image="2" src="{{ surface_3 }}" alt="Cutwork and open textile detail" width="1200" height="1200" loading="lazy">
+          <img data-surface-image="3" src="{{ surface_4 }}" alt="Counted thread relief" width="1200" height="1200" loading="lazy">
+          <span class="ntd-surface__scan" aria-hidden="true"></span>
+        </div>
+        <div class="ntd-surface__meta">
+          <p data-surface-index>01 / 04</p>
+          <h3 data-surface-title>Quiet from afar.</h3>
+          <p data-surface-copy>The full composition reads cleanly before the individual stitches reveal themselves.</p>
+        </div>
+      </div>
+
+      <div class="ntd-surface__tabs" role="tablist" aria-label="Textile views">
+        <button class="is-active" type="button" data-surface-tab="0" aria-selected="true">01 Composition</button>
+        <button type="button" data-surface-tab="1" aria-selected="false">02 Line</button>
+        <button type="button" data-surface-tab="2" aria-selected="false">03 Air</button>
+        <button type="button" data-surface-tab="3" aria-selected="false">04 Relief</button>
+      </div>
+
+      <div class="ntd-fragments" aria-hidden="true">
+        <p>Texture, not decoration.</p>
+        <p>Indian craft, cut for now.</p>
+        <p>Quiet from afar. Distinct up close.</p>
+      </div>
+    </section>
+
+    <section class="ntd-fit" id="fit" data-fit aria-labelledby="fit-title">
+      <div class="ntd-intro ntd-intro--fit">
+        <p class="ntd-kicker">The NABZ fit</p>
+        <h2 id="fit-title">Choose room. Then choose length.</h2>
+        <p>Your shoulders and chest decide the size. Your height and torso decide the length.</p>
+      </div>
+
+      <div class="ntd-fit__table">
+        <div class="ntd-fit__visual">
+          <div class="ntd-fit__frame" data-fit-frame style="--fit-width:1;--fit-height:1">
+            <img data-fit-shirt src="{{ fit_system }}" alt="NABZ shirt silhouette in M Standard" width="820" height="1040" loading="lazy">
+            <span class="ntd-fit__shoulder" aria-hidden="true"></span>
+            <span class="ntd-fit__chest" aria-hidden="true"></span>
+            <div class="ntd-fit__measure" aria-hidden="true"><i></i><b data-fit-measure>27 in</b></div>
+          </div>
+        </div>
+
+        <div class="ntd-fit__panel">
+          <fieldset>
+            <legend>1. Body size</legend>
+            <div class="ntd-choices" data-size-controls>
+              <button type="button" data-size="S" aria-pressed="false">S</button>
+              <button class="is-active" type="button" data-size="M" aria-pressed="true">M</button>
+              <button type="button" data-size="L" aria-pressed="false">L</button>
+              <button type="button" data-size="XL" aria-pressed="false">XL</button>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>2. Length</legend>
+            <div class="ntd-choices ntd-choices--length" data-length-controls>
+              <button class="is-active" type="button" data-length="Standard" aria-pressed="true">Standard</button>
+              <button type="button" data-length="Extended" aria-pressed="false">Extended</button>
+            </div>
+            <p class="ntd-fit__availability" data-fit-availability aria-live="polite"></p>
+          </fieldset>
+
+          <div class="ntd-fit__output" aria-live="polite" aria-atomic="true">
+            <span data-fit-name>M Standard</span>
+            <strong data-fit-length>27 inches</strong>
+            <p data-fit-description>M room with a cleaner, shorter untucked proportion.</p>
+          </div>
+
+          <div class="ntd-compare" data-compare>
+            <div class="ntd-compare__labels"><span>Standard</span><b>Drag to compare</b><span>Extended</span></div>
+            <div class="ntd-compare__stage">
+              <img data-compare-standard src="{{ fit_system }}" alt="Standard length shirt silhouette" width="820" height="1040" loading="lazy">
+              <div class="ntd-compare__extended" data-compare-layer><img data-compare-extended src="{{ fit_system }}" alt="Extended length shirt silhouette" width="820" height="1040" loading="lazy"></div>
+              <span class="ntd-compare__handle" data-compare-handle aria-hidden="true"></span>
+              <input data-compare-range type="range" min="0" max="100" value="50" aria-label="Compare Standard and Extended garment length">
+            </div>
+          </div>
+
+          <p class="ntd-fit__note">Garment length is measured from the high shoulder point to the hem.</p>
+          <a class="ntd-link" href="/pages/size-guide">View the complete size guide</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="ntd-crescendo" id="story" data-crescendo aria-labelledby="crescendo-title">
+      <img src="{{ closing }}" alt="NABZ embroidery resolving into the NABZ logo" width="1920" height="1080" loading="lazy">
+      <div aria-hidden="true"></div>
+      <h2 id="crescendo-title">Built for everyday.<br>Worth a second look.</h2>
+    </section>
+
+    <section class="ntd-gateway" aria-labelledby="gateway-title">
+      <img src="{{ gateway }}" alt="NABZ embroidered shirt worn in an editorial setting" width="1920" height="1080" loading="lazy">
+      <div aria-hidden="true"></div>
+      <div class="ntd-gateway__copy">
+        <p class="ntd-kicker">The collection</p>
+        <h2 id="gateway-title">See what NABZ looks like when worn.</h2>
+        <a class="ntd-link ntd-link--light" data-seam-link href="{{ routes.all_products_collection_url }}">Explore all shirts</a>
+        <a class="ntd-gateway__secondary" data-seam-link href="{{ routes.all_products_collection_url }}">Enter the catalog</a>
+      </div>
+    </section>
+  </main>
+
+  <div class="ntd-page-seam" data-page-seam aria-hidden="true"></div>
+</div>
+
+{% schema %}
+{
+  "name": "NABZ Textile Distance",
+  "settings": [],
+  "presets": [{ "name": "NABZ Textile Distance" }]
+}
+{% endschema %}

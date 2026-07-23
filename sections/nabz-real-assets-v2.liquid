@@ -1,0 +1,241 @@
+{% liquid
+  assign hero_desktop = 'nabz-self-contour-hero-1920.webp' | asset_url
+  assign hero_mobile = 'nabz-self-contour-hero-mobile-1080.webp' | asset_url
+  assign hero_macro = 'nabz-self-contour-macro-1400.webp' | asset_url
+  assign wordmark_dark = 'nabz-wordmark-on-dark.webp' | asset_url
+  assign background_ink = 'nabz-ink-textile-2048.webp' | asset_url
+  assign background_cloth = 'nabz-unbleached-textile-2048.webp' | asset_url
+  assign surface_field = 'nabz-surface-field-1920.webp' | asset_url
+  assign surface_fault = 'nabz-fault-line-macro-1200.webp' | asset_url
+  assign surface_jali = 'nabz-jali-air-macro-1200.webp' | asset_url
+  assign surface_phulkari = 'nabz-phulkari-pixels-macro-1200.webp' | asset_url
+  assign closing_desktop = 'nabz-closing-logo-1920.webp' | asset_url
+  assign closing_mobile = 'nabz-closing-logo-mobile-1080.webp' | asset_url
+  assign gateway_desktop = 'nabz-air-cable-editorial-1920.webp' | asset_url
+  assign gateway_mobile = 'nabz-air-cable-editorial-mobile-1080.webp' | asset_url
+%}
+
+<script>
+  document.documentElement.classList.add('nabz-home-active');
+  (function () {
+    var favicon = document.querySelector('link[rel~="icon"]') || document.createElement('link');
+    favicon.rel = 'icon';
+    favicon.type = 'image/png';
+    favicon.href = {{ 'nabz-favicon-32.png' | asset_url | json }};
+    if (!favicon.parentNode) document.head.appendChild(favicon);
+  })();
+</script>
+
+<div class="nabz-landing" data-nabz-root>
+  <div class="nabz-loader" data-nabz-loader aria-hidden="true">
+    <div class="nabz-loader__mark">
+      <img src="{{ wordmark_dark }}" alt="" width="900" height="397" fetchpriority="high">
+      <span class="nabz-loader__thread"></span>
+    </div>
+    <span class="nabz-loader__seam"></span>
+  </div>
+
+  <header class="nabz-header" data-nabz-header>
+    <a class="nabz-header__brand" href="{{ routes.root_url }}" aria-label="NABZ home">
+      <img src="{{ wordmark_dark }}" alt="NABZ" width="900" height="397" fetchpriority="high">
+    </a>
+    <nav class="nabz-header__nav" aria-label="Primary navigation">
+      <a href="{{ routes.all_products_collection_url }}">Shop</a>
+      <a href="#nabz-fit">Fit</a>
+      <a href="#nabz-story">Story</a>
+      <a href="{{ routes.cart_url }}">Bag <span aria-label="{{ cart.item_count }} items">{{ cart.item_count }}</span></a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="nabz-hero" data-nabz-hero aria-labelledby="nabz-hero-title">
+      <div class="nabz-hero__sticky">
+        <picture class="nabz-hero__picture">
+          <source media="(max-width: 749px)" srcset="{{ hero_mobile }}">
+          <img src="{{ hero_desktop }}" alt="Model wearing a NABZ embroidered shirt" width="1920" height="1081" loading="eager" fetchpriority="high">
+        </picture>
+        <div class="nabz-hero__macro" aria-hidden="true">
+          <img src="{{ hero_macro }}" alt="" width="1400" height="1400" loading="eager" fetchpriority="high">
+        </div>
+        <span class="nabz-hero__thread" aria-hidden="true"></span>
+        <div class="nabz-hero__shade" aria-hidden="true"></div>
+        <div class="nabz-hero__copy">
+          <p class="nabz-kicker">NABZ</p>
+          <h1 id="nabz-hero-title">Not ethnic wear.<br>Not a plain shirt.<br><em>The space between.</em></h1>
+          <p>India’s textile language, re-cut into everyday shirts. Clean from a distance. Unforgettable up close.</p>
+          <a class="nabz-thread-link nabz-thread-link--light" href="#nabz-surface">Enter NABZ</a>
+        </div>
+        <div class="nabz-scroll-cue" aria-hidden="true"><span></span>Explore the cloth</div>
+      </div>
+    </section>
+
+    <section class="nabz-surface nabz-tone-light" id="nabz-surface" data-nabz-surface aria-labelledby="nabz-surface-title">
+      <div class="nabz-section-intro">
+        <p class="nabz-kicker">The surface</p>
+        <h2 id="nabz-surface-title">Made to be noticed twice.</h2>
+        <p>From across the room, a clean shirt. Up close, the work appears.</p>
+      </div>
+
+      <div class="nabz-surface-stage" data-surface-stage tabindex="0" aria-label="Explore NABZ embroidery surfaces">
+        <div class="nabz-surface-stage__media" aria-live="polite">
+          <img class="is-active" src="{{ surface_field }}" data-surface-image="0" alt="A composed field of NABZ embroidered shirt surfaces" width="1920" height="1080" loading="lazy">
+          <img src="{{ surface_fault }}" data-surface-image="1" alt="Extreme macro of fault line embroidery and raised thread relief" width="1200" height="1500" loading="lazy">
+          <img src="{{ surface_jali }}" data-surface-image="2" alt="Extreme macro of jali-inspired embroidery and fabric weave" width="1200" height="1500" loading="lazy">
+          <img src="{{ surface_phulkari }}" data-surface-image="3" alt="Extreme macro of contemporary phulkari-inspired pixels" width="1200" height="1500" loading="lazy">
+          <span class="nabz-surface-stage__scan" aria-hidden="true"></span>
+        </div>
+        <div class="nabz-surface-stage__caption">
+          <span data-surface-index>01 / 04</span>
+          <strong data-surface-copy>Texture, not decoration.</strong>
+          <small>Move across the image or use the controls.</small>
+        </div>
+      </div>
+
+      <div class="nabz-surface-controls" role="tablist" aria-label="Embroidery views">
+        <button class="is-active" type="button" role="tab" aria-selected="true" data-surface-tab="0">Whole surface</button>
+        <button type="button" role="tab" aria-selected="false" data-surface-tab="1">Thread relief</button>
+        <button type="button" role="tab" aria-selected="false" data-surface-tab="2">Jali rhythm</button>
+        <button type="button" role="tab" aria-selected="false" data-surface-tab="3">Phulkari pixels</button>
+      </div>
+
+      <div class="nabz-surface-notes" aria-hidden="true">
+        <p>Texture, not decoration.</p>
+        <p>Indian craft, cut for now.</p>
+        <p>Quiet from afar. Distinct up close.</p>
+      </div>
+    </section>
+
+    <section class="nabz-fit nabz-tone-light" id="nabz-fit" data-nabz-fit aria-labelledby="nabz-fit-title">
+      <div class="nabz-fit__intro">
+        <p class="nabz-kicker">The NABZ fit</p>
+        <h2 id="nabz-fit-title">Choose room. Then choose length.</h2>
+        <p>Your shoulders and chest decide the size. Your height and torso decide the length.</p>
+      </div>
+
+      <div class="nabz-fit-table">
+        <div class="nabz-fit-visual">
+          <div class="nabz-fit-visual__frame" data-fit-frame>
+            <img data-fit-image src="{{ 'nabz-fit-m-standard.webp' | asset_url }}" alt="Air Cable shirt in M Standard" width="900" height="1200" loading="lazy">
+            <div class="nabz-fit-measure" aria-hidden="true">
+              <span class="nabz-fit-measure__cap"></span>
+              <span class="nabz-fit-measure__line"></span>
+              <span class="nabz-fit-measure__value" data-fit-measure>27 in</span>
+            </div>
+            <div class="nabz-fit-guides" aria-hidden="true">
+              <span class="nabz-fit-guides__shoulder"></span>
+              <span class="nabz-fit-guides__chest"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="nabz-fit-panel">
+          <fieldset class="nabz-choice-group">
+            <legend>1. Body size</legend>
+            <div class="nabz-choice-row" data-size-controls>
+              <button type="button" data-size="S" aria-pressed="false">S</button>
+              <button class="is-active" type="button" data-size="M" aria-pressed="true">M</button>
+              <button type="button" data-size="L" aria-pressed="false">L</button>
+              <button type="button" data-size="XL" aria-pressed="false">XL</button>
+            </div>
+          </fieldset>
+
+          <fieldset class="nabz-choice-group">
+            <legend>2. Length</legend>
+            <div class="nabz-choice-row nabz-choice-row--length" data-length-controls>
+              <button class="is-active" type="button" data-length="Standard" aria-pressed="true">Standard</button>
+              <button type="button" data-length="Extended" aria-pressed="false">Extended</button>
+            </div>
+            <p class="nabz-fit-availability" data-fit-availability aria-live="polite"></p>
+          </fieldset>
+
+          <div class="nabz-fit-output" aria-live="polite" aria-atomic="true">
+            <span data-fit-name>M Standard</span>
+            <strong data-fit-length>27 inches</strong>
+            <p data-fit-description>M room with a cleaner, shorter untucked proportion.</p>
+          </div>
+
+          <div class="nabz-fit-comparison" data-fit-comparison>
+            <div class="nabz-fit-comparison__heading">
+              <span>Standard</span>
+              <strong>Drag to compare</strong>
+              <span>Extended</span>
+            </div>
+            <div class="nabz-fit-comparison__stage">
+              <img data-compare-standard src="{{ 'nabz-fit-m-standard.webp' | asset_url }}" alt="M Standard shirt comparison" width="900" height="1200" loading="lazy">
+              <div class="nabz-fit-comparison__extended" data-compare-layer>
+                <img data-compare-extended src="{{ 'nabz-fit-m-extended.webp' | asset_url }}" alt="M Extended shirt comparison" width="900" height="1200" loading="lazy">
+              </div>
+              <span class="nabz-fit-comparison__handle" data-compare-handle aria-hidden="true"></span>
+              <input data-compare-range type="range" min="0" max="100" value="50" aria-label="Compare Standard and Extended garment length">
+            </div>
+          </div>
+
+          <p class="nabz-fit-note">Garment length is measured from the high shoulder point to the hem.</p>
+          <a class="nabz-thread-link" href="/pages/size-guide">View the complete size guide</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="nabz-crescendo" id="nabz-story" aria-labelledby="nabz-crescendo-title">
+      <picture class="nabz-crescendo__media">
+        <source media="(max-width: 749px)" srcset="{{ closing_mobile }}">
+        <img src="{{ closing_desktop }}" alt="NABZ embroidery resolving into the NABZ logo" width="1920" height="1080" loading="lazy">
+      </picture>
+      <div class="nabz-crescendo__shade" aria-hidden="true"></div>
+      <div class="nabz-crescendo__copy">
+        <h2 id="nabz-crescendo-title">Built for everyday.<br>Worth a second look.</h2>
+      </div>
+    </section>
+
+    <section class="nabz-gateway" aria-labelledby="nabz-gateway-title">
+      <picture class="nabz-gateway__media">
+        <source media="(max-width: 749px)" srcset="{{ gateway_mobile }}">
+        <img src="{{ gateway_desktop }}" alt="A NABZ shirt worn in an editorial setting" width="1920" height="1081" loading="lazy">
+      </picture>
+      <div class="nabz-gateway__shade" aria-hidden="true"></div>
+      <div class="nabz-gateway__copy">
+        <p class="nabz-kicker">The catalog</p>
+        <h2 id="nabz-gateway-title">See what NABZ looks like when worn.</h2>
+        <a class="nabz-catalog-button" data-seam-link href="{{ routes.all_products_collection_url }}"><span>Explore all shirts</span></a>
+        <a class="nabz-thread-link nabz-thread-link--light" data-seam-link href="{{ routes.all_products_collection_url }}">Enter the catalog</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="nabz-footer">
+    <span>© {{ 'now' | date: '%Y' }} NABZ</span>
+    <nav aria-label="Footer navigation">
+      <a href="{{ routes.search_url }}">Search</a>
+      <a href="{{ routes.cart_url }}">Bag</a>
+      <a href="/policies/privacy-policy">Privacy</a>
+      <a href="/policies/terms-of-service">Terms</a>
+    </nav>
+  </footer>
+
+  <div class="nabz-page-seam" data-page-seam aria-hidden="true"></div>
+</div>
+
+{{ 'nabz-real-assets-v2-a.css' | asset_url | stylesheet_tag }}
+{{ 'nabz-real-assets-v2-b.css' | asset_url | stylesheet_tag }}
+{{ 'nabz-real-assets-v2-c.css' | asset_url | stylesheet_tag }}
+{{ 'nabz-real-assets-v2-d.css' | asset_url | stylesheet_tag }}
+
+<script>
+{% render 'nabz-v2-js-a' %}
+{% render 'nabz-v2-js-b' %}
+{% render 'nabz-v2-js-c' %}
+</script>
+
+{% schema %}
+{
+  "name": "NABZ Textile Distance",
+  "tag": "section",
+  "class": "nabz-textile-distance-section",
+  "settings": [],
+  "presets": [
+    {
+      "name": "NABZ Textile Distance"
+    }
+  ]
+}
+{% endschema %}

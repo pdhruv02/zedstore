@@ -1,0 +1,226 @@
+{% liquid
+  assign bg_url = section.settings.background_url
+  assign study_number = section.settings.study_number
+  assign study_name = section.settings.study_name
+%}
+
+{{ 'nabz-background-lab.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'nabz-background-lab.js' | asset_url }}" defer="defer"></script>
+
+<style>
+  #NabzBackgroundLab-{{ section.id }} {
+    --fabric-image: url('{{ bg_url }}');
+    --base: {{ section.settings.base }};
+    --ink: {{ section.settings.ink }};
+    --muted: {{ section.settings.muted }};
+    --accent: {{ section.settings.accent }};
+    --line: {{ section.settings.line }};
+    --line-strong: {{ section.settings.line_strong }};
+    --panel: {{ section.settings.panel }};
+    --panel-strong: {{ section.settings.panel_strong }};
+    --chip-bg: {{ section.settings.chip_bg }};
+    --nav-bg: {{ section.settings.nav_bg }};
+    --button-bg: {{ section.settings.button_bg }};
+    --button-ink: {{ section.settings.button_ink }};
+    --global-veil: {{ section.settings.global_veil }};
+    --logo-filter: {{ section.settings.logo_filter }};
+    --shadow: 0 40px 100px rgba(22, 13, 8, {{ section.settings.shadow_alpha }});
+    --shadow-soft: 0 24px 64px rgba(22, 13, 8, {{ section.settings.shadow_soft_alpha }});
+  }
+</style>
+
+<div id="NabzBackgroundLab-{{ section.id }}" class="nabz-bg-lab" data-nabz-bg-lab>
+  <div class="nabz-bg-progress" data-scroll-progress></div>
+
+  <nav class="nabz-bg-nav" aria-label="NABZ prototype navigation">
+    <a class="nabz-bg-logo" href="#top" aria-label="NABZ home">
+      <img src="https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-wordmark-on-dark.webp?v=1784770537" alt="NABZ">
+    </a>
+    <div class="nabz-bg-navlinks">
+      <a href="#surface">Surface</a>
+      <a href="#fit">Fit</a>
+      <a href="#catalog">Collection</a>
+    </div>
+    <div class="nabz-bg-theme-tag">Option {{ study_number }}</div>
+  </nav>
+
+  <main>
+    <section class="nabz-bg-section nabz-bg-hero" id="top">
+      <div class="nabz-bg-shell nabz-bg-hero-grid">
+        <div class="nabz-bg-hero-copy" data-reveal>
+          <div class="nabz-bg-eyebrow">Background study {{ study_number }} · {{ study_name }}</div>
+          <h1 class="nabz-bg-title">A shirt should frame you. <em>Not swallow you.</em></h1>
+          <p class="nabz-bg-copy">NABZ is built around proportion, surface and restraint. This prototype uses real brand imagery and production-level spacing so the fabric world can be judged across a complete landing-page scroll.</p>
+          <div class="nabz-bg-actions">
+            <a class="nabz-bg-btn" href="#surface">Enter the surface</a>
+            <a class="nabz-bg-btn is-ghost" href="#fit">See the fit system</a>
+          </div>
+        </div>
+
+        <div class="nabz-bg-hero-visual" data-reveal>
+          <div class="nabz-bg-portrait">
+            <img src="https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-self-contour-hero-1920.webp?v=1784770323" alt="NABZ Self Contour editorial shirt">
+          </div>
+          <div class="nabz-bg-float-card">
+            <img src="https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-self-contour-macro-1400.webp?v=1784770344" alt="Self Contour embroidery detail">
+            <div class="nabz-bg-float-meta"><span>Self Contour</span><span>01 / 04</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="nabz-bg-scroll-note">Scroll through one continuous cloth</div>
+    </section>
+
+    <section class="nabz-bg-section" aria-label="NABZ manifesto">
+      <div class="nabz-bg-shell nabz-bg-manifesto-grid">
+        <div class="nabz-bg-number" data-reveal>27</div>
+        <div class="nabz-bg-manifesto-card" data-reveal>
+          <div class="nabz-bg-eyebrow">The proportion thesis</div>
+          <h2 class="nabz-bg-display">The shoulder can stay. The unnecessary <strong>length can go.</strong></h2>
+          <p class="nabz-bg-copy">Most shirts scale the body in every direction. NABZ separates structure from length, keeping the presence while correcting the drop.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="nabz-bg-section" id="surface">
+      <div class="nabz-bg-shell">
+        <div class="nabz-bg-surface-head">
+          <div data-reveal>
+            <div class="nabz-bg-eyebrow">Surface language</div>
+            <h2 class="nabz-bg-display">Embroidery that changes with distance.</h2>
+          </div>
+          <p class="nabz-bg-copy" data-reveal>From across the room, it reads as structure. Up close, the thread reveals its own geography. The page background should support this, not compete with it.</p>
+        </div>
+
+        <div class="nabz-bg-surface-grid">
+          <article class="nabz-bg-surface-card" data-reveal>
+            <img src="https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-self-contour-macro-1400.webp?v=1784770344" alt="Self Contour embroidery">
+            <div class="nabz-bg-card-copy"><span>01</span><h3>Self Contour</h3></div>
+          </article>
+          <article class="nabz-bg-surface-card" data-reveal>
+            <img src="https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-fault-line-macro-1200.webp?v=1784770374" alt="Fault Line embroidery">
+            <div class="nabz-bg-card-copy"><span>02</span><h3>Fault Line</h3></div>
+          </article>
+          <article class="nabz-bg-surface-card" data-reveal>
+            <img src="https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-jali-air-macro-1200.webp?v=1784770387" alt="Jali Air embroidery">
+            <div class="nabz-bg-card-copy"><span>03</span><h3>Jali Air</h3></div>
+          </article>
+          <article class="nabz-bg-surface-card" data-reveal>
+            <img src="https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-phulkari-pixels-macro-1200.webp?v=1784770398" alt="Phulkari Pixels embroidery">
+            <div class="nabz-bg-card-copy"><span>04</span><h3>Phulkari Pixels</h3></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="nabz-bg-section" id="fit">
+      <div class="nabz-bg-shell nabz-bg-fit-grid">
+        <div data-reveal>
+          <div class="nabz-bg-eyebrow">One shoulder. Two lengths.</div>
+          <h2 class="nabz-bg-display">Choose proportion, not compromise.</h2>
+          <p class="nabz-bg-copy">The demo interaction uses actual M Standard and M Extended photography. The garment changes, not a stretched illustration.</p>
+          <div class="nabz-bg-fit-controls" role="group" aria-label="Fit length preview">
+            <button class="nabz-bg-fit-control is-active" type="button" data-fit-control="standard">Standard</button>
+            <button class="nabz-bg-fit-control" type="button" data-fit-control="extended">Extended</button>
+          </div>
+          <div class="nabz-bg-specs">
+            <div class="nabz-bg-spec"><span>Size</span><strong>M</strong></div>
+            <div class="nabz-bg-spec"><span>Length</span><strong data-fit-length>27 in</strong></div>
+            <div class="nabz-bg-spec"><span>Shoulder</span><strong>Same</strong></div>
+            <div class="nabz-bg-spec"><span>Drop</span><strong>Chosen</strong></div>
+          </div>
+        </div>
+
+        <div class="nabz-bg-fit-stage" data-fit-stage data-fit="standard" data-reveal>
+          <img data-fit-image="standard" src="https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-fit-m-standard.webp?v=1784770421" alt="NABZ M Standard fit">
+          <img data-fit-image="extended" src="https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-fit-m-extended.webp?v=1784770429" alt="NABZ M Extended fit">
+          <div class="nabz-bg-measure"><span>Shoulder</span><span>Hem</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="nabz-bg-section nabz-bg-editorial">
+      <div class="nabz-bg-shell">
+        <div class="nabz-bg-editorial-frame" data-reveal>
+          <img src="https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-air-cable-editorial-1920.webp?v=1784770516" alt="NABZ Air Cable editorial">
+          <div class="nabz-bg-editorial-copy">
+            <div class="nabz-bg-eyebrow">Air Cable · Study 02</div>
+            <h2 class="nabz-bg-display">Texture without noise.</h2>
+            <p class="nabz-bg-copy">A familiar knit rhythm, translated into breathable embroidery. Detail that rewards attention instead of asking for it.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="nabz-bg-section" id="catalog">
+      <div class="nabz-bg-shell">
+        <div class="nabz-bg-catalog-head">
+          <div data-reveal>
+            <div class="nabz-bg-eyebrow">First surface studies</div>
+            <h2 class="nabz-bg-display">A small collection with a clear point of view.</h2>
+          </div>
+          <a class="nabz-bg-btn is-ghost" href="#top" data-reveal>Return to top</a>
+        </div>
+
+        <div class="nabz-bg-products">
+          <article class="nabz-bg-product" data-reveal>
+            <img src="https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-self-contour-hero-1920.webp?v=1784770323" alt="Self Contour shirt">
+            <div class="nabz-bg-product-copy"><div><strong>Self Contour</strong><span>Structured cotton</span></div><strong>01</strong></div>
+          </article>
+          <article class="nabz-bg-product" data-reveal>
+            <img src="https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-surface-field-1920.webp?v=1784770362" alt="NABZ surface field">
+            <div class="nabz-bg-product-copy"><div><strong>Surface Field</strong><span>Four thread studies</span></div><strong>02</strong></div>
+          </article>
+          <article class="nabz-bg-product" data-reveal>
+            <img src="https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-air-cable-editorial-1920.webp?v=1784770516" alt="Air Cable shirt">
+            <div class="nabz-bg-product-copy"><div><strong>Air Cable</strong><span>Open embroidered structure</span></div><strong>03</strong></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="nabz-bg-section nabz-bg-closing">
+      <div class="nabz-bg-shell nabz-bg-closing-inner" data-reveal>
+        <img class="nabz-bg-closing-mark" src="https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-wordmark-on-dark.webp?v=1784770537" alt="NABZ">
+        <div class="nabz-bg-eyebrow" style="justify-content:center">Background study {{ study_number }}</div>
+        <h2 class="nabz-bg-display">The background is not a section. It is the world the entire site lives in.</h2>
+        <p class="nabz-bg-copy">Judge the texture at the top, through dense product content, behind real photography, and at the final quiet moment.</p>
+        <div class="nabz-bg-actions">
+          <a class="nabz-bg-btn" href="#top">Run it again</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="nabz-bg-footer">
+    <span>NABZ background laboratory · option {{ study_number }}</span>
+    <span>Prototype content for visual selection</span>
+  </footer>
+</div>
+
+{% schema %}
+{
+  "name": "NABZ background lab",
+  "settings": [
+    {"type":"text","id":"study_number","label":"Study number","default":"01"},
+    {"type":"text","id":"study_name","label":"Study name","default":"Subtle embroidered linen"},
+    {"type":"url","id":"background_url","label":"Background image URL"},
+    {"type":"text","id":"base","label":"Base","default":"#e7dac8"},
+    {"type":"text","id":"ink","label":"Ink","default":"#211a16"},
+    {"type":"text","id":"muted","label":"Muted","default":"rgba(33, 26, 22, 0.68)"},
+    {"type":"text","id":"accent","label":"Accent","default":"#8e4b2a"},
+    {"type":"text","id":"line","label":"Line","default":"rgba(33, 26, 22, 0.16)"},
+    {"type":"text","id":"line_strong","label":"Strong line","default":"rgba(33, 26, 22, 0.34)"},
+    {"type":"text","id":"panel","label":"Panel","default":"rgba(250, 246, 238, 0.52)"},
+    {"type":"text","id":"panel_strong","label":"Strong panel","default":"rgba(250, 246, 238, 0.78)"},
+    {"type":"text","id":"chip_bg","label":"Chip background","default":"rgba(250, 246, 238, 0.48)"},
+    {"type":"text","id":"nav_bg","label":"Navigation background","default":"rgba(250, 246, 238, 0.64)"},
+    {"type":"text","id":"button_bg","label":"Button background","default":"#211a16"},
+    {"type":"text","id":"button_ink","label":"Button ink","default":"#fff8ee"},
+    {"type":"text","id":"global_veil","label":"Global veil","default":"linear-gradient(180deg, rgba(246, 239, 228, 0.16), rgba(216, 197, 174, 0.08))"},
+    {"type":"text","id":"logo_filter","label":"Logo filter","default":"brightness(0) saturate(100%)"},
+    {"type":"text","id":"shadow_alpha","label":"Shadow alpha","default":"0.16"},
+    {"type":"text","id":"shadow_soft_alpha","label":"Soft shadow alpha","default":"0.09"}
+  ],
+  "presets": [{"name":"NABZ background lab"}]
+}
+{% endschema %}

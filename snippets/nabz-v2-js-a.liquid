@@ -1,0 +1,71 @@
+(() => {
+    const root = document.querySelector('[data-nabz-root]');
+    if (!root || root.dataset.initialized === 'true') return;
+    root.dataset.initialized = 'true';
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const loader = root.querySelector('[data-nabz-loader]');
+    let loaderSeen = false;
+    try { loaderSeen = localStorage.getItem('nabz-loader-seen') === '1'; } catch (error) {}
+    const loaderDelay = reducedMotion ? 0 : (loaderSeen ? 180 : 1280);
+    window.setTimeout(() => {
+      loader?.classList.add('is-complete');
+      try { localStorage.setItem('nabz-loader-seen', '1'); } catch (error) {}
+    }, loaderDelay);
+
+    const header = root.querySelector('[data-nabz-header]');
+    const hero = root.querySelector('[data-nabz-hero]');
+    const updateHero = () => {
+      if (!hero || reducedMotion) return;
+      const rect = hero.getBoundingClientRect();
+      const travel = Math.max(hero.offsetHeight - window.innerHeight, 1);
+      const progress = Math.min(1, Math.max(0, -rect.top / travel));
+      hero.style.setProperty('--hero-clip', `${100 - progress * 100}%`);
+      hero.style.setProperty('--hero-copy-opacity', `${Math.max(.12, 1 - progress * 1.35)}`);
+      header?.classList.toggle('is-solid', progress > .1 || rect.bottom <= window.innerHeight);
+    };
+    let ticking = false;
+    const requestHeroUpdate = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { updateHero(); ticking = false; });
+    };
+    updateHero();
+    window.addEventListener('scroll', requestHeroUpdate, { passive: true });
+    window.addEventListener('resize', requestHeroUpdate, { passive: true });
+
+    const surfaceStage = root.querySelector('[data-surface-stage]');
+    const surfaceImages = [...root.querySelectorAll('[data-surface-image]')];
+    const surfaceTabs = [...root.querySelectorAll('[data-surface-tab]')];
+    const surfaceCopy = root.querySelector('[data-surface-copy]');
+    const surfaceIndex = root.querySelector('[data-surface-index]');
+    const surfaceLines = ['Texture, not decoration.','Relief that changes with the light.','Indian craft, cut for now.','Quiet from afar. Distinct up close.'];
+    let activeSurface = 0;
+    const setSurface = (next) => {
+      const index = Math.min(surfaceImages.length - 1, Math.max(0, Number(next) || 0));
+      if (index === activeSurface && surfaceImages[index]?.classList.contains('is-active')) return;
+      activeSurface = index;
+      surfaceImages.forEach((image, imageIndex) => image.classList.toggle('is-active', imageIndex === index));
+      surfaceTabs.forEach((tab, tabIndex) => {
+        const selected = tabIndex === index;
+        tab.classList.toggle('is-active', selected);
+        tab.setAttribute('aria-selected', String(selected));
+      });
+      if (surfaceCopy) surfaceCopy.textContent = surfaceLines[index];
+      if (surfaceIndex) surfaceIndex.textContent = `${String(index + 1).padStart(2, '0')} / 04`;
+    };
+    surfaceTabs.forEach((tab) => {
+      tab.addEventListener('click', () => setSurface(tab.dataset.surfaceTab));
+      tab.addEventListener('mouseenter', () => setSurface(tab.dataset.surfaceTab));
+    });
+    surfaceStage?.addEventListener('pointermove', (event) => {
+      if (event.pointerType === 'touch') return;
+      const rect = surfaceStage.getBoundingClientRect();
+      const ratio = Math.min(.999, Math.max(0, (event.clientX - rect.left) / rect.width));
+      surfaceStage.style.setProperty('--surface-x', `${ratio * 100}%`);
+      setSurface(Math.floor(ratio * 4));
+    });
+    surfaceStage?.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight') { event.preventDefault(); setSurface((activeSurface + 1) % 4); }
+      if (event.key === 'ArrowLeft') { event.preventDefault(); setSurface((activeSurface + 3) % 4); }
+    });

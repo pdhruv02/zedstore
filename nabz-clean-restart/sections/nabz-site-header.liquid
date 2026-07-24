@@ -15,17 +15,25 @@
 </style>
 <div class="nabz-home-marker" hidden aria-hidden="true"></div>
 <header class="nabz-site-header">
-  <div class="nabz-shell nabz-site-header__inner">
-    <a class="nabz-site-header__brand" href="{{ routes.root_url }}" aria-label="NABZ home">
-      <img src="{{ 'nabz-wordmark-on-dark.webp' | asset_url }}" alt="NABZ" width="900" height="397" fetchpriority="high">
-    </a>
-    <nav class="nabz-site-header__nav" aria-label="Primary navigation">
-      <a href="{{ routes.all_products_collection_url }}">Shop</a>
-      <a href="#surface">Surface</a>
-      <a href="#fit">Fit</a>
-      <a href="#story">Story</a>
-    </nav>
-    <a class="nabz-site-header__bag" href="{{ routes.cart_url }}">Bag ({{ cart.item_count }})</a>
+  <div class="nabz-shell">
+    <div class="nabz-site-header__bar">
+      <a class="nabz-site-header__brand" href="{{ routes.root_url }}" aria-label="NABZ home">
+        <img
+          src="{{ 'nabz-logo-embroidered-safe.png' | asset_url }}"
+          alt="NABZ"
+          width="480"
+          height="220"
+          fetchpriority="high"
+        >
+      </a>
+      <nav class="nabz-site-header__nav" aria-label="Primary navigation">
+        <a href="{{ routes.all_products_collection_url }}">Shop</a>
+        <a href="#surface">Surface</a>
+        <a href="#fit">Fit</a>
+        <a href="#story">Story</a>
+      </nav>
+      <a class="nabz-site-header__bag" href="{{ routes.cart_url }}">Bag ({{ cart.item_count }})</a>
+    </div>
   </div>
 </header>
 {% schema %}

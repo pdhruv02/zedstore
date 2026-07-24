@@ -12,12 +12,51 @@
     padding: 0 !important;
     max-width: none !important;
   }
+  .nabz-site-header {
+    padding-top: clamp(10px, 1.2vw, 16px);
+  }
   .nabz-site-header__bar {
-    border-radius: 30px;
+    min-height: 64px;
+    gap: clamp(14px, 2vw, 30px);
+    padding: 4px clamp(16px, 2vw, 28px);
+    border-color: rgba(238, 227, 211, 0.16);
+    border-radius: 28px;
+    background:
+      linear-gradient(105deg, rgba(7, 7, 6, 0.88), rgba(18, 14, 11, 0.72)),
+      url("https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-background-study-04.png?v=1784820062");
+    background-size: cover;
+    background-position: center 8%;
+    box-shadow:
+      0 10px 28px rgba(0, 0, 0, 0.18),
+      inset 0 1px 0 rgba(255, 244, 226, 0.05);
+    backdrop-filter: blur(10px) saturate(106%);
+    -webkit-backdrop-filter: blur(10px) saturate(106%);
+  }
+  .nabz-site-header__brand {
+    width: clamp(124px, 10vw, 146px);
+    height: clamp(46px, 4vw, 54px);
+  }
+  .nabz-site-header__nav a,
+  .nabz-site-header__bag {
+    font-size: 0.68rem;
+    letter-spacing: 0.11em;
   }
   @media (max-width: 640px) {
+    .nabz-site-header {
+      padding-top: 8px;
+    }
     .nabz-site-header__bar {
+      min-height: 58px;
+      padding: 3px 12px;
       border-radius: 24px;
+    }
+    .nabz-site-header__brand {
+      width: 110px;
+      height: 46px;
+    }
+    .nabz-site-header__bag {
+      font-size: 0.63rem;
+      letter-spacing: 0.09em;
     }
   }
 </style>

@@ -1,13 +1,24 @@
 <footer class="nabz-site-footer">
   <div class="nabz-shell nabz-site-footer__inner">
-    <span>© {{ 'now' | date: '%Y' }} NABZ</span>
-    <nav class="nabz-site-footer__nav" aria-label="Footer navigation">
-      <a href="{{ routes.all_products_collection_url }}">Shop</a>
-      <a href="{{ routes.search_url }}">Search</a>
-      <a href="{{ routes.cart_url }}">Bag</a>
-      <a href="/policies/privacy-policy">Privacy</a>
-      <a href="/policies/terms-of-service">Terms</a>
-    </nav>
+    <a class="nabz-site-footer__brand" href="{{ routes.root_url }}" aria-label="NABZ home">
+      <img
+        src="{{ 'nabz-logo-embroidered-safe.png' | asset_url }}"
+        alt="NABZ"
+        width="1400"
+        height="640"
+        loading="lazy"
+      >
+    </a>
+    <div class="nabz-site-footer__meta">
+      <span>© {{ 'now' | date: '%Y' }} NABZ</span>
+      <nav class="nabz-site-footer__nav" aria-label="Footer navigation">
+        <a href="{{ routes.all_products_collection_url }}">Shop</a>
+        <a href="{{ routes.search_url }}">Search</a>
+        <a href="{{ routes.cart_url }}">Bag</a>
+        <a href="/policies/privacy-policy">Privacy</a>
+        <a href="/policies/terms-of-service">Terms</a>
+      </nav>
+    </div>
   </div>
 </footer>
 {% schema %}

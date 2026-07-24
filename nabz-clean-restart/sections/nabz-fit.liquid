@@ -12,11 +12,14 @@
       {% assign fit_lengths = '26.75 in,27 in,Extended,Standard,Extended,Standard' | split: ',' %}
       {% assign fit_images = 'nabz-fit-s-standard.webp,nabz-fit-m-standard.webp,nabz-fit-m-extended.webp,nabz-fit-l-standard.webp,nabz-fit-l-extended.webp,nabz-fit-xl-standard.webp' | split: ',' %}
       {% for name in fit_names %}
+        {% assign fit_index = forloop.index0 %}
+        {% assign fit_image = fit_images[fit_index] %}
+        {% assign fit_length = fit_lengths[fit_index] %}
         <article class="nabz-fit-card">
           <div class="nabz-fit-card__media">
-            <img src="{{ fit_images[forloop.index0] | asset_url }}" alt="Air Cable shirt in {{ name }}" width="900" height="1200" loading="lazy">
+            <img src="{{ fit_image | asset_url }}" alt="Air Cable shirt in {{ name }}" width="900" height="1200" loading="lazy">
           </div>
-          <div class="nabz-fit-card__meta"><strong>{{ name }}</strong><span>{{ fit_lengths[forloop.index0] }}</span></div>
+          <div class="nabz-fit-card__meta"><strong>{{ name }}</strong><span>{{ fit_length }}</span></div>
         </article>
       {% endfor %}
     </div>

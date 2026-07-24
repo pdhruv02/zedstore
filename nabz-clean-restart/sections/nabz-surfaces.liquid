@@ -1,0 +1,44 @@
+<section class="nabz-section" id="surface" aria-labelledby="nabz-surface-title">
+  <div class="nabz-shell">
+    <div class="nabz-section-intro">
+      <div>
+        <p class="nabz-kicker">{{ section.settings.kicker }}</p>
+        <h2 class="nabz-section-heading" id="nabz-surface-title">{{ section.settings.heading }}</h2>
+      </div>
+      <p class="nabz-copy">{{ section.settings.copy }}</p>
+    </div>
+    <div class="nabz-surface-grid">
+      <article class="nabz-surface-card">
+        <img src="{{ 'nabz-surface-field-1920.webp' | asset_url }}" alt="NABZ embroidered shirt surfaces" width="1920" height="1080" loading="lazy">
+        <span class="nabz-surface-card__shade" aria-hidden="true"></span>
+        <div class="nabz-surface-card__copy"><strong>Whole surface</strong><span>Texture, not decoration.</span></div>
+      </article>
+      <article class="nabz-surface-card">
+        <img src="{{ 'nabz-fault-line-macro-1200.webp' | asset_url }}" alt="Raised thread relief on NABZ fabric" width="1200" height="1500" loading="lazy">
+        <span class="nabz-surface-card__shade" aria-hidden="true"></span>
+        <div class="nabz-surface-card__copy"><strong>Thread relief</strong><span>Work you can see and feel.</span></div>
+      </article>
+      <article class="nabz-surface-card">
+        <img src="{{ 'nabz-jali-air-macro-1200.webp' | asset_url }}" alt="Jali-inspired embroidery on NABZ fabric" width="1200" height="1500" loading="lazy">
+        <span class="nabz-surface-card__shade" aria-hidden="true"></span>
+        <div class="nabz-surface-card__copy"><strong>Jali rhythm</strong><span>Indian craft, cut for now.</span></div>
+      </article>
+      <article class="nabz-surface-card">
+        <img src="{{ 'nabz-phulkari-pixels-macro-1200.webp' | asset_url }}" alt="Contemporary phulkari-inspired pixels" width="1200" height="1500" loading="lazy">
+        <span class="nabz-surface-card__shade" aria-hidden="true"></span>
+        <div class="nabz-surface-card__copy"><strong>Phulkari pixels</strong><span>Quiet from afar. Distinct up close.</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name":"NABZ surfaces",
+  "settings":[
+    {"type":"text","id":"kicker","label":"Kicker","default":"The surface"},
+    {"type":"text","id":"heading","label":"Heading","default":"A clean shirt with a second reading."},
+    {"type":"textarea","id":"copy","label":"Copy","default":"The embroidery does not sit on top as a loud motif. It becomes part of the cloth, revealing more as the viewer comes closer."}
+  ],
+  "presets":[{"name":"NABZ surfaces"}]
+}
+{% endschema %}

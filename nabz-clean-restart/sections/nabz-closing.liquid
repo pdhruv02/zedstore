@@ -1,0 +1,24 @@
+<section class="nabz-cinematic" aria-labelledby="nabz-closing-title">
+  <picture class="nabz-cinematic__media">
+    <source media="(max-width: 749px)" srcset="{{ 'nabz-closing-logo-mobile-1080.webp' | asset_url }}">
+    <img src="{{ 'nabz-closing-logo-1920.webp' | asset_url }}" alt="NABZ embroidery resolving into the NABZ logo" width="1920" height="1080" loading="lazy">
+  </picture>
+  <div class="nabz-cinematic__shade" aria-hidden="true"></div>
+  <div class="nabz-shell nabz-cinematic__content">
+    <p class="nabz-kicker">{{ section.settings.kicker }}</p>
+    <h2 class="nabz-section-heading" id="nabz-closing-title">{{ section.settings.line_1 }}<br>{{ section.settings.line_2 }}</h2>
+    <p class="nabz-copy">{{ section.settings.copy }}</p>
+  </div>
+</section>
+{% schema %}
+{
+  "name":"NABZ closing story",
+  "settings":[
+    {"type":"text","id":"kicker","label":"Kicker","default":"NABZ"},
+    {"type":"text","id":"line_1","label":"Heading line 1","default":"Built for everyday."},
+    {"type":"text","id":"line_2","label":"Heading line 2","default":"Worth a second look."},
+    {"type":"textarea","id":"copy","label":"Copy","default":"A modern shirt first. A deeper textile story when you come closer."}
+  ],
+  "presets":[{"name":"NABZ closing story"}]
+}
+{% endschema %}

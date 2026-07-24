@@ -1,5 +1,4 @@
 {{ 'nabz-scroll-hero.css' | asset_url | stylesheet_tag }}
-<script src="{{ 'nabz-scroll-hero.js' | asset_url }}" defer="defer"></script>
 
 <section class="nabz-shirt-scroll" id="top" data-shirt-scroll data-frame-count="154" data-frames-per-sheet="8" data-sheet-columns="4" aria-label="A NABZ shirt forms on the model as the page scrolls">
   <div class="nabz-shirt-scroll-sticky">
@@ -32,6 +31,8 @@
     <div class="nabz-shirt-scroll-progress" aria-hidden="true"><span data-shirt-progress></span></div>
   </div>
 </section>
+
+<script src="{{ 'nabz-scroll-hero.js' | asset_url }}" defer="defer"></script>
 
 {% schema %}
 {

@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "nabz_header": {"type": "nabz-site-header", "settings": {}},
+    "hero": {"type": "nabz-hero", "settings": {}},
+    "story": {"type": "nabz-story", "settings": {}},
+    "surfaces": {"type": "nabz-surfaces", "settings": {}},
+    "fit": {"type": "nabz-fit", "settings": {}},
+    "closing": {"type": "nabz-closing", "settings": {}},
+    "catalog": {"type": "nabz-catalog-gateway", "settings": {}},
+    "nabz_footer": {"type": "nabz-site-footer", "settings": {}}
+  },
+  "order": ["nabz_header", "hero", "story", "surfaces", "fit", "closing", "catalog", "nabz_footer"]
+}

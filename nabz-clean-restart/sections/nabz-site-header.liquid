@@ -1,4 +1,18 @@
 {{ 'nabz-base.css' | asset_url | stylesheet_tag }}
+<style>
+  .shopify-section-group-header-group,
+  .shopify-section-group-footer-group,
+  #header-group,
+  #footer-group {
+    display: none !important;
+  }
+  #MainContent,
+  main {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: none !important;
+  }
+</style>
 <div class="nabz-home-marker" hidden aria-hidden="true"></div>
 <header class="nabz-site-header">
   <div class="nabz-shell nabz-site-header__inner">

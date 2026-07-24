@@ -1,0 +1,36 @@
+<section class="nabz-section nabz-section--panel" id="fit" aria-labelledby="nabz-fit-title">
+  <div class="nabz-shell">
+    <div class="nabz-section-intro">
+      <div>
+        <p class="nabz-kicker">{{ section.settings.kicker }}</p>
+        <h2 class="nabz-section-heading" id="nabz-fit-title">{{ section.settings.heading }}</h2>
+      </div>
+      <p class="nabz-copy">{{ section.settings.copy }}</p>
+    </div>
+    <div class="nabz-fit-grid">
+      {% assign fit_names = 'S Standard,M Standard,M Extended,L Standard,L Extended,XL Standard' | split: ',' %}
+      {% assign fit_lengths = '26.75 in,27 in,Extended,Standard,Extended,Standard' | split: ',' %}
+      {% assign fit_images = 'nabz-fit-s-standard.webp,nabz-fit-m-standard.webp,nabz-fit-m-extended.webp,nabz-fit-l-standard.webp,nabz-fit-l-extended.webp,nabz-fit-xl-standard.webp' | split: ',' %}
+      {% for name in fit_names %}
+        <article class="nabz-fit-card">
+          <div class="nabz-fit-card__media">
+            <img src="{{ fit_images[forloop.index0] | asset_url }}" alt="Air Cable shirt in {{ name }}" width="900" height="1200" loading="lazy">
+          </div>
+          <div class="nabz-fit-card__meta"><strong>{{ name }}</strong><span>{{ fit_lengths[forloop.index0] }}</span></div>
+        </article>
+      {% endfor %}
+    </div>
+    <p class="nabz-fit-note">Your shoulders and chest decide the size. Your height and torso decide the length. Garment length is measured from the high shoulder point to the hem.</p>
+  </div>
+</section>
+{% schema %}
+{
+  "name":"NABZ fit",
+  "settings":[
+    {"type":"text","id":"kicker","label":"Kicker","default":"The NABZ fit"},
+    {"type":"text","id":"heading","label":"Heading","default":"Choose room. Then choose length."},
+    {"type":"textarea","id":"copy","label":"Copy","default":"A clearer system for Indian proportions. Choose the shoulder and chest room first, then select the length that suits your height and torso."}
+  ],
+  "presets":[{"name":"NABZ fit"}]
+}
+{% endschema %}

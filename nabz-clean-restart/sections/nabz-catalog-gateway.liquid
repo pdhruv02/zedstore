@@ -1,0 +1,25 @@
+<section class="nabz-cinematic" aria-labelledby="nabz-catalog-title">
+  <picture class="nabz-cinematic__media">
+    <source media="(max-width: 749px)" srcset="{{ 'nabz-air-cable-editorial-mobile-1080.webp' | asset_url }}">
+    <img src="{{ 'nabz-air-cable-editorial-1920.webp' | asset_url }}" alt="A NABZ shirt worn in an editorial setting" width="1920" height="1081" loading="lazy">
+  </picture>
+  <div class="nabz-cinematic__shade" aria-hidden="true"></div>
+  <div class="nabz-shell nabz-cinematic__content">
+    <p class="nabz-kicker">{{ section.settings.kicker }}</p>
+    <h2 class="nabz-section-heading" id="nabz-catalog-title">{{ section.settings.heading }}</h2>
+    <p class="nabz-copy">{{ section.settings.copy }}</p>
+    <a class="nabz-button nabz-button--solid" href="{{ routes.all_products_collection_url }}">{{ section.settings.button_label }}</a>
+  </div>
+</section>
+{% schema %}
+{
+  "name":"NABZ catalog gateway",
+  "settings":[
+    {"type":"text","id":"kicker","label":"Kicker","default":"The catalog"},
+    {"type":"text","id":"heading","label":"Heading","default":"See what NABZ looks like when worn."},
+    {"type":"textarea","id":"copy","label":"Copy","default":"Explore the first NABZ shirts, built around surface, structure, and a cleaner untucked proportion."},
+    {"type":"text","id":"button_label","label":"Button","default":"Explore all shirts"}
+  ],
+  "presets":[{"name":"NABZ catalog gateway"}]
+}
+{% endschema %}

@@ -1,0 +1,27 @@
+<section class="nabz-section nabz-section--panel" id="story" aria-labelledby="nabz-story-title">
+  <div class="nabz-shell nabz-story-grid">
+    <div class="nabz-story-grid__media">
+      <img src="{{ 'nabz-self-contour-macro-1400.webp' | asset_url }}" alt="Close view of NABZ embroidery and fabric" width="1400" height="1400" loading="lazy">
+    </div>
+    <div class="nabz-story-grid__body">
+      <div>
+        <p class="nabz-kicker">{{ section.settings.kicker }}</p>
+        <h2 class="nabz-section-heading" id="nabz-story-title">{{ section.settings.heading }}</h2>
+      </div>
+      <p class="nabz-copy">{{ section.settings.copy }}</p>
+      <a class="nabz-button" href="{{ routes.all_products_collection_url }}">{{ section.settings.button_label }}</a>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name":"NABZ story",
+  "settings":[
+    {"type":"text","id":"kicker","label":"Kicker","default":"The idea"},
+    {"type":"text","id":"heading","label":"Heading","default":"Made to be noticed twice."},
+    {"type":"textarea","id":"copy","label":"Copy","default":"From across the room, a clean shirt. Up close, the work appears. Indian craft becomes texture, structure, and detail for everyday dressing."},
+    {"type":"text","id":"button_label","label":"Button","default":"See the catalog"}
+  ],
+  "presets":[{"name":"NABZ story"}]
+}
+{% endschema %}

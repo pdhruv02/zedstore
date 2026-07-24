@@ -1,0 +1,44 @@
+{{ 'nabz-scroll-hero.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'nabz-scroll-hero.js' | asset_url }}" defer="defer"></script>
+
+<section class="nabz-shirt-scroll" id="top" data-shirt-scroll data-frame-count="154" data-frames-per-sheet="8" data-sheet-columns="4" aria-label="A NABZ shirt forms on the model as the page scrolls">
+  <div class="nabz-shirt-scroll-sticky">
+    <div class="nabz-shirt-scroll-media">
+      <img class="nabz-shirt-scroll-fallback" src="https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-shirt-scroll-first.webp?v=1784862663" alt="Model before the NABZ shirt forms" width="1280" height="720" fetchpriority="high">
+      <canvas class="nabz-shirt-scroll-canvas" data-shirt-canvas width="1280" height="720" aria-hidden="true"></canvas>
+      <div class="nabz-shirt-scroll-loading" data-shirt-loading aria-hidden="true"><span></span>Loading the thread</div>
+      <script type="application/json" data-shirt-sprites>[{"url":"https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-shirt-scroll-sheet-01.webp?v=1784862856","count":8},{"url":"https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-shirt-scroll-sheet-02.webp?v=1784862869","count":8},{"url":"https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-shirt-scroll-sheet-03.webp?v=1784862881","count":8},{"url":"https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-shirt-scroll-sheet-04.webp?v=1784862894","count":8},{"url":"https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-shirt-scroll-sheet-05.webp?v=1784862909","count":8},{"url":"https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-shirt-scroll-sheet-06.webp?v=1784862917","count":8},{"url":"https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-shirt-scroll-sheet-07.webp?v=1784862927","count":8},{"url":"https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-shirt-scroll-sheet-08.webp?v=1784862938","count":8},{"url":"https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-shirt-scroll-sheet-09.webp?v=1784862949","count":8},{"url":"https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-shirt-scroll-sheet-10.webp?v=1784862959","count":8},{"url":"https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-shirt-scroll-sheet-11.webp?v=1784862968","count":8},{"url":"https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-shirt-scroll-sheet-12.webp?v=1784862980","count":8},{"url":"https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-shirt-scroll-sheet-13.webp?v=1784862992","count":8},{"url":"https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-shirt-scroll-sheet-14.webp?v=1784863002","count":8},{"url":"https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-shirt-scroll-sheet-15.webp?v=1784863016","count":8},{"url":"https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-shirt-scroll-sheet-16.webp?v=1784863026","count":8},{"url":"https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-shirt-scroll-sheet-17.webp?v=1784863037","count":8},{"url":"https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-shirt-scroll-sheet-18.webp?v=1784863049","count":8},{"url":"https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-shirt-scroll-sheet-19.webp?v=1784863060","count":8},{"url":"https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-shirt-scroll-sheet-20.webp?v=1784863072","count":2}]</script>
+    </div>
+
+    <div class="nabz-shirt-scroll-vignette" aria-hidden="true"></div>
+    <div class="nabz-shirt-scroll-grain" aria-hidden="true"></div>
+
+    <div class="nabz-shirt-scroll-copy">
+      <div class="nabz-shirt-scroll-kicker">Scroll to dress the silhouette</div>
+      <h1 class="nabz-shirt-scroll-sr">Not ethnic wear. Not a plain shirt. The space between.</h1>
+      <div class="nabz-shirt-scroll-lines" aria-hidden="true">
+        <p class="nabz-shirt-scroll-line" data-shirt-line="1">Not ethnic wear.</p>
+        <p class="nabz-shirt-scroll-line" data-shirt-line="2">Not a plain shirt.</p>
+        <p class="nabz-shirt-scroll-line" data-shirt-line="3">The space <em>between.</em></p>
+      </div>
+      <div class="nabz-shirt-scroll-finale">
+        <p>India's textile language, re-cut into an everyday shirt that reveals itself as you move closer.</p>
+        <a class="nabz-scroll-enter" href="#surface">Enter NABZ</a>
+      </div>
+    </div>
+
+    <div class="nabz-shirt-scroll-meta">Scroll to make the shirt</div>
+    <div class="nabz-shirt-scroll-frame-label" data-shirt-frame>001 / 154</div>
+    <div class="nabz-shirt-scroll-progress" aria-hidden="true"><span data-shirt-progress></span></div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "NABZ scroll hero",
+  "tag": "section",
+  "class": "nabz-scroll-hero-section",
+  "settings": [],
+  "presets": [{ "name": "NABZ scroll hero" }]
+}
+{% endschema %}

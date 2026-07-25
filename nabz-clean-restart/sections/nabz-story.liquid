@@ -1,9 +1,10 @@
-<section class="nabz-section nabz-section--panel" id="story" aria-labelledby="nabz-story-title">
+<section class="nabz-section nabz-section--panel nabz-story-scroll" id="story" data-nabz-parallax="0.08" aria-labelledby="nabz-story-title">
   <div class="nabz-shell nabz-story-grid">
-    <div class="nabz-story-grid__media">
+    <div class="nabz-story-grid__media" data-nabz-reveal>
       <img src="{{ 'nabz-self-contour-macro-1400.webp' | asset_url }}" alt="Close view of NABZ embroidery and fabric" width="1400" height="1400" loading="lazy">
+      <span class="nabz-story-thread" aria-hidden="true"></span>
     </div>
-    <div class="nabz-story-grid__body">
+    <div class="nabz-story-grid__body" data-nabz-reveal style="--nabz-delay: 140ms;">
       <div>
         <p class="nabz-kicker">{{ section.settings.kicker }}</p>
         <h2 class="nabz-section-heading" id="nabz-story-title">{{ section.settings.heading }}</h2>

@@ -1,39 +1,122 @@
-<section class="nabz-section nabz-section--panel" id="fit" aria-labelledby="nabz-fit-title">
-  <div class="nabz-shell">
-    <div class="nabz-section-intro">
-      <div>
-        <p class="nabz-kicker">{{ section.settings.kicker }}</p>
-        <h2 class="nabz-section-heading" id="nabz-fit-title">{{ section.settings.heading }}</h2>
+{% liquid
+  assign fit_sizes = 'S,M,L,XL' | split: ','
+  assign fit_standard = '26.75,27,27.75,28.5' | split: ','
+  assign fit_extended = 'none,28.5,29.25,none' | split: ','
+%}
+
+<section class="nabz-chapter nabz-chapter--fit" data-nabz-chapter data-chapter-index="3" id="fit" aria-labelledby="nabz-fit-title">
+  <div class="nabz-chapter__frame nabz-fit-frame" data-nabz-fit>
+    <div class="nabz-fit-frame__copy">
+      <h2 id="nabz-fit-title">S or M size is too narrow and tight for you? and the next size is comfortably loose but becomes unnecessarily long?</h2>
+      <p class="nabz-fit-frame__aside">read this one...</p>
+      <p>Shirts longer than your torso makes you appear shorter, and ruins the overall proportion.</p>
+      <p class="nabz-fit-frame__statement">NABZ separates size and length</p>
+      <p>Up to 5′8″? Start with Standard. Above 5′8″? Start with Extended. Refer to the size chart for precise fit.</p>
+    </div>
+
+    <div class="nabz-fit-frame__interaction">
+      <script type="application/json" data-nabz-fit-data>
+        [
+          {% for size in fit_sizes %}
+            {
+              "size": {{ size | json }},
+              "standard": {{ fit_standard[forloop.index0] | json }},
+              "extended": {% if fit_extended[forloop.index0] == 'none' %}null{% else %}{{ fit_extended[forloop.index0] | json }}{% endif %}
+            }{% unless forloop.last %},{% endunless %}
+          {% endfor %}
+        ]
+      </script>
+
+      <div class="nabz-fit-controls" role="group" aria-label="Size">
+        {% for size in fit_sizes %}
+          <button
+            type="button"
+            class="nabz-fit-control{% if size == 'M' %} is-active{% endif %}"
+            data-fit-size="{{ size }}"
+            aria-pressed="{% if size == 'M' %}true{% else %}false{% endif %}"
+          >{{ size }}</button>
+        {% endfor %}
       </div>
-      <p class="nabz-copy">{{ section.settings.copy }}</p>
+
+      <div class="nabz-fit-controls nabz-fit-controls--length" role="group" aria-label="Length">
+        <button type="button" class="nabz-fit-control is-active" data-fit-length="standard" aria-pressed="true">Standard</button>
+        <button type="button" class="nabz-fit-control" data-fit-length="extended" aria-pressed="false">Extended</button>
+      </div>
+
+      <div class="nabz-fit-visual">
+        <svg viewBox="0 0 360 460" role="img" aria-labelledby="nabz-fit-svg-title nabz-fit-svg-desc">
+          <title id="nabz-fit-svg-title">NABZ shirt size and length diagram</title>
+          <desc id="nabz-fit-svg-desc">The shirt becomes subtly wider by size and extends only below the upper body when Extended is selected.</desc>
+
+          <g class="nabz-fit-shirt" data-fit-width-layer>
+            <path class="nabz-fit-shirt__upper" d="M128 94 L105 113 L62 140 L91 219 L113 208 L119 430 M232 94 L255 113 L298 140 L269 219 L247 208 L241 430" />
+            <path class="nabz-fit-shirt__shoulders" d="M128 94 Q145 111 180 112 Q215 111 232 94" />
+            <path class="nabz-fit-shirt__collar" d="M146 72 L128 94 L159 126 L180 112 L201 126 L232 94 L214 72 Q180 88 146 72 Z" />
+            <path class="nabz-fit-shirt__placket-upper" d="M180 112 L180 220" />
+
+            <g class="nabz-fit-shirt__lower" data-fit-lower-layer>
+              <path d="M119 220 L119 392 Q148 410 180 403 Q212 410 241 392 L241 220" />
+              <path d="M180 220 L180 403" />
+              <circle cx="180" cy="248" r="3.2" />
+              <circle cx="180" cy="286" r="3.2" />
+              <circle cx="180" cy="324" r="3.2" />
+              <circle cx="180" cy="362" r="3.2" />
+            </g>
+          </g>
+
+          <g class="nabz-fit-measure">
+            <line x1="315" y1="92" x2="315" y2="220" />
+            <g data-fit-measure-lower>
+              <line x1="315" y1="220" x2="315" y2="403" />
+              <line x1="305" y1="403" x2="325" y2="403" />
+            </g>
+            <line x1="305" y1="92" x2="325" y2="92" />
+            <text x="336" y="252" data-fit-svg-length>27"</text>
+          </g>
+        </svg>
+      </div>
+
+      <output class="nabz-fit-readout" aria-live="polite">
+        <span data-fit-readout-size>M</span>
+        <span aria-hidden="true">+</span>
+        <span data-fit-readout-length>Standard</span>
+        <span aria-hidden="true">+</span>
+        <span data-fit-readout-value>27"</span>
+      </output>
+      <p class="nabz-fit-unavailable" data-fit-unavailable hidden>Not initially offered</p>
     </div>
-    <div class="nabz-fit-grid">
-      {% assign fit_names = 'S Standard,M Standard,M Extended,L Standard,L Extended,XL Standard' | split: ',' %}
-      {% assign fit_lengths = '26.75 in,27 in,Extended,Standard,Extended,Standard' | split: ',' %}
-      {% assign fit_images = 'nabz-fit-s-standard.webp,nabz-fit-m-standard.webp,nabz-fit-m-extended.webp,nabz-fit-l-standard.webp,nabz-fit-l-extended.webp,nabz-fit-xl-standard.webp' | split: ',' %}
-      {% for name in fit_names %}
-        {% assign fit_index = forloop.index0 %}
-        {% assign fit_image = fit_images[fit_index] %}
-        {% assign fit_length = fit_lengths[fit_index] %}
-        <article class="nabz-fit-card">
-          <div class="nabz-fit-card__media">
-            <img src="{{ fit_image | asset_url }}" alt="Air Cable shirt in {{ name }}" width="900" height="1200" loading="lazy">
-          </div>
-          <div class="nabz-fit-card__meta"><strong>{{ name }}</strong><span>{{ fit_length }}</span></div>
-        </article>
-      {% endfor %}
+
+    <div class="nabz-fit-chart">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Size</th>
+            <th scope="col">Standard</th>
+            <th scope="col">Extended</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for size in fit_sizes %}
+            <tr>
+              <th scope="row">{{ size }}</th>
+              <td>{{ fit_standard[forloop.index0] }}"</td>
+              <td>{% if fit_extended[forloop.index0] == 'none' %}Not initially offered{% else %}{{ fit_extended[forloop.index0] }}"{% endif %}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-    <p class="nabz-fit-note">Your shoulders and chest decide the size. Your height and torso decide the length. Garment length is measured from the high shoulder point to the hem.</p>
   </div>
 </section>
+
 {% schema %}
 {
-  "name":"NABZ fit",
-  "settings":[
-    {"type":"text","id":"kicker","label":"Kicker","default":"The NABZ fit"},
-    {"type":"text","id":"heading","label":"Heading","default":"Choose room. Then choose length."},
-    {"type":"textarea","id":"copy","label":"Copy","default":"A clearer system for Indian proportions. Choose the shoulder and chest room first, then select the length that suits your height and torso."}
-  ],
-  "presets":[{"name":"NABZ fit"}]
+  "name": "NABZ fit chapter",
+  "settings": [],
+  "presets": [
+    {
+      "name": "NABZ fit chapter"
+    }
+  ]
 }
 {% endschema %}

@@ -1,13 +1,117 @@
 {
   "sections": {
-    "nabz_header": {"type": "nabz-site-header", "settings": {}},
-    "hero": {"type": "nabz-hero", "settings": {}},
-    "story": {"type": "nabz-story", "settings": {}},
-    "surfaces": {"type": "nabz-surfaces", "settings": {}},
-    "fit": {"type": "nabz-fit", "settings": {}},
-    "closing": {"type": "nabz-closing", "settings": {}},
-    "catalog": {"type": "nabz-catalog-gateway", "settings": {}},
-    "nabz_footer": {"type": "nabz-site-footer", "settings": {}}
+    "nabz_header": {
+      "type": "nabz-site-header",
+      "settings": {}
+    },
+    "hero": {
+      "type": "nabz-hero",
+      "settings": {}
+    },
+    "products": {
+      "type": "nabz-products",
+      "blocks": {
+        "fault_line": {
+          "type": "product",
+          "settings": {
+            "name": "Fault Line",
+            "link": "",
+            "asset_name": "nabz-product-1-hq.webp"
+          }
+        },
+        "jali_air": {
+          "type": "product",
+          "settings": {
+            "name": "Jali Air",
+            "link": "",
+            "asset_name": "nabz-product-2-hq.webp"
+          }
+        },
+        "microcosm": {
+          "type": "product",
+          "settings": {
+            "name": "Microcosm",
+            "link": "",
+            "asset_name": "nabz-product-3-hq.webp"
+          }
+        },
+        "phulkari_pixels": {
+          "type": "product",
+          "settings": {
+            "name": "Phulkari Pixels",
+            "link": "",
+            "asset_name": "nabz-product-4-hq.webp"
+          }
+        },
+        "dissolving_oxford": {
+          "type": "product",
+          "settings": {
+            "name": "Dissolving Oxford",
+            "link": "",
+            "asset_name": "nabz-product-5-hq.webp"
+          }
+        },
+        "shadow_study": {
+          "type": "product",
+          "settings": {
+            "name": "Shadow Study",
+            "link": "",
+            "asset_name": "nabz-product-6-hq.webp"
+          }
+        },
+        "moire_motion": {
+          "type": "product",
+          "settings": {
+            "name": "Moiré in Motion",
+            "link": "",
+            "asset_name": "nabz-product-7-hq.webp"
+          }
+        },
+        "body_map": {
+          "type": "product",
+          "settings": {
+            "name": "Body Map",
+            "link": "",
+            "asset_name": "nabz-product-8-hq.webp"
+          }
+        }
+      },
+      "block_order": [
+        "fault_line",
+        "jali_air",
+        "microcosm",
+        "phulkari_pixels",
+        "dissolving_oxford",
+        "shadow_study",
+        "moire_motion",
+        "body_map"
+      ],
+      "settings": {}
+    },
+    "fit": {
+      "type": "nabz-fit",
+      "settings": {}
+    },
+    "shoulder": {
+      "type": "nabz-shoulder",
+      "settings": {}
+    },
+    "contact": {
+      "type": "nabz-contact",
+      "settings": {}
+    },
+    "nabz_footer": {
+      "type": "nabz-site-footer",
+      "settings": {}
+    }
   },
-  "order": ["nabz_header", "hero", "story", "surfaces", "fit", "closing", "catalog", "nabz_footer"]
+  "order": [
+    "nabz_header",
+    "hero",
+    "products",
+    "fit",
+    "shoulder",
+    "contact",
+    "nabz_footer"
+  ]
 }

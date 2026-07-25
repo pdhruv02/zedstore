@@ -1,0 +1,52 @@
+/* Progressive enhancement and compatibility safeguards */
+html:not(.nabz-scroll-ready) [data-nabz-reveal] {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+.nabz-site-header:focus-within {
+  transform: translateY(0) !important;
+}
+
+body:has(.nabz-home-marker) .shopify-section:has(.nabz-surface-scroll) {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+
+.nabz-hero--scroll .nabz-hero__shade {
+  background:
+    linear-gradient(90deg, rgba(5,4,4,.9) 0%, rgba(5,4,4,.6) 42%, rgba(5,4,4,.12) 74%, rgba(5,4,4,.52) 100%),
+    linear-gradient(0deg, rgba(5,4,4,.78), transparent 63%);
+  opacity: calc(.88 + var(--nabz-hero-progress) * .12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nabz-surface-scroll {
+    height: auto !important;
+    padding-block: 100px;
+  }
+  .nabz-surface-scroll__track {
+    width: auto;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 0 var(--gutter);
+    transform: none !important;
+  }
+  .nabz-surface-scroll__intro {
+    width: auto;
+    grid-column: 1 / -1;
+  }
+  .nabz-surface-scroll .nabz-surface-card {
+    width: auto;
+    opacity: 1;
+    transform: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) and (max-width: 640px) {
+  .nabz-surface-scroll__track {
+    grid-template-columns: 1fr;
+  }
+}

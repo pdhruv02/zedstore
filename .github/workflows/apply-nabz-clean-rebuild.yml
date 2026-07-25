@@ -22,8 +22,13 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          cat .nabz-rebuild/part-*.b64 | base64 --decode > /tmp/nabz-clean-rebuild.tar.gz
-          echo "999253cb15d25a07ba90c74977ea55f1  /tmp/nabz-clean-rebuild.tar.gz" | md5sum --check -
+          python - <<'PY'
+          from pathlib import Path
+          import base64
+          source = ''.join(path.read_text() for path in sorted(Path('.nabz-rebuild').glob('part-*.b85')))
+          Path('/tmp/nabz-clean-rebuild.tar.gz').write_bytes(base64.b85decode(source))
+          PY
+          echo "3aa2cdf1e63ede1ed3fc672d844102da  /tmp/nabz-clean-rebuild.tar.gz" | md5sum --check -
           tar -xzf /tmp/nabz-clean-rebuild.tar.gz -C .
 
           rm -f \
@@ -31,6 +36,15 @@ jobs:
             sections/nabz-surfaces.liquid \
             sections/nabz-closing.liquid \
             sections/nabz-catalog-gateway.liquid \
+            sections/nabz-air-cable.liquid \
+            sections/nabz-closing-drop.liquid \
+            sections/nabz-construction-hero.liquid \
+            sections/nabz-fit-system.liquid \
+            sections/nabz-footer.liquid \
+            sections/nabz-header.liquid \
+            sections/nabz-product-assurances.liquid \
+            sections/nabz-textile-distance.liquid \
+            sections/nabz-textile-language.liquid \
             assets/nabz-scroll.css \
             assets/nabz-scroll.js \
             assets/nabz-scroll-safety.css \
@@ -58,7 +72,9 @@ jobs:
             assets/nabz-real-assets-v2-c.css \
             assets/nabz-real-assets-v2-c.css.liquid \
             assets/nabz-real-assets-v2-d.css \
-            assets/nabz-real-assets-v2-d.css.liquid
+            assets/nabz-real-assets-v2-d.css.liquid \
+            assets/nabz-textile-distance.css \
+            assets/nabz-textile-distance.js
 
           rm -rf .nabz-rebuild
           rm -f .github/workflows/apply-nabz-clean-rebuild.yml

@@ -1,17 +1,22 @@
-<section class="nabz-hero" aria-labelledby="nabz-hero-title">
-  <picture class="nabz-hero__media">
-    <source media="(max-width: 749px)" srcset="{{ 'nabz-self-contour-hero-mobile-1080.webp' | asset_url }}">
-    <img src="{{ 'nabz-self-contour-hero-1920.webp' | asset_url }}" alt="Model wearing a NABZ embroidered shirt" width="1920" height="1081" loading="eager" fetchpriority="high">
-  </picture>
-  <div class="nabz-hero__shade" aria-hidden="true"></div>
-  <div class="nabz-shell nabz-hero__content">
-    <p class="nabz-kicker">{{ section.settings.kicker }}</p>
-    <h1 class="nabz-heading" id="nabz-hero-title">{{ section.settings.line_1 }}<br>{{ section.settings.line_2 }}<br><em>{{ section.settings.line_3 }}</em></h1>
-    <p class="nabz-hero__copy">{{ section.settings.copy }}</p>
-    <div class="nabz-hero__actions">
-      <a class="nabz-button nabz-button--solid" href="#surface">{{ section.settings.primary_label }}</a>
-      <a class="nabz-button" href="{{ routes.all_products_collection_url }}">{{ section.settings.secondary_label }}</a>
+<section class="nabz-hero nabz-hero--scroll" data-nabz-hero aria-labelledby="nabz-hero-title">
+  <div class="nabz-hero__stage">
+    <picture class="nabz-hero__media">
+      <source media="(max-width: 749px)" srcset="{{ 'nabz-self-contour-hero-mobile-1080.webp' | asset_url }}">
+      <img src="{{ 'nabz-self-contour-hero-1920.webp' | asset_url }}" alt="Model wearing a NABZ embroidered shirt" width="1920" height="1081" loading="eager" fetchpriority="high">
+    </picture>
+    <div class="nabz-hero__shade" aria-hidden="true"></div>
+    <div class="nabz-shell nabz-hero__content">
+      <div data-nabz-reveal>
+        <p class="nabz-kicker">{{ section.settings.kicker }}</p>
+        <h1 class="nabz-heading" id="nabz-hero-title">{{ section.settings.line_1 }}<br>{{ section.settings.line_2 }}<br><em>{{ section.settings.line_3 }}</em></h1>
+        <p class="nabz-hero__copy">{{ section.settings.copy }}</p>
+        <div class="nabz-hero__actions">
+          <a class="nabz-button nabz-button--solid" href="#surface">{{ section.settings.primary_label }}</a>
+          <a class="nabz-button" href="{{ routes.all_products_collection_url }}">{{ section.settings.secondary_label }}</a>
+        </div>
+      </div>
     </div>
+    <div class="nabz-hero__eyeline" aria-hidden="true">Scroll into the cloth</div>
   </div>
 </section>
 {% schema %}

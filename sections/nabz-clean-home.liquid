@@ -1,0 +1,106 @@
+{{ 'nabz-clean-home.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'nabz-clean-home.js' | asset_url }}" defer></script>
+
+<div class="nabz-clean-home" data-nabz-home>
+  <section class="nabz-chapter nabz-chapter--hero" id="hero">
+    <div class="nabz-chapter__frame nabz-hero-frame">
+      <span class="nabz-chapter__index" aria-hidden="true">01</span>
+      <img class="nabz-hero-frame__model" src="https://cdn.shopify.com/s/files/1/0766/4042/0034/t/21/assets/nabz-hero-self-contour-hq.webp" alt="NABZ embroidered shirt" width="1024" height="1536" fetchpriority="high">
+      <div class="nabz-hero-frame__shade" aria-hidden="true"></div>
+      <div class="nabz-hero-frame__copy">
+        <h1>Not ethnic wear.<br>Not a plain shirt.<br><em>The space between.</em></h1>
+        <p>India’s textile language, re-cut into everyday shirts. Clean from a distance. Unforgettable up close.</p>
+      </div>
+      <figure class="nabz-hero-frame__macro">
+        <img src="https://cdn.shopify.com/s/files/1/0766/4042/0034/t/21/assets/nabz-hero-self-contour-macro-hq.webp" alt="Close-up of NABZ embroidery" width="302" height="779" fetchpriority="high">
+      </figure>
+    </div>
+  </section>
+
+  <section class="nabz-chapter nabz-chapter--products" id="products">
+    <div class="nabz-chapter__frame nabz-products-frame">
+      <span class="nabz-chapter__index" aria-hidden="true">02</span>
+      <h2>Unforgettable up close.</h2>
+      <div class="nabz-product-gallery" data-product-gallery>
+        {% assign product_urls = 'https://cdn.shopify.com/s/files/1/0766/4042/0034/t/21/assets/nabz-product-1-hq.webp,https://cdn.shopify.com/s/files/1/0766/4042/0034/t/21/assets/nabz-product-2-hq.webp,https://cdn.shopify.com/s/files/1/0766/4042/0034/t/21/assets/nabz-product-3-hq.webp,https://cdn.shopify.com/s/files/1/0766/4042/0034/t/21/assets/nabz-product-4-hq.webp,https://cdn.shopify.com/s/files/1/0766/4042/0034/t/21/assets/nabz-product-5-hq.webp,https://cdn.shopify.com/s/files/1/0766/4042/0034/t/21/assets/nabz-product-6-hq.webp,https://cdn.shopify.com/s/files/1/0766/4042/0034/t/21/assets/nabz-product-7-hq.webp,https://cdn.shopify.com/s/files/1/0766/4042/0034/t/21/assets/nabz-product-8-hq.webp' | split: ',' %}
+        {% assign product_names = 'Fault Line,Jali Air,Microcosm,Phulkari Pixels,Dissolving Oxford,Shadow Study,Moiré in Motion,Body Map' | split: ',' %}
+        {% for product_url in product_urls %}
+          <button class="nabz-product-panel{% if forloop.first %} is-active{% endif %}" type="button" data-product-panel aria-label="{{ product_names[forloop.index0] }}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}">
+            <img src="{{ product_url }}" alt="{{ product_names[forloop.index0] }}" width="1003" height="1568" loading="{% if forloop.index < 3 %}eager{% else %}lazy{% endif %}">
+          </button>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section class="nabz-chapter nabz-chapter--fit" id="fit">
+    <div class="nabz-chapter__frame nabz-fit-frame">
+      <span class="nabz-chapter__index" aria-hidden="true">03</span>
+      <div class="nabz-fit-frame__copy">
+        <h2>S or M size is too narrow and tight for you? and the next size is comfortably loose but becomes unnecessarily long?</h2>
+        <p class="nabz-fit-frame__read">read this one...</p>
+        <p>Shirts longer than your torso makes you appear shorter, and ruins the overall proportion.</p>
+        <h3>NABZ separates size and length</h3>
+        <p>Up to 5′8″? Start with Standard. Above 5′8″? Start with Extended. Refer to the size chart for precise fit.</p>
+      </div>
+
+      <div class="nabz-fit-selector" data-fit-selector>
+        <div class="nabz-fit-selector__controls">
+          <div class="nabz-fit-selector__group" data-size-buttons>
+            <button type="button" data-size="S" aria-pressed="false">S</button>
+            <button class="is-active" type="button" data-size="M" aria-pressed="true">M</button>
+            <button type="button" data-size="L" aria-pressed="false">L</button>
+            <button type="button" data-size="XL" aria-pressed="false">XL</button>
+          </div>
+          <div class="nabz-fit-selector__group" data-length-buttons>
+            <button class="is-active" type="button" data-length="Standard" aria-pressed="true">Standard</button>
+            <button type="button" data-length="Extended" aria-pressed="false">Extended</button>
+          </div>
+        </div>
+        <output class="nabz-fit-selector__output" data-fit-output aria-live="polite">M · Standard · 27&quot;</output>
+        <div class="nabz-size-table-wrap">
+          <table class="nabz-size-table">
+            <thead><tr><th>Size</th><th>Standard</th><th>Extended</th></tr></thead>
+            <tbody>
+              <tr data-row="S"><th>S</th><td data-cell="S-Standard">26.75&quot;</td><td data-cell="S-Extended">Not initially offered</td></tr>
+              <tr class="is-active" data-row="M"><th>M</th><td class="is-active" data-cell="M-Standard">27&quot;</td><td data-cell="M-Extended">28.5&quot;</td></tr>
+              <tr data-row="L"><th>L</th><td data-cell="L-Standard">27.75&quot;</td><td data-cell="L-Extended">29.25&quot;</td></tr>
+              <tr data-row="XL"><th>XL</th><td data-cell="XL-Standard">28.5&quot;</td><td data-cell="XL-Extended">Not initially offered</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="nabz-chapter nabz-chapter--shoulders" id="shoulders">
+    <div class="nabz-chapter__frame nabz-shoulders-frame">
+      <span class="nabz-chapter__index" aria-hidden="true">04</span>
+      <img src="https://cdn.shopify.com/s/files/1/0766/4042/0034/t/21/assets/nabz-hero-air-cable-hq.webp" alt="NABZ shirt with a square shoulder line" width="972" height="1619" loading="lazy">
+      <div class="nabz-shoulders-frame__shade" aria-hidden="true"></div>
+      <div class="nabz-shoulders-frame__copy">
+        <h2>shirts that feel like suit</h2>
+        <p>shoulder fabric extra padded to give square shoulders look.</p>
+        <p>say no to dropped or downsloping shoulders</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="nabz-chapter nabz-chapter--contact" id="contact">
+    <div class="nabz-chapter__frame nabz-contact-frame">
+      <span class="nabz-chapter__index" aria-hidden="true">05</span>
+      <div>
+        <h2>wanna promote our product? wanna provide feedback? wanna talk?</h2>
+        <a href="/pages/contact">we are here to respond!</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "NABZ clean homepage",
+  "settings": [],
+  "presets": [{ "name": "NABZ clean homepage" }]
+}
+{% endschema %}

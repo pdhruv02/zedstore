@@ -1,0 +1,21 @@
+{{ 'nabz-base.css' | asset_url | stylesheet_tag }}
+<div class="nabz-home-marker" hidden aria-hidden="true"></div>
+<header class="nabz-site-header">
+  <div class="nabz-shell">
+    <div class="nabz-site-header__bar">
+      <a class="nabz-site-header__brand" href="{{ routes.root_url }}" aria-label="NABZ home">
+        <img src="https://cdn.shopify.com/s/files/1/0766/4042/0034/t/21/assets/nabz-logo-embroidered-safe.png" alt="NABZ" width="480" height="220" fetchpriority="high">
+      </a>
+      <nav class="nabz-site-header__nav" aria-label="Primary navigation">
+        <a href="{{ routes.all_products_collection_url }}">Shop</a>
+        <a href="#products">Surface</a>
+        <a href="#fit">Fit</a>
+        <a href="#shoulders">Story</a>
+      </nav>
+      <a class="nabz-site-header__bag" href="{{ routes.cart_url }}">Bag ({{ cart.item_count }})</a>
+    </div>
+  </div>
+</header>
+{% schema %}
+{"name":"NABZ header","settings":[],"presets":[{"name":"NABZ header"}]}
+{% endschema %}

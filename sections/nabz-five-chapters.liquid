@@ -1,0 +1,191 @@
+{{ 'nabz-five-chapters.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'nabz-five-chapters.js' | asset_url }}" defer></script>
+
+<div class="nabz-five" data-nabz-home>
+  <section class="nabz-chapter nabz-chapter--hero" data-nabz-chapter data-chapter-index="1">
+    <div class="nabz-chapter__frame">
+      <div class="nabz-hero__media">
+        <img class="nabz-hero__image" src="{{ 'nabz-hero-self-contour.jpg' | asset_url }}" alt="Model wearing the navy NABZ embroidered shirt" width="933" height="1400" loading="eager" fetchpriority="high">
+        <div class="nabz-hero__shade" aria-hidden="true"></div>
+        <div class="nabz-hero__copy">
+          <h1>Not ethnic wear.<br>Not a plain shirt.<br><em>The space between.</em></h1>
+          <p>India’s textile language, re-cut into everyday shirts. Clean from a distance. Unforgettable up close.</p>
+        </div>
+        <figure class="nabz-hero__macro">
+          <img src="{{ 'nabz-embroidery-closeup.jpg' | asset_url }}" alt="Close-up of navy embroidery with a copper accent stitch" width="302" height="779" loading="eager">
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="nabz-chapter nabz-chapter--products" id="products" data-nabz-chapter data-chapter-index="2">
+    <div class="nabz-chapter__frame">
+      <h2>Unforgettable up close.</h2>
+      <div class="nabz-products" data-product-gallery>
+        {% for block in section.blocks %}
+          {% if block.type == 'product' %}
+            {% liquid
+              case block.settings.asset_key
+                when 'fault-line'
+                  assign product_asset = 'nabz-product-fault-line.jpg'
+                when 'jali-air'
+                  assign product_asset = 'nabz-product-jali-air.jpg'
+                when 'microcosm'
+                  assign product_asset = 'nabz-product-microcosm.jpg'
+                when 'phulkari-pixels'
+                  assign product_asset = 'nabz-product-phulkari-pixels.jpg'
+                when 'dissolving-oxford'
+                  assign product_asset = 'nabz-product-dissolving-oxford.jpg'
+                when 'shadow-study'
+                  assign product_asset = 'nabz-product-shadow-study.jpg'
+                when 'moire-in-motion'
+                  assign product_asset = 'nabz-product-moire-in-motion.jpg'
+                when 'body-map'
+                  assign product_asset = 'nabz-product-body-map.jpg'
+              endcase
+            %}
+            <article class="nabz-product{% if forloop.first %} is-active{% endif %}" data-product-panel data-product-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+              {% if block.settings.link != blank %}<a href="{{ block.settings.link }}" aria-label="{{ block.settings.name | escape }}">{% endif %}
+                <img src="{{ product_asset | asset_url }}" alt="{{ block.settings.name | escape }}" width="896" height="1400" loading="lazy">
+                <span>{{ block.settings.name }}</span>
+              {% if block.settings.link != blank %}</a>{% endif %}
+              <button type="button" class="nabz-product__activate" data-product-activate aria-label="Show {{ block.settings.name | escape }}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"></button>
+            </article>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section class="nabz-chapter nabz-chapter--fit" id="fit" data-nabz-chapter data-chapter-index="3">
+    <div class="nabz-chapter__frame">
+      <div class="nabz-fit__copy">
+        <h2>S or M size is too narrow and tight for you? and the next size is comfortably loose but becomes unnecessarily long?</h2>
+        <p class="nabz-fit__read">read this one...</p>
+        <p>Shirts longer than your torso makes you appear shorter, and ruins the overall proportion.</p>
+        <h3>NABZ separates size and length</h3>
+        <p>Up to 5′8″? Start with Standard. Above 5′8″? Start with Extended. Refer to the size chart for precise fit.</p>
+      </div>
+
+      <div class="nabz-fit__interactive" data-fit-root>
+        <div class="nabz-fit__visual">
+          <svg class="nabz-fit__shirt" viewBox="0 0 360 500" role="img" aria-label="Shirt diagram showing M Standard at 27 inches">
+            <path class="nabz-fit__upper" d="M113 104 L149 78 L161 105 L180 116 L199 105 L211 78 L247 104 L297 156 L264 197 L238 174"/>
+            <path class="nabz-fit__upper" d="M113 104 L63 156 L96 197 L122 174"/>
+            <path class="nabz-fit__collar" d="M149 78 L180 116 L161 105 Z M211 78 L180 116 L199 105 Z"/>
+            <path class="nabz-fit__body" data-shirt-body d="M122 174 L122 404 Q180 424 238 404 L238 174"/>
+            <line class="nabz-fit__placket" x1="180" y1="116" x2="180" y2="414" data-shirt-placket/>
+            <line class="nabz-fit__measure" x1="304" y1="104" x2="304" y2="414" data-measure-line/>
+            <line class="nabz-fit__measure-cap" x1="296" y1="104" x2="312" y2="104"/>
+            <line class="nabz-fit__measure-cap" x1="296" y1="414" x2="312" y2="414" data-measure-cap/>
+            <text class="nabz-fit__measurement" x="320" y="265" data-measure-text transform="rotate(90 320 265)">27&quot;</text>
+          </svg>
+        </div>
+
+        <div class="nabz-fit__controls">
+          <div class="nabz-fit__choice-row" role="group" aria-label="Size">
+            <button type="button" data-fit-size="S" aria-pressed="false">S</button>
+            <button type="button" data-fit-size="M" aria-pressed="true" class="is-active">M</button>
+            <button type="button" data-fit-size="L" aria-pressed="false">L</button>
+            <button type="button" data-fit-size="XL" aria-pressed="false">XL</button>
+          </div>
+          <div class="nabz-fit__choice-row nabz-fit__choice-row--length" role="group" aria-label="Length">
+            <button type="button" data-fit-length="Standard" aria-pressed="true" class="is-active">Standard</button>
+            <button type="button" data-fit-length="Extended" aria-pressed="false">Extended</button>
+          </div>
+          <output class="nabz-fit__output" data-fit-output aria-live="polite">M + Standard + 27&quot;</output>
+          <p class="nabz-fit__unavailable" data-fit-unavailable aria-live="polite"></p>
+        </div>
+
+        <div class="nabz-fit__table-wrap">
+          <table class="nabz-fit__table">
+            <thead><tr><th>Size</th><th>Standard</th><th>Extended</th></tr></thead>
+            <tbody data-fit-table></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="nabz-chapter nabz-chapter--shoulder" id="shoulders" data-nabz-chapter data-chapter-index="4">
+    <div class="nabz-chapter__frame">
+      <img class="nabz-shoulder__image" src="{{ 'nabz-hero-air-cable.jpg' | asset_url }}" alt="Model wearing the cream NABZ shirt with the shoulder line clearly visible" width="841" height="1400" loading="lazy">
+      <div class="nabz-shoulder__shade" aria-hidden="true"></div>
+      <div class="nabz-shoulder__copy">
+        <h2>shirts that feel like suit</h2>
+        <p>shoulder fabric extra padded to give square shoulders look.</p>
+        <p>say no to dropped or downsloping shoulders</p>
+        <svg class="nabz-shoulder__lines" viewBox="0 0 240 90" aria-hidden="true">
+          <path d="M12 24 C76 24 116 40 228 70"/>
+          <path d="M12 66 C82 42 153 42 228 46"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="nabz-chapter nabz-chapter--contact" id="contact" data-nabz-chapter data-chapter-index="5">
+    <div class="nabz-chapter__frame">
+      <div class="nabz-contact__copy">
+        <h2>wanna promote our product? wanna provide feedback? wanna talk?</h2>
+        <p>we are here to respond!</p>
+      </div>
+      {% form 'contact', class: 'nabz-contact__form' %}
+        {% if form.posted_successfully? %}<p tabindex="-1" autofocus>{{ 'templates.contact.form.post_success' | t }}</p>{% endif %}
+        {{ form.errors | default_errors }}
+        <label for="NabzContactName">Name</label>
+        <input id="NabzContactName" type="text" name="contact[name]" value="{{ form.name | escape }}" autocomplete="name">
+        <label for="NabzContactEmail">Email</label>
+        <input id="NabzContactEmail" type="email" name="contact[email]" value="{{ form.email | escape }}" autocomplete="email" required>
+        <label for="NabzContactMessage">Message</label>
+        <textarea id="NabzContactMessage" name="contact[body]" rows="7" required>{{ form.body }}</textarea>
+        <button type="submit">Send</button>
+      {% endform %}
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "NABZ five chapters",
+  "max_blocks": 8,
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {
+          "type": "select",
+          "id": "asset_key",
+          "label": "NABZ image",
+          "options": [
+            { "value": "fault-line", "label": "Fault Line" },
+            { "value": "jali-air", "label": "Jali Air" },
+            { "value": "microcosm", "label": "Microcosm" },
+            { "value": "phulkari-pixels", "label": "Phulkari Pixels" },
+            { "value": "dissolving-oxford", "label": "Dissolving Oxford" },
+            { "value": "shadow-study", "label": "Shadow Study" },
+            { "value": "moire-in-motion", "label": "Moiré in Motion" },
+            { "value": "body-map", "label": "Body Map" }
+          ],
+          "default": "fault-line"
+        },
+        { "type": "text", "id": "name", "label": "Product name", "default": "Fault Line" },
+        { "type": "url", "id": "link", "label": "Product link" }
+      ]
+    }
+  ],
+  "presets": [{
+    "name": "NABZ five chapters",
+    "blocks": [
+      { "type": "product", "settings": { "asset_key": "fault-line", "name": "Fault Line" } },
+      { "type": "product", "settings": { "asset_key": "jali-air", "name": "Jali Air" } },
+      { "type": "product", "settings": { "asset_key": "microcosm", "name": "Microcosm" } },
+      { "type": "product", "settings": { "asset_key": "phulkari-pixels", "name": "Phulkari Pixels" } },
+      { "type": "product", "settings": { "asset_key": "dissolving-oxford", "name": "Dissolving Oxford" } },
+      { "type": "product", "settings": { "asset_key": "shadow-study", "name": "Shadow Study" } },
+      { "type": "product", "settings": { "asset_key": "moire-in-motion", "name": "Moiré in Motion" } },
+      { "type": "product", "settings": { "asset_key": "body-map", "name": "Body Map" } }
+    ]
+  }]
+}
+{% endschema %}

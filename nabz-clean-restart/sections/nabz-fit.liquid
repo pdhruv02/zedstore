@@ -1,11 +1,12 @@
-<section class="nabz-section nabz-section--panel" id="fit" aria-labelledby="nabz-fit-title">
-  <div class="nabz-shell">
-    <div class="nabz-section-intro">
+<section class="nabz-section nabz-section--panel nabz-fit-scroll" id="fit" aria-labelledby="nabz-fit-title">
+  <div class="nabz-shell nabz-fit-layout">
+    <div class="nabz-fit-layout__intro" data-nabz-reveal>
       <div>
         <p class="nabz-kicker">{{ section.settings.kicker }}</p>
         <h2 class="nabz-section-heading" id="nabz-fit-title">{{ section.settings.heading }}</h2>
       </div>
       <p class="nabz-copy">{{ section.settings.copy }}</p>
+      <p class="nabz-fit-note">Your shoulders and chest decide the size. Your height and torso decide the length. Garment length is measured from the high shoulder point to the hem.</p>
     </div>
     <div class="nabz-fit-grid">
       {% assign fit_names = 'S Standard,M Standard,M Extended,L Standard,L Extended,XL Standard' | split: ',' %}
@@ -15,7 +16,7 @@
         {% assign fit_index = forloop.index0 %}
         {% assign fit_image = fit_images[fit_index] %}
         {% assign fit_length = fit_lengths[fit_index] %}
-        <article class="nabz-fit-card">
+        <article class="nabz-fit-card" data-nabz-reveal style="--nabz-delay: {{ fit_index | times: 70 }}ms;">
           <div class="nabz-fit-card__media">
             <img src="{{ fit_image | asset_url }}" alt="Air Cable shirt in {{ name }}" width="900" height="1200" loading="lazy">
           </div>
@@ -23,7 +24,6 @@
         </article>
       {% endfor %}
     </div>
-    <p class="nabz-fit-note">Your shoulders and chest decide the size. Your height and torso decide the length. Garment length is measured from the high shoulder point to the hem.</p>
   </div>
 </section>
 {% schema %}

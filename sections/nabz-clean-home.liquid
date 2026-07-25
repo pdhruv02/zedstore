@@ -1,41 +1,40 @@
 {{ 'nabz-clean-home.css' | asset_url | stylesheet_tag }}
+{{ 'nabz-five-chapters-fix.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'nabz-clean-home.js' | asset_url }}" defer></script>
 
 <div class="nabz-clean-home" data-nabz-home>
-  <section class="nabz-chapter nabz-chapter--hero" id="hero">
+  <section class="nabz-chapter nabz-chapter--hero" data-nabz-chapter data-chapter-index="1" id="hero">
     <div class="nabz-chapter__frame nabz-hero-frame">
-      <span class="nabz-chapter__index" aria-hidden="true">01</span>
-      <img class="nabz-hero-frame__model" src="https://cdn.shopify.com/s/files/1/0766/4042/0034/t/21/assets/nabz-hero-self-contour-hq.webp" alt="NABZ embroidered shirt" width="1024" height="1536" fetchpriority="high">
+      <img class="nabz-hero-frame__model" src="{{ 'nabz-hero-self-contour-hq.webp' | asset_url }}" alt="NABZ navy embroidered shirt" width="1024" height="1536" fetchpriority="high">
       <div class="nabz-hero-frame__shade" aria-hidden="true"></div>
       <div class="nabz-hero-frame__copy">
         <h1>Not ethnic wear.<br>Not a plain shirt.<br><em>The space between.</em></h1>
         <p>India’s textile language, re-cut into everyday shirts. Clean from a distance. Unforgettable up close.</p>
       </div>
       <figure class="nabz-hero-frame__macro">
-        <img src="https://cdn.shopify.com/s/files/1/0766/4042/0034/t/21/assets/nabz-hero-self-contour-macro-hq.webp" alt="Close-up of NABZ embroidery" width="302" height="779" fetchpriority="high">
+        <img src="{{ 'nabz-hero-self-contour-macro-hq.webp' | asset_url }}" alt="Close-up of navy NABZ embroidery" width="302" height="779" fetchpriority="high">
       </figure>
     </div>
   </section>
 
-  <section class="nabz-chapter nabz-chapter--products" id="products">
+  <section class="nabz-chapter nabz-chapter--products" data-nabz-chapter data-chapter-index="2" id="products">
     <div class="nabz-chapter__frame nabz-products-frame">
-      <span class="nabz-chapter__index" aria-hidden="true">02</span>
       <h2>Unforgettable up close.</h2>
       <div class="nabz-product-gallery" data-product-gallery>
-        {% assign product_urls = 'https://cdn.shopify.com/s/files/1/0766/4042/0034/t/21/assets/nabz-product-1-hq.webp,https://cdn.shopify.com/s/files/1/0766/4042/0034/t/21/assets/nabz-product-2-hq.webp,https://cdn.shopify.com/s/files/1/0766/4042/0034/t/21/assets/nabz-product-3-hq.webp,https://cdn.shopify.com/s/files/1/0766/4042/0034/t/21/assets/nabz-product-4-hq.webp,https://cdn.shopify.com/s/files/1/0766/4042/0034/t/21/assets/nabz-product-5-hq.webp,https://cdn.shopify.com/s/files/1/0766/4042/0034/t/21/assets/nabz-product-6-hq.webp,https://cdn.shopify.com/s/files/1/0766/4042/0034/t/21/assets/nabz-product-7-hq.webp,https://cdn.shopify.com/s/files/1/0766/4042/0034/t/21/assets/nabz-product-8-hq.webp' | split: ',' %}
-        {% assign product_names = 'Fault Line,Jali Air,Microcosm,Phulkari Pixels,Dissolving Oxford,Shadow Study,Moiré in Motion,Body Map' | split: ',' %}
-        {% for product_url in product_urls %}
-          <button class="nabz-product-panel{% if forloop.first %} is-active{% endif %}" type="button" data-product-panel aria-label="{{ product_names[forloop.index0] }}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}">
-            <img src="{{ product_url }}" alt="{{ product_names[forloop.index0] }}" width="1003" height="1568" loading="{% if forloop.index < 3 %}eager{% else %}lazy{% endif %}">
+        {% assign product_assets = 'nabz-product-1-hq.webp|Fault Line,nabz-product-2-hq.webp|Jali Air,nabz-product-3-hq.webp|Microcosm,nabz-product-4-hq.webp|Phulkari Pixels,nabz-product-5-hq.webp|Dissolving Oxford,nabz-product-6-hq.webp|Shadow Study,nabz-product-7-hq.webp|Moiré in Motion,nabz-product-8-hq.webp|Body Map' | split: ',' %}
+        {% for product_asset in product_assets %}
+          {% assign product_parts = product_asset | split: '|' %}
+          <button class="nabz-product-panel{% if forloop.first %} is-active{% endif %}" type="button" data-product-panel aria-label="{{ product_parts[1] }}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}">
+            <img src="{{ product_parts[0] | asset_url }}" alt="{{ product_parts[1] }}" width="1003" height="1568" loading="{% if forloop.index < 3 %}eager{% else %}lazy{% endif %}">
+            <span class="nabz-product-panel__name">{{ product_parts[1] }}</span>
           </button>
         {% endfor %}
       </div>
     </div>
   </section>
 
-  <section class="nabz-chapter nabz-chapter--fit" id="fit">
+  <section class="nabz-chapter nabz-chapter--fit" data-nabz-chapter data-chapter-index="3" id="fit">
     <div class="nabz-chapter__frame nabz-fit-frame">
-      <span class="nabz-chapter__index" aria-hidden="true">03</span>
       <div class="nabz-fit-frame__copy">
         <h2>S or M size is too narrow and tight for you? and the next size is comfortably loose but becomes unnecessarily long?</h2>
         <p class="nabz-fit-frame__read">read this one...</p>
@@ -73,10 +72,9 @@
     </div>
   </section>
 
-  <section class="nabz-chapter nabz-chapter--shoulders" id="shoulders">
+  <section class="nabz-chapter nabz-chapter--shoulders" data-nabz-chapter data-chapter-index="4" id="shoulders">
     <div class="nabz-chapter__frame nabz-shoulders-frame">
-      <span class="nabz-chapter__index" aria-hidden="true">04</span>
-      <img src="https://cdn.shopify.com/s/files/1/0766/4042/0034/t/21/assets/nabz-hero-air-cable-hq.webp" alt="NABZ shirt with a square shoulder line" width="972" height="1619" loading="lazy">
+      <img src="{{ 'nabz-hero-air-cable-hq.webp' | asset_url }}" alt="NABZ cream shirt with a square shoulder line" width="972" height="1619" loading="lazy">
       <div class="nabz-shoulders-frame__shade" aria-hidden="true"></div>
       <div class="nabz-shoulders-frame__copy">
         <h2>shirts that feel like suit</h2>
@@ -86,13 +84,23 @@
     </div>
   </section>
 
-  <section class="nabz-chapter nabz-chapter--contact" id="contact">
+  <section class="nabz-chapter nabz-chapter--contact" data-nabz-chapter data-chapter-index="5" id="contact">
     <div class="nabz-chapter__frame nabz-contact-frame">
-      <span class="nabz-chapter__index" aria-hidden="true">05</span>
-      <div>
+      <div class="nabz-contact-frame__intro">
         <h2>wanna promote our product? wanna provide feedback? wanna talk?</h2>
-        <a href="/pages/contact">we are here to respond!</a>
+        <p>we are here to respond!</p>
       </div>
+      {% form 'contact', class: 'nabz-contact-form' %}
+        {% if form.posted_successfully? %}<p role="status">we are here to respond!</p>{% endif %}
+        {{ form.errors | default_errors }}
+        <label for="NabzContactName">Name</label>
+        <input id="NabzContactName" type="text" name="contact[name]" autocomplete="name">
+        <label for="NabzContactEmail">Email</label>
+        <input id="NabzContactEmail" type="email" name="contact[email]" autocomplete="email" required>
+        <label for="NabzContactMessage">Message</label>
+        <textarea id="NabzContactMessage" name="contact[body]" rows="6" required></textarea>
+        <button type="submit">Send</button>
+      {% endform %}
     </div>
   </section>
 </div>

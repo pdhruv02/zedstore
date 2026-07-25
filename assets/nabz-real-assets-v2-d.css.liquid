@@ -1,0 +1,62 @@
+
+  .nabz-footer { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 30px clamp(20px,5vw,72px); color: rgba(239,230,216,.66); background: var(--nabz-ink) url({{ 'nabz-ink-textile-2048.webp' | asset_url }}) center / cover; text-transform: uppercase; letter-spacing: .11em; font-size: 9px; }
+  .nabz-footer nav { display: flex; gap: 22px; }
+  .nabz-footer a { color: inherit; text-decoration: none; }
+  .nabz-page-seam { position: fixed; z-index: 999; inset: 0; pointer-events: none; background: var(--nabz-ink) url({{ 'nabz-ink-textile-2048.webp' | asset_url }}) center / cover; transform: scaleX(0); transform-origin: center; }
+  .nabz-page-seam.is-active { animation: nabz-page-seam 350ms cubic-bezier(.65,0,.2,1) both; }
+  @keyframes nabz-page-seam { 0% { transform: scaleX(0); } 100% { transform: scaleX(1); } }
+
+  @media (max-width: 899px) {
+    .nabz-header { min-height: 64px; padding: 10px 16px; }
+    .nabz-header__brand { width: 92px; }
+    .nabz-header__nav { gap: 13px; }
+    .nabz-header__nav a { font-size: 9px; letter-spacing: .08em; }
+    .nabz-hero { height: 140vh; min-height: 840px; }
+    .nabz-hero__sticky { min-height: 600px; }
+    .nabz-hero__picture img { object-position: center top; }
+    .nabz-hero__copy { left: 20px; right: 20px; top: auto; bottom: 78px; width: auto; transform: none; }
+    .nabz-hero h1 { max-width: 500px; font-size: clamp(44px,12vw,72px); }
+    .nabz-hero__copy > p:not(.nabz-kicker) { max-width: 520px; margin: 1.2rem 0 1.5rem; font-size: 14px; }
+    .nabz-scroll-cue { display: none; }
+    .nabz-surface-stage { height: 72vh; min-height: 520px; }
+    .nabz-surface-stage__caption { grid-template-columns: auto 1fr; align-items: center; }
+    .nabz-surface-stage__caption strong { text-align: right; }
+    .nabz-surface-stage__caption small { display: none; }
+    .nabz-surface-controls { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+    .nabz-surface-controls::-webkit-scrollbar { display: none; }
+    .nabz-surface-controls button { flex: 0 0 44%; border-bottom: 0; scroll-snap-align: start; }
+    .nabz-surface-notes { grid-template-columns: 1fr; gap: 32px; }
+    .nabz-fit-table { grid-template-columns: 1fr; }
+    .nabz-fit-visual { position: relative; top: auto; }
+    .nabz-fit-visual__frame { min-height: 650px; }
+    .nabz-fit-panel { width: min(620px,100%); margin: 0 auto; }
+    .nabz-fit-comparison__stage { height: 390px; }
+  }
+
+  @media (max-width: 560px) {
+    .nabz-header__nav { gap: 10px; }
+    .nabz-header__nav a:nth-child(3) { display: none; }
+    .nabz-hero__shade { background: linear-gradient(0deg, rgba(18,16,14,.88) 0%, rgba(18,16,14,.2) 68%, rgba(18,16,14,.08)); }
+    .nabz-hero__macro img { object-position: 55% center; }
+    .nabz-surface, .nabz-fit { padding-left: 16px; padding-right: 16px; }
+    .nabz-surface-stage { height: 72vh; min-height: 480px; }
+    .nabz-surface-stage__caption { left: 16px; right: 16px; bottom: 18px; }
+    .nabz-surface-stage__caption strong { font-size: 27px; }
+    .nabz-choice-row button { min-height: 48px; }
+    .nabz-fit-visual__frame { min-height: 510px; }
+    .nabz-fit-visual__frame > img { width: 82%; }
+    .nabz-fit-measure { left: 8%; top: 17%; bottom: 12%; }
+    .nabz-fit-guides span { left: 16%; right: 16%; }
+    .nabz-fit-comparison__stage { height: 315px; }
+    .nabz-crescendo__copy, .nabz-gateway__copy { padding-left: 20px; padding-right: 20px; padding-bottom: 72px; }
+    .nabz-crescendo h2, .nabz-gateway h2 { width: 100%; }
+    .nabz-footer { flex-direction: column; align-items: flex-start; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nabz-landing *, .nabz-landing *::before, .nabz-landing *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    .nabz-loader { display: none; }
+    .nabz-hero { height: 100vh; min-height: 650px; --hero-clip: 100%; }
+    .nabz-hero__macro, .nabz-hero__thread { display: none; }
+    .nabz-crescendo__media img { transform: none; }
+  }

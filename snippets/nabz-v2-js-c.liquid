@@ -1,0 +1,72 @@
+      sizeButtons.forEach((button) => {
+        const active = button.dataset.size === selectedSize;
+        button.classList.toggle('is-active', active);
+        button.setAttribute('aria-pressed', String(active));
+      });
+      lengthButtons.forEach((button) => {
+        const active = button.dataset.length === selectedLength;
+        button.classList.toggle('is-active', active);
+        button.setAttribute('aria-pressed', String(active));
+      });
+      if (fitAvailability) fitAvailability.textContent = extendedAvailable ? '' : `${selectedSize} is currently available in Standard.`;
+      if (fitName) fitName.textContent = `${selectedSize} ${selectedLength}`;
+      if (fitLength) fitLength.textContent = `${formatInches(state.inches)} inches`;
+      if (fitDescription) fitDescription.textContent = state.copy;
+      if (fitMeasure) fitMeasure.textContent = `${formatInches(state.inches)} in`;
+      if (fitImage && fitImage.src !== source) {
+        fitFrame?.classList.add('is-changing');
+        window.setTimeout(() => {
+          fitImage.src = source;
+          fitImage.alt = `Air Cable shirt in ${selectedSize} ${selectedLength}`;
+          fitFrame?.classList.remove('is-changing');
+        }, reducedMotion ? 0 : 170);
+      }
+      updateComparison();
+    };
+    sizeButtons.forEach((button) => button.addEventListener('click', () => {
+      selectedSize = button.dataset.size;
+      renderFit();
+    }));
+    lengthButtons.forEach((button) => button.addEventListener('click', () => {
+      const requested = button.dataset.length;
+      const extendedAvailable = selectedSize === 'M' || selectedSize === 'L';
+      if (requested === 'Extended' && !extendedAvailable) {
+        if (fitAvailability) fitAvailability.textContent = `${selectedSize} is currently available in Standard.`;
+        return;
+      }
+      selectedLength = requested;
+      renderFit();
+    }));
+    const updateComparePosition = () => {
+      const value = Number(compareRange?.value || 50);
+      if (compareLayer) compareLayer.style.width = `${value}%`;
+      if (compareHandle) compareHandle.style.left = `${value}%`;
+      if (compareExtended && comparison) {
+        const stage = comparison.querySelector('.nabz-fit-comparison__stage');
+        if (stage) compareExtended.style.width = `${stage.clientWidth}px`;
+      }
+    };
+    compareRange?.addEventListener('input', updateComparePosition);
+    window.addEventListener('resize', updateComparePosition, { passive: true });
+    renderFit();
+    updateComparePosition();
+    const crescendo = root.querySelector('.nabz-crescendo');
+    if ('IntersectionObserver' in window && crescendo) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => entry.target.classList.toggle('is-visible', entry.isIntersecting));
+      }, { threshold: .3 });
+      observer.observe(crescendo);
+    } else {
+      crescendo?.classList.add('is-visible');
+    }
+    const pageSeam = root.querySelector('[data-page-seam]');
+    root.querySelectorAll('[data-seam-link]').forEach((link) => {
+      link.addEventListener('click', (event) => {
+        if (reducedMotion || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        event.preventDefault();
+        const href = link.href;
+        pageSeam?.classList.add('is-active');
+        window.setTimeout(() => { window.location.href = href; }, 330);
+      });
+    });
+  })();

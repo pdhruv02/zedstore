@@ -1,0 +1,57 @@
+    const fitAssets = {
+      'S-Standard': {{ 'nabz-fit-s-standard.webp' | asset_url | json }},
+      'M-Standard': {{ 'nabz-fit-m-standard.webp' | asset_url | json }},
+      'M-Extended': {{ 'nabz-fit-m-extended.webp' | asset_url | json }},
+      'L-Standard': {{ 'nabz-fit-l-standard.webp' | asset_url | json }},
+      'L-Extended': {{ 'nabz-fit-l-extended.webp' | asset_url | json }},
+      'XL-Standard': {{ 'nabz-fit-xl-standard.webp' | asset_url | json }}
+    };
+    const fitData = {
+      'S-Standard': { inches: 26.75, copy: 'S room with a cleaner, shorter untucked proportion.' },
+      'M-Standard': { inches: 27, copy: 'M room with a cleaner, shorter untucked proportion.' },
+      'M-Extended': { inches: 28.5, copy: 'The same M room with added body and sleeve length.' },
+      'L-Standard': { inches: 27.75, copy: 'L room with a cleaner, shorter untucked proportion.' },
+      'L-Extended': { inches: 29.25, copy: 'The same L room with added body and sleeve length.' },
+      'XL-Standard': { inches: 28.5, copy: 'XL room with a cleaner untucked proportion.' }
+    };
+    const fitFrame = root.querySelector('[data-fit-frame]');
+    const fitImage = root.querySelector('[data-fit-image]');
+    const fitMeasure = root.querySelector('[data-fit-measure]');
+    const fitName = root.querySelector('[data-fit-name]');
+    const fitLength = root.querySelector('[data-fit-length]');
+    const fitDescription = root.querySelector('[data-fit-description]');
+    const fitAvailability = root.querySelector('[data-fit-availability]');
+    const sizeButtons = [...root.querySelectorAll('[data-size]')];
+    const lengthButtons = [...root.querySelectorAll('[data-length]')];
+    const comparison = root.querySelector('[data-fit-comparison]');
+    const compareStandard = root.querySelector('[data-compare-standard]');
+    const compareExtended = root.querySelector('[data-compare-extended]');
+    const compareLayer = root.querySelector('[data-compare-layer]');
+    const compareHandle = root.querySelector('[data-compare-handle]');
+    const compareRange = root.querySelector('[data-compare-range]');
+    let selectedSize = 'M';
+    let selectedLength = 'Standard';
+    const formatInches = (value) => Number.isInteger(value) ? String(value) : String(value).replace(/0+$/, '');
+    const updateComparison = () => {
+      const canCompare = selectedSize === 'M' || selectedSize === 'L';
+      comparison?.classList.toggle('is-hidden', !canCompare);
+      if (!canCompare) return;
+      if (compareStandard) {
+        compareStandard.src = fitAssets[`${selectedSize}-Standard`];
+        compareStandard.alt = `${selectedSize} Standard shirt comparison`;
+      }
+      if (compareExtended) {
+        compareExtended.src = fitAssets[`${selectedSize}-Extended`];
+        compareExtended.alt = `${selectedSize} Extended shirt comparison`;
+      }
+    };
+    const renderFit = () => {
+      const extendedAvailable = selectedSize === 'M' || selectedSize === 'L';
+      const extendedButton = lengthButtons.find((button) => button.dataset.length === 'Extended');
+      extendedButton?.classList.toggle('is-unavailable', !extendedAvailable);
+      extendedButton?.setAttribute('aria-disabled', String(!extendedAvailable));
+      if (!extendedAvailable && selectedLength === 'Extended') selectedLength = 'Standard';
+      const key = `${selectedSize}-${selectedLength}`;
+      const state = fitData[key];
+      const source = fitAssets[key];
+      if (!state || !source) return;

@@ -1,4 +1,6 @@
 {{ 'nabz-base.css' | asset_url | stylesheet_tag }}
+{{ 'nabz-scroll.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'nabz-scroll.js' | asset_url }}" defer></script>
 <style>
   .shopify-section-group-header-group,
   .shopify-section-group-footer-group,
@@ -61,6 +63,10 @@
   }
 </style>
 <div class="nabz-home-marker" hidden aria-hidden="true"></div>
+<div class="nabz-scroll-seam" aria-hidden="true">
+  <span class="nabz-scroll-seam__fill"></span>
+  <span class="nabz-scroll-seam__dot"></span>
+</div>
 <header class="nabz-site-header">
   <div class="nabz-shell">
     <div class="nabz-site-header__bar">

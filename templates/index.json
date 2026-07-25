@@ -1,7 +1,21 @@
 {
   "sections": {
     "nabz_header": { "type": "nabz-site-header", "settings": {} },
-    "main": { "type": "nabz-clean-home", "settings": {} },
+    "main": {
+      "type": "nabz-five-chapters",
+      "blocks": {
+        "fault_line": { "type": "product", "settings": { "asset_key": "fault-line", "name": "Fault Line", "link": "" } },
+        "jali_air": { "type": "product", "settings": { "asset_key": "jali-air", "name": "Jali Air", "link": "" } },
+        "microcosm": { "type": "product", "settings": { "asset_key": "microcosm", "name": "Microcosm", "link": "" } },
+        "phulkari_pixels": { "type": "product", "settings": { "asset_key": "phulkari-pixels", "name": "Phulkari Pixels", "link": "" } },
+        "dissolving_oxford": { "type": "product", "settings": { "asset_key": "dissolving-oxford", "name": "Dissolving Oxford", "link": "" } },
+        "shadow_study": { "type": "product", "settings": { "asset_key": "shadow-study", "name": "Shadow Study", "link": "" } },
+        "moire_motion": { "type": "product", "settings": { "asset_key": "moire-in-motion", "name": "Moiré in Motion", "link": "" } },
+        "body_map": { "type": "product", "settings": { "asset_key": "body-map", "name": "Body Map", "link": "" } }
+      },
+      "block_order": ["fault_line","jali_air","microcosm","phulkari_pixels","dissolving_oxford","shadow_study","moire_motion","body_map"],
+      "settings": {}
+    },
     "nabz_footer": { "type": "nabz-site-footer", "settings": {} }
   },
   "order": ["nabz_header", "main", "nabz_footer"]

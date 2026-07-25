@@ -1,0 +1,39 @@
+name: Apply NABZ five chapter homepage
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".nabz-home-code.tar.gz"
+      - ".github/workflows/apply-nabz-home.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply homepage source
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p nabz-clean-restart
+          tar -xzf .nabz-home-code.tar.gz -C nabz-clean-restart
+          rm -f .nabz-home-code.tar.gz
+          rm -f .github/workflows/apply-nabz-home.yml
+
+      - name: Commit homepage
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Build NABZ five chapter homepage"
+          git push

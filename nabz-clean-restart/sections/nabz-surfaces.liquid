@@ -1,34 +1,37 @@
-<section class="nabz-section" id="surface" aria-labelledby="nabz-surface-title">
-  <div class="nabz-shell">
-    <div class="nabz-section-intro">
-      <div>
+<section class="nabz-surface-scroll" id="surface" data-nabz-horizontal aria-labelledby="nabz-surface-title">
+  <div class="nabz-surface-scroll__viewport" data-nabz-horizontal-viewport>
+    <div class="nabz-surface-scroll__track" data-nabz-horizontal-track>
+      <div class="nabz-surface-scroll__intro" data-nabz-reveal>
         <p class="nabz-kicker">{{ section.settings.kicker }}</p>
         <h2 class="nabz-section-heading" id="nabz-surface-title">{{ section.settings.heading }}</h2>
+        <p class="nabz-copy">{{ section.settings.copy }}</p>
       </div>
-      <p class="nabz-copy">{{ section.settings.copy }}</p>
-    </div>
-    <div class="nabz-surface-grid">
-      <article class="nabz-surface-card">
+      <article class="nabz-surface-card" data-nabz-horizontal-card>
+        <span class="nabz-surface-index">01</span>
         <img src="{{ 'nabz-surface-field-1920.webp' | asset_url }}" alt="NABZ embroidered shirt surfaces" width="1920" height="1080" loading="lazy">
         <span class="nabz-surface-card__shade" aria-hidden="true"></span>
         <div class="nabz-surface-card__copy"><strong>Whole surface</strong><span>Texture, not decoration.</span></div>
       </article>
-      <article class="nabz-surface-card">
+      <article class="nabz-surface-card" data-nabz-horizontal-card>
+        <span class="nabz-surface-index">02</span>
         <img src="{{ 'nabz-fault-line-macro-1200.webp' | asset_url }}" alt="Raised thread relief on NABZ fabric" width="1200" height="1500" loading="lazy">
         <span class="nabz-surface-card__shade" aria-hidden="true"></span>
         <div class="nabz-surface-card__copy"><strong>Thread relief</strong><span>Work you can see and feel.</span></div>
       </article>
-      <article class="nabz-surface-card">
+      <article class="nabz-surface-card" data-nabz-horizontal-card>
+        <span class="nabz-surface-index">03</span>
         <img src="{{ 'nabz-jali-air-macro-1200.webp' | asset_url }}" alt="Jali-inspired embroidery on NABZ fabric" width="1200" height="1500" loading="lazy">
         <span class="nabz-surface-card__shade" aria-hidden="true"></span>
         <div class="nabz-surface-card__copy"><strong>Jali rhythm</strong><span>Indian craft, cut for now.</span></div>
       </article>
-      <article class="nabz-surface-card">
+      <article class="nabz-surface-card" data-nabz-horizontal-card>
+        <span class="nabz-surface-index">04</span>
         <img src="{{ 'nabz-phulkari-pixels-macro-1200.webp' | asset_url }}" alt="Contemporary phulkari-inspired pixels" width="1200" height="1500" loading="lazy">
         <span class="nabz-surface-card__shade" aria-hidden="true"></span>
         <div class="nabz-surface-card__copy"><strong>Phulkari pixels</strong><span>Quiet from afar. Distinct up close.</span></div>
       </article>
     </div>
+    <div class="nabz-surface-scroll__hint" aria-hidden="true">Keep scrolling</div>
   </div>
 </section>
 {% schema %}

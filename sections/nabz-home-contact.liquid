@@ -1,0 +1,15 @@
+{{ 'nabz-home.css' | asset_url | stylesheet_tag }}
+<section class="nabz-chapter nabz-chapter--contact" data-nabz-chapter data-chapter-index="5">
+  <div class="nabz-chapter__frame nabz-contact-frame">
+    <div class="nabz-contact-copy"><h2>wanna promote our product? wanna provide feedback? wanna talk?</h2><p>we are here to respond!</p></div>
+    {% form 'contact', class: 'nabz-contact-form' %}
+      {% if form.posted_successfully? %}<p class="nabz-contact-success">we are here to respond!</p>{% endif %}
+      {{ form.errors | default_errors }}
+      <label>Name<input type="text" name="contact[name]" autocomplete="name"></label>
+      <label>Email<input type="email" name="contact[email]" autocomplete="email" required></label>
+      <label>Message<textarea name="contact[body]" required></textarea></label>
+      <button type="submit">Send</button>
+    {% endform %}
+  </div>
+</section>
+{% schema %}{"name":"NABZ contact","settings":[],"presets":[{"name":"NABZ contact"}]}{% endschema %}

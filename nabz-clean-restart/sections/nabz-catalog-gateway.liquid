@@ -1,14 +1,16 @@
-<section class="nabz-cinematic" aria-labelledby="nabz-catalog-title">
-  <picture class="nabz-cinematic__media">
-    <source media="(max-width: 749px)" srcset="{{ 'nabz-air-cable-editorial-mobile-1080.webp' | asset_url }}">
-    <img src="{{ 'nabz-air-cable-editorial-1920.webp' | asset_url }}" alt="A NABZ shirt worn in an editorial setting" width="1920" height="1081" loading="lazy">
-  </picture>
-  <div class="nabz-cinematic__shade" aria-hidden="true"></div>
-  <div class="nabz-shell nabz-cinematic__content">
-    <p class="nabz-kicker">{{ section.settings.kicker }}</p>
-    <h2 class="nabz-section-heading" id="nabz-catalog-title">{{ section.settings.heading }}</h2>
-    <p class="nabz-copy">{{ section.settings.copy }}</p>
-    <a class="nabz-button nabz-button--solid" href="{{ routes.all_products_collection_url }}">{{ section.settings.button_label }}</a>
+<section class="nabz-cinematic nabz-cinematic--scroll nabz-cinematic--catalog" data-nabz-cinematic data-nabz-parallax="0.045" aria-labelledby="nabz-catalog-title">
+  <div class="nabz-cinematic__stage">
+    <picture class="nabz-cinematic__media">
+      <source media="(max-width: 749px)" srcset="{{ 'nabz-air-cable-editorial-mobile-1080.webp' | asset_url }}">
+      <img src="{{ 'nabz-air-cable-editorial-1920.webp' | asset_url }}" alt="A NABZ shirt worn in an editorial setting" width="1920" height="1081" loading="lazy">
+    </picture>
+    <div class="nabz-cinematic__shade" aria-hidden="true"></div>
+    <div class="nabz-shell nabz-cinematic__content" data-nabz-reveal>
+      <p class="nabz-kicker">{{ section.settings.kicker }}</p>
+      <h2 class="nabz-section-heading" id="nabz-catalog-title">{{ section.settings.heading }}</h2>
+      <p class="nabz-copy">{{ section.settings.copy }}</p>
+      <a class="nabz-button nabz-button--solid" href="{{ routes.all_products_collection_url }}">{{ section.settings.button_label }}</a>
+    </div>
   </div>
 </section>
 {% schema %}

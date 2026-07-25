@@ -1,0 +1,15 @@
+{{ 'nabz-home.css' | asset_url | stylesheet_tag }}
+<section class="nabz-chapter nabz-chapter--hero" data-nabz-chapter data-chapter-index="1">
+  <div class="nabz-chapter__frame nabz-hero-frame">
+    <img class="nabz-hero-frame__model" src="{{ 'nabz-hero-self-contour-final.webp' | asset_url }}" alt="NABZ navy embroidered shirt" width="1024" height="1536" fetchpriority="high">
+    <div class="nabz-hero-frame__shade" aria-hidden="true"></div>
+    <div class="nabz-hero-frame__copy">
+      <h1><span>Not ethnic wear.</span><br><span>Not a plain shirt.</span><br><span>The space between.</span></h1>
+      <p>India’s textile language, re-cut into everyday shirts. Clean from a distance. Unforgettable up close.</p>
+    </div>
+    <figure class="nabz-hero-macro">
+      <img src="{{ 'nabz-embroidery-closeup-final.webp' | asset_url }}" alt="Close-up of navy NABZ embroidery" width="302" height="779" fetchpriority="high">
+    </figure>
+  </div>
+</section>
+{% schema %}{"name":"NABZ main hero","settings":[],"presets":[{"name":"NABZ main hero"}]}{% endschema %}

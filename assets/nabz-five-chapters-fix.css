@@ -1,0 +1,112 @@
+.nabz-product-panel__name {
+  position: absolute;
+  z-index: 2;
+  left: 18px;
+  bottom: 16px;
+  max-width: calc(100% - 36px);
+  color: #f0e5d5;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  line-height: 1.25;
+  text-align: left;
+  text-transform: uppercase;
+  opacity: .72;
+  transition: opacity .25s ease, transform .35s ease;
+}
+
+.nabz-product-panel.is-active .nabz-product-panel__name {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.nabz-contact-frame {
+  grid-template-columns: minmax(0, 1.05fr) minmax(320px, .75fr);
+  gap: clamp(38px, 7vw, 110px);
+  align-items: center;
+  text-align: left;
+}
+
+.nabz-contact-frame__intro {
+  max-width: 760px;
+}
+
+.nabz-contact-frame__intro p {
+  margin: clamp(24px, 4vw, 48px) 0 0;
+  color: #d98a61;
+  font-family: var(--nabz-serif);
+  font-size: clamp(28px, 3.5vw, 54px);
+  line-height: 1.05;
+}
+
+.nabz-contact-form {
+  display: grid;
+  gap: 12px;
+  width: 100%;
+  padding: clamp(24px, 3vw, 40px);
+  border: 1px solid rgba(238, 227, 210, .18);
+  border-radius: 28px;
+  background: rgba(7, 6, 5, .52);
+}
+
+.nabz-contact-form label {
+  margin-top: 8px;
+  color: rgba(238, 227, 210, .66);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.nabz-contact-form input,
+.nabz-contact-form textarea {
+  width: 100%;
+  color: var(--nabz-cloth);
+  border: 0;
+  border-bottom: 1px solid rgba(238, 227, 210, .24);
+  border-radius: 0;
+  outline: 0;
+  background: transparent;
+  font: inherit;
+}
+
+.nabz-contact-form input {
+  min-height: 48px;
+}
+
+.nabz-contact-form textarea {
+  min-height: 140px;
+  padding-top: 12px;
+  resize: vertical;
+}
+
+.nabz-contact-form input:focus,
+.nabz-contact-form textarea:focus {
+  border-color: #d98a61;
+}
+
+.nabz-contact-form button {
+  min-height: 50px;
+  margin-top: 18px;
+  color: #17110e;
+  border: 0;
+  border-radius: 999px;
+  background: #eee3d2;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.nabz-contact-form .errors {
+  color: #f0b39a;
+}
+
+@media (max-width: 900px) {
+  .nabz-contact-frame {
+    grid-template-columns: 1fr;
+    text-align: left;
+  }
+
+  .nabz-product-panel__name {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,246 @@
+{% liquid
+  assign bg_url = section.settings.background_url
+%}
+
+{{ 'nabz-background-lab.css' | asset_url | stylesheet_tag }}
+{{ 'nabz-production.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'nabz-background-lab.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'nabz-production.js' | asset_url }}" defer="defer"></script>
+<script>document.documentElement.classList.add('nabz-is-loading');</script>
+
+<style>
+  #NabzBackgroundLab-{{ section.id }} {
+    --fabric-image: url('{{ bg_url }}');
+    --base: {{ section.settings.base }};
+    --ink: {{ section.settings.ink }};
+    --muted: {{ section.settings.muted }};
+    --accent: {{ section.settings.accent }};
+    --line: {{ section.settings.line }};
+    --line-strong: {{ section.settings.line_strong }};
+    --panel: {{ section.settings.panel }};
+    --panel-strong: {{ section.settings.panel_strong }};
+    --chip-bg: {{ section.settings.chip_bg }};
+    --nav-bg: {{ section.settings.nav_bg }};
+    --button-bg: {{ section.settings.button_bg }};
+    --button-ink: {{ section.settings.button_ink }};
+    --global-veil: {{ section.settings.global_veil }};
+    --logo-filter: none;
+    --shadow: 0 40px 100px rgba(22, 13, 8, {{ section.settings.shadow_alpha }});
+    --shadow-soft: 0 24px 64px rgba(22, 13, 8, {{ section.settings.shadow_soft_alpha }});
+  }
+</style>
+
+<div id="NabzBackgroundLab-{{ section.id }}" class="nabz-bg-lab nabz-production-home" data-nabz-bg-lab data-nabz-production>
+  <div class="nabz-loader" data-nabz-loader role="status" aria-label="NABZ is loading">
+    <div class="nabz-loader-fabric" aria-hidden="true"></div>
+    <div class="nabz-loader-door is-left" aria-hidden="true"></div>
+    <div class="nabz-loader-door is-right" aria-hidden="true"></div>
+
+    <div class="nabz-loader-stage">
+      <div class="nabz-loader-logo" data-loader-logo>
+        <img src="{{ 'nabz-logo-embroidered.png' | asset_url }}" alt="" width="432" height="216">
+      </div>
+
+      <svg class="nabz-loader-stitch" viewBox="0 0 520 180" aria-hidden="true">
+        <path class="nabz-loader-track" d="M12 101 L128 101 L155 74 L178 126 L220 15 L256 163 L282 101 L508 101"></path>
+        <path class="nabz-loader-thread" data-loader-thread d="M12 101 L128 101 L155 74 L178 126 L220 15 L256 163 L282 101 L508 101"></path>
+        <circle class="nabz-loader-needle-glow" data-loader-needle-glow r="12" cx="12" cy="101"></circle>
+        <circle class="nabz-loader-needle" data-loader-needle r="3.5" cx="12" cy="101"></circle>
+      </svg>
+
+      <div class="nabz-loader-caption">
+        <span>Cut</span><span>to</span><span>proportion</span>
+      </div>
+    </div>
+
+    <span class="nabz-loader-status-text">NABZ</span>
+  </div>
+
+  <div class="nabz-bg-progress" data-scroll-progress></div>
+
+  <nav class="nabz-bg-nav" aria-label="NABZ navigation">
+    <a class="nabz-bg-logo" href="#top" aria-label="NABZ home">
+      <span class="nabz-bg-logo-panel">
+        <img src="{{ 'nabz-logo-embroidered.png' | asset_url }}" alt="NABZ" width="432" height="216">
+      </span>
+    </a>
+
+    <div class="nabz-bg-navlinks">
+      <a href="#surface">Surface</a>
+      <a href="#fit">Fit</a>
+      <a href="#catalog">Collection</a>
+    </div>
+
+    <a class="nabz-bg-theme-tag nabz-bg-bag" href="{{ routes.cart_url }}">
+      <span>Bag</span>
+      <span class="nabz-bg-bag-count">{{ cart.item_count }}</span>
+    </a>
+  </nav>
+
+  <main>
+    <section class="nabz-bg-section nabz-bg-hero" id="top">
+      <div class="nabz-bg-shell nabz-bg-hero-grid">
+        <div class="nabz-bg-hero-copy" data-reveal>
+          <div class="nabz-bg-eyebrow">Modern embroidered shirts, cut for Indian proportions</div>
+          <h1 class="nabz-bg-title">A shirt should frame you. <em>Not swallow you.</em></h1>
+          <p class="nabz-bg-copy">Not ethnic wear. Not a plain shirt. The space between. India's textile language, re-cut into everyday shirts that feel restrained from a distance and unforgettable up close.</p>
+          <div class="nabz-bg-actions">
+            <a class="nabz-bg-btn" href="#catalog">Enter the collection</a>
+            <a class="nabz-bg-btn is-ghost" href="#fit">See the fit system</a>
+          </div>
+        </div>
+
+        <div class="nabz-bg-hero-visual" data-reveal>
+          <div class="nabz-bg-portrait">
+            <img src="https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-self-contour-hero-1920.webp?v=1784770323" alt="NABZ Self Contour embroidered shirt" width="1920" height="1080" fetchpriority="high">
+          </div>
+          <div class="nabz-bg-float-card">
+            <img src="https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-self-contour-macro-1400.webp?v=1784770344" alt="Self Contour embroidery detail" width="1400" height="1400">
+            <div class="nabz-bg-float-meta"><span>Self Contour</span><span>01 / 02</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="nabz-bg-scroll-note">Scroll through one continuous cloth</div>
+    </section>
+
+    <section class="nabz-bg-section" aria-label="NABZ proportion philosophy">
+      <div class="nabz-bg-shell nabz-bg-manifesto-grid">
+        <div class="nabz-bg-number" data-reveal>27</div>
+        <div class="nabz-bg-manifesto-card" data-reveal>
+          <div class="nabz-bg-eyebrow">The proportion thesis</div>
+          <h2 class="nabz-bg-display">The shoulder can stay. The unnecessary <strong>length can go.</strong></h2>
+          <p class="nabz-bg-copy">Most shirts scale the body in every direction. NABZ separates structure from length, keeping the presence while correcting the drop.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="nabz-bg-section" id="surface">
+      <div class="nabz-bg-shell">
+        <div class="nabz-bg-surface-head">
+          <div data-reveal>
+            <div class="nabz-bg-eyebrow">Surface language</div>
+            <h2 class="nabz-bg-display">Embroidery that changes with distance.</h2>
+          </div>
+          <p class="nabz-bg-copy" data-reveal>From across the room, it reads as structure. Up close, the thread reveals its own geography. Each surface rewards attention without demanding it.</p>
+        </div>
+
+        <div class="nabz-bg-surface-grid nabz-bg-surface-grid-production">
+          <article class="nabz-bg-surface-card" data-reveal>
+            <img src="https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-self-contour-macro-1400.webp?v=1784770344" alt="Self Contour embroidery" width="1400" height="1400" loading="lazy">
+            <div class="nabz-bg-card-copy"><span>01</span><h3>Self Contour</h3></div>
+          </article>
+          <article class="nabz-bg-surface-card" data-reveal>
+            <img src="https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-air-cable-editorial-1920.webp?v=1784770516" alt="Air Cable embroidery" width="1920" height="1080" loading="lazy">
+            <div class="nabz-bg-card-copy"><span>02</span><h3>Air Cable</h3></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="nabz-bg-section" id="fit">
+      <div class="nabz-bg-shell nabz-bg-fit-grid">
+        <div data-reveal>
+          <div class="nabz-bg-eyebrow">One shoulder. Two lengths.</div>
+          <h2 class="nabz-bg-display">Choose proportion, not compromise.</h2>
+          <p class="nabz-bg-copy">M Standard and M Extended keep the same shoulder structure while changing the body length. Choose the drop that suits your height, not a compromise in width.</p>
+          <div class="nabz-bg-fit-controls" role="group" aria-label="Fit length preview">
+            <button class="nabz-bg-fit-control is-active" type="button" data-fit-control="standard">Standard</button>
+            <button class="nabz-bg-fit-control" type="button" data-fit-control="extended">Extended</button>
+          </div>
+          <div class="nabz-bg-specs">
+            <div class="nabz-bg-spec"><span>Size</span><strong>M</strong></div>
+            <div class="nabz-bg-spec"><span>Length</span><strong data-fit-length>27 in</strong></div>
+            <div class="nabz-bg-spec"><span>Shoulder</span><strong>Same</strong></div>
+            <div class="nabz-bg-spec"><span>Drop</span><strong>Chosen</strong></div>
+          </div>
+        </div>
+
+        <div class="nabz-bg-fit-stage" data-fit-stage data-fit="standard" data-reveal>
+          <img data-fit-image="standard" src="https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-fit-m-standard.webp?v=1784770421" alt="NABZ M Standard fit" width="1200" height="1600" loading="lazy">
+          <img data-fit-image="extended" src="https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-fit-m-extended.webp?v=1784770429" alt="NABZ M Extended fit" width="1200" height="1600" loading="lazy">
+          <div class="nabz-bg-measure"><span>Shoulder</span><span>Hem</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="nabz-bg-section nabz-bg-editorial">
+      <div class="nabz-bg-shell">
+        <div class="nabz-bg-editorial-frame" data-reveal>
+          <img src="https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-air-cable-editorial-1920.webp?v=1784770516" alt="NABZ Air Cable editorial shirt" width="1920" height="1080" loading="lazy">
+          <div class="nabz-bg-editorial-copy">
+            <div class="nabz-bg-eyebrow">Air Cable · 02</div>
+            <h2 class="nabz-bg-display">Texture without noise.</h2>
+            <p class="nabz-bg-copy">A familiar knit rhythm, translated into breathable embroidery. Detail that rewards attention instead of asking for it.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="nabz-bg-section" id="catalog">
+      <div class="nabz-bg-shell">
+        <div class="nabz-bg-catalog-head">
+          <div data-reveal>
+            <div class="nabz-bg-eyebrow">The first two</div>
+            <h2 class="nabz-bg-display">Two shirts. Two surface languages.</h2>
+          </div>
+          <a class="nabz-bg-btn is-ghost" href="{{ routes.all_products_collection_url }}" data-reveal>Shop all</a>
+        </div>
+
+        <div class="nabz-bg-products nabz-bg-products-production">
+          <a class="nabz-bg-product" href="{{ routes.all_products_collection_url }}" data-reveal>
+            <img src="https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-self-contour-hero-1920.webp?v=1784770323" alt="Self Contour shirt" width="1920" height="1080" loading="lazy">
+            <div class="nabz-bg-product-copy"><div><strong>Self Contour</strong><span>Structured cotton</span></div><strong>01</strong></div>
+          </a>
+          <a class="nabz-bg-product" href="{{ routes.all_products_collection_url }}" data-reveal>
+            <img src="https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-air-cable-editorial-1920.webp?v=1784770516" alt="Air Cable shirt" width="1920" height="1080" loading="lazy">
+            <div class="nabz-bg-product-copy"><div><strong>Air Cable</strong><span>Open embroidered structure</span></div><strong>02</strong></div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="nabz-bg-section nabz-bg-closing">
+      <div class="nabz-bg-shell nabz-bg-closing-inner" data-reveal>
+        <div class="nabz-bg-closing-logo-panel">
+          <img class="nabz-bg-closing-mark" src="{{ 'nabz-logo-embroidered.png' | asset_url }}" alt="NABZ" width="432" height="216" loading="lazy">
+        </div>
+        <div class="nabz-bg-eyebrow" style="justify-content:center">NABZ</div>
+        <h2 class="nabz-bg-display">Made to frame the body. Made to be remembered up close.</h2>
+        <p class="nabz-bg-copy">Modern shirts shaped by proportion, embroidery and the textile intelligence of India.</p>
+        <div class="nabz-bg-actions">
+          <a class="nabz-bg-btn" href="{{ routes.all_products_collection_url }}">Enter the collection</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="nabz-bg-footer">
+    <span>NABZ · India</span>
+    <span>Proportion. Surface. Restraint.</span>
+  </footer>
+</div>
+
+{% schema %}
+{
+  "name": "NABZ production home",
+  "settings": [
+    {"type":"url","id":"background_url","label":"Background image URL"},
+    {"type":"text","id":"base","label":"Base","default":"#a9907d"},
+    {"type":"text","id":"ink","label":"Ink","default":"#231915"},
+    {"type":"text","id":"muted","label":"Muted","default":"rgba(35, 25, 21, 0.66)"},
+    {"type":"text","id":"accent","label":"Accent","default":"#a5532f"},
+    {"type":"text","id":"line","label":"Line","default":"rgba(35, 25, 21, 0.16)"},
+    {"type":"text","id":"line_strong","label":"Strong line","default":"rgba(35, 25, 21, 0.34)"},
+    {"type":"text","id":"panel","label":"Panel","default":"rgba(244, 235, 224, 0.48)"},
+    {"type":"text","id":"panel_strong","label":"Strong panel","default":"rgba(244, 235, 224, 0.76)"},
+    {"type":"text","id":"chip_bg","label":"Chip background","default":"rgba(244, 235, 224, 0.46)"},
+    {"type":"text","id":"nav_bg","label":"Navigation background","default":"rgba(244, 235, 224, 0.62)"},
+    {"type":"text","id":"button_bg","label":"Button background","default":"#231915"},
+    {"type":"text","id":"button_ink","label":"Button ink","default":"#fff7ed"},
+    {"type":"text","id":"global_veil","label":"Global veil","default":"linear-gradient(180deg, rgba(239, 226, 211, 0.08), rgba(83, 59, 47, 0.08))"},
+    {"type":"text","id":"shadow_alpha","label":"Shadow alpha","default":"0.20"},
+    {"type":"text","id":"shadow_soft_alpha","label":"Soft shadow alpha","default":"0.11"}
+  ],
+  "presets": [{"name":"NABZ production home"}]
+}
+{% endschema %}

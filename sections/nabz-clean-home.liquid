@@ -2,7 +2,7 @@
 <script src="{{ 'nabz-clean-home.js' | asset_url }}" defer></script>
 
 <div class="nabz-clean-home" data-nabz-home>
-  <section class="nabz-chapter nabz-chapter--hero" id="hero" data-nabz-chapter>
+  <section class="nabz-chapter nabz-chapter--hero" id="hero" data-nabz-chapter data-chapter-label="The space between">
     <div class="nabz-chapter__frame nabz-hero">
       <div class="nabz-hero__copy">
         <h1>
@@ -35,7 +35,7 @@
     </div>
   </section>
 
-  <section class="nabz-chapter nabz-chapter--products" id="products" data-nabz-chapter>
+  <section class="nabz-chapter nabz-chapter--products" id="products" data-nabz-chapter data-chapter-label="Textile language">
     <div class="nabz-chapter__frame nabz-products">
       <h2>
         <span>India’s textile language, re-cut into everyday shirts.</span>
@@ -65,7 +65,7 @@
     </div>
   </section>
 
-  <section class="nabz-chapter nabz-chapter--fit" id="fit" data-nabz-chapter>
+  <section class="nabz-chapter nabz-chapter--fit" id="fit" data-nabz-chapter data-chapter-label="Fit, separated">
     <div class="nabz-chapter__frame nabz-fit">
       <div class="nabz-fit-card" data-fit-story>
         <article class="nabz-fit-card__state is-active" data-fit-story-state="problem" aria-hidden="false">
@@ -173,7 +173,7 @@
     </div>
   </section>
 
-  <section class="nabz-chapter nabz-chapter--shoulders" id="shoulders" data-nabz-chapter>
+  <section class="nabz-chapter nabz-chapter--shoulders" id="shoulders" data-nabz-chapter data-chapter-label="Shoulder structure">
     <div class="nabz-chapter__frame nabz-shoulders">
       <div class="nabz-shoulders__visual">
         <img
@@ -197,7 +197,7 @@
     </div>
   </section>
 
-  <section class="nabz-chapter nabz-chapter--contact" id="contact" data-nabz-chapter>
+  <section class="nabz-chapter nabz-chapter--contact" id="contact" data-nabz-chapter data-chapter-label="Talk to NABZ">
     <div class="nabz-chapter__frame nabz-contact">
       <div class="nabz-contact__intro">
         <span class="nabz-kicker">The line is open</span>
@@ -222,6 +222,16 @@
       {% endform %}
     </div>
   </section>
+
+  <div class="nabz-deck-ui" data-deck-ui aria-label="Chapter navigation">
+    <span class="nabz-deck-ui__count" data-deck-count>01 / 05</span>
+    <span class="nabz-deck-ui__label" data-deck-label>The space between</span>
+    <div class="nabz-deck-ui__controls">
+      <button type="button" data-deck-previous aria-label="Previous chapter"><span aria-hidden="true">↑</span></button>
+      <button type="button" data-deck-next aria-label="Next chapter"><span aria-hidden="true">↓</span></button>
+    </div>
+  </div>
+  <p class="visually-hidden" data-deck-live aria-live="polite"></p>
 </div>
 
 {% schema %}

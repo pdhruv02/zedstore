@@ -902,3 +902,257 @@
     transition: none;
   }
 }
+
+/* Looping chapter deck */
+.nabz-deck-ui {
+  display: none;
+}
+
+@media (min-width: 821px) and (min-height: 620px) {
+  body.nabz-deck-active {
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
+  body.nabz-deck-active .page-wrapper,
+  body.nabz-deck-active #MainContent {
+    min-height: 0;
+    height: 100svh;
+    overflow: hidden;
+  }
+
+  body.nabz-deck-active #MainContent {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+
+  body.nabz-deck-active #MainContent > .shopify-section {
+    min-height: 0;
+  }
+
+  body.nabz-deck-active #MainContent > .shopify-section:has(.nabz-clean-home) {
+    overflow: hidden;
+  }
+
+  body.nabz-deck-active .nabz-site-header {
+    padding-top: 8px;
+  }
+
+  body.nabz-deck-active .nabz-site-header__bar {
+    min-height: 56px;
+  }
+
+  body.nabz-deck-active .nabz-site-footer__inner {
+    min-height: 46px;
+  }
+
+  body.nabz-deck-active .nabz-site-footer__brand {
+    width: 68px;
+    height: 30px;
+  }
+
+  body.nabz-deck-active .nabz-site-footer__meta,
+  body.nabz-deck-active .nabz-site-footer__nav a {
+    font-size: .61rem;
+  }
+
+  .nabz-clean-home[data-nabz-deck-ready="true"] {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    perspective: 1500px;
+    perspective-origin: 50% 45%;
+    touch-action: pan-x;
+  }
+
+  .nabz-clean-home[data-nabz-deck-ready="true"] .nabz-chapter {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    height: 100%;
+    min-height: 0;
+    padding: clamp(7px, 1vw, 13px) clamp(12px, 2.2vw, 34px) 10px;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform-origin: 50% 44%;
+    backface-visibility: hidden;
+    will-change: transform, opacity, filter;
+    transition:
+      transform .88s cubic-bezier(.2, .78, .18, 1),
+      opacity .52s ease,
+      filter .72s ease,
+      visibility 0s linear .9s;
+  }
+
+  .nabz-clean-home[data-nabz-deck-ready="true"] .nabz-chapter[data-deck-state="active"] {
+    z-index: 3;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translate3d(0, 0, 0) rotateX(0deg) scale(1);
+    filter: blur(0) brightness(1);
+    transition-delay: 0s;
+  }
+
+  .nabz-clean-home[data-nabz-deck-ready="true"] .nabz-chapter[data-deck-state="future"] {
+    z-index: 4;
+    transform: translate3d(0, 104%, 80px) rotateX(2.5deg) scale(.965);
+    filter: blur(1px) brightness(.72);
+  }
+
+  .nabz-clean-home[data-nabz-deck-ready="true"] .nabz-chapter[data-deck-state="past"] {
+    z-index: 2;
+    transform: translate3d(0, -8%, -310px) rotateX(-5deg) scale(.82);
+    filter: blur(4px) brightness(.48);
+  }
+
+  .nabz-clean-home[data-nabz-deck-ready="true"] .nabz-chapter.is-deck-preparing {
+    transition: none !important;
+  }
+
+  .nabz-clean-home[data-nabz-deck-ready="true"] .nabz-chapter__frame {
+    height: 100%;
+    min-height: 0;
+  }
+
+  .nabz-clean-home[data-nabz-deck-ready="true"] .nabz-hero__visual,
+  .nabz-clean-home[data-nabz-deck-ready="true"] .nabz-shoulders__visual {
+    min-height: 0;
+  }
+
+  .nabz-clean-home[data-nabz-deck-ready="true"] .nabz-products {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    padding-block: clamp(24px, 3vw, 42px) clamp(14px, 1.7vw, 22px);
+  }
+
+  .nabz-clean-home[data-nabz-deck-ready="true"] .nabz-products h2 {
+    flex: 0 0 auto;
+    margin-bottom: clamp(18px, 2vw, 28px);
+  }
+
+  .nabz-clean-home[data-nabz-deck-ready="true"] .nabz-product-gallery {
+    flex: 1 1 auto;
+    height: auto;
+    min-height: 0;
+  }
+
+  .nabz-clean-home[data-nabz-deck-ready="true"] .nabz-fit,
+  .nabz-clean-home[data-nabz-deck-ready="true"] .nabz-contact {
+    min-height: 0;
+  }
+
+  .nabz-deck-ui {
+    position: absolute;
+    z-index: 12;
+    right: max(48px, calc((100vw - 1280px) / 2 + 25px));
+    bottom: 28px;
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-areas:
+      "meta controls"
+      "label controls";
+    align-items: center;
+    gap: 3px 18px;
+    min-width: 228px;
+    padding: 10px 10px 10px 14px;
+    border: 1px solid rgba(238, 227, 210, .17);
+    border-radius: 999px;
+    background: rgba(8, 7, 6, .78);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .26);
+    backdrop-filter: blur(13px);
+  }
+
+  .nabz-deck-ui__count {
+    grid-area: meta;
+    color: #d98254;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .12em;
+  }
+
+  .nabz-deck-ui__label {
+    grid-area: label;
+    color: rgba(238, 227, 210, .62);
+    font-size: 9px;
+    letter-spacing: .06em;
+    white-space: nowrap;
+  }
+
+  .nabz-deck-ui__controls {
+    grid-area: controls;
+    display: flex;
+    gap: 5px;
+  }
+
+  .nabz-deck-ui button {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    place-items: center;
+    color: var(--nabz-cloth);
+    border: 1px solid rgba(238, 227, 210, .17);
+    border-radius: 50%;
+    background: rgba(238, 227, 210, .035);
+    transition: color .2s ease, border-color .2s ease, background .2s ease;
+  }
+
+  .nabz-deck-ui button:hover {
+    color: #17110e;
+    border-color: #d98254;
+    background: #d98254;
+  }
+}
+
+@media (min-width: 821px) and (min-height: 620px) and (max-height: 790px) {
+  body.nabz-deck-active .nabz-site-header__bar {
+    min-height: 50px;
+  }
+
+  body.nabz-deck-active .nabz-site-header__brand {
+    height: 44px;
+  }
+
+  body.nabz-deck-active .nabz-site-footer__inner {
+    min-height: 40px;
+  }
+
+  .nabz-clean-home[data-nabz-deck-ready="true"] .nabz-fit {
+    gap: 24px;
+    padding: 22px 30px;
+  }
+
+  .nabz-clean-home[data-nabz-deck-ready="true"] .nabz-fit-card {
+    min-height: 380px;
+  }
+
+  .nabz-clean-home[data-nabz-deck-ready="true"] .nabz-fit-tool__diagram {
+    height: 230px;
+  }
+
+  .nabz-clean-home[data-nabz-deck-ready="true"] .nabz-shoulders__copy,
+  .nabz-clean-home[data-nabz-deck-ready="true"] .nabz-contact {
+    padding-block: 28px;
+  }
+}
+
+@media (max-width: 820px), (max-height: 619px) {
+  .nabz-clean-home {
+    scroll-snap-type: y proximity;
+  }
+
+  .nabz-chapter {
+    scroll-snap-align: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nabz-clean-home[data-nabz-deck-ready="true"] .nabz-chapter {
+    transition: none;
+  }
+}

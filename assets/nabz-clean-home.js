@@ -232,10 +232,203 @@
     });
   };
 
+  const bootChapterDeck = (root) => {
+    root.querySelectorAll('[data-nabz-home]').forEach((deck) => {
+      if (deck.dataset.nabzDeckReady === 'true') return;
+
+      const desktopDeck = window.matchMedia('(min-width: 821px) and (min-height: 620px)');
+      const chapters = [...deck.querySelectorAll('[data-nabz-chapter]')];
+      const previousButton = deck.querySelector('[data-deck-previous]');
+      const nextButton = deck.querySelector('[data-deck-next]');
+      const count = deck.querySelector('[data-deck-count]');
+      const label = deck.querySelector('[data-deck-label]');
+      const live = deck.querySelector('[data-deck-live]');
+      const labels = chapters.map((chapter) => chapter.dataset.chapterLabel || 'NABZ');
+
+      if (chapters.length < 2) return;
+
+      let activeIndex = Math.max(0, chapters.findIndex((chapter) => `#${chapter.id}` === window.location.hash));
+      let transitioning = false;
+      let transitionTimer = 0;
+      let wheelTotal = 0;
+      let wheelResetTimer = 0;
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let enabled = false;
+
+      const twoDigits = (value) => String(value).padStart(2, '0');
+      const isTextInput = (target) => target.matches('input, textarea, select, [contenteditable="true"]');
+      const isInteractive = (target) => Boolean(target.closest('button, a, input, textarea, select, summary, [contenteditable="true"]'));
+
+      const setChapterState = (chapter, state) => {
+        chapter.dataset.deckState = state;
+        const isActive = state === 'active';
+        chapter.setAttribute('aria-hidden', String(!isActive));
+        if ('inert' in chapter) chapter.inert = !isActive;
+      };
+
+      const updateUi = (announce = false) => {
+        if (count) count.textContent = `${twoDigits(activeIndex + 1)} / ${twoDigits(chapters.length)}`;
+        if (label) label.textContent = labels[activeIndex];
+        if (live && announce) live.textContent = `Chapter ${activeIndex + 1} of ${chapters.length}: ${labels[activeIndex]}`;
+        chapters.forEach((chapter, index) => {
+          chapter.classList.toggle('is-active', index === activeIndex);
+        });
+      };
+
+      const setInitialStates = () => {
+        chapters.forEach((chapter, index) => {
+          if (index === activeIndex) setChapterState(chapter, 'active');
+          else setChapterState(chapter, index < activeIndex ? 'past' : 'future');
+        });
+        updateUi(false);
+      };
+
+      const goTo = (nextIndex, direction = 1, announce = true) => {
+        if (!enabled || transitioning) return;
+        const normalizedIndex = (nextIndex + chapters.length) % chapters.length;
+        if (normalizedIndex === activeIndex) return;
+
+        transitioning = true;
+        const current = chapters[activeIndex];
+        const incoming = chapters[normalizedIndex];
+
+        incoming.classList.add('is-deck-preparing');
+        setChapterState(incoming, direction > 0 ? 'future' : 'past');
+        incoming.getBoundingClientRect();
+        incoming.classList.remove('is-deck-preparing');
+
+        window.requestAnimationFrame(() => {
+          setChapterState(current, direction > 0 ? 'past' : 'future');
+          setChapterState(incoming, 'active');
+          activeIndex = normalizedIndex;
+          updateUi(announce);
+
+          if (history.replaceState) history.replaceState(null, '', `#${chapters[activeIndex].id}`);
+        });
+
+        window.clearTimeout(transitionTimer);
+        transitionTimer = window.setTimeout(() => {
+          chapters.forEach((chapter, index) => {
+            if (index === activeIndex) return;
+            setChapterState(chapter, direction > 0 ? 'past' : 'future');
+          });
+          transitioning = false;
+        }, reducedMotion ? 40 : 920);
+      };
+
+      const canScrollInside = (target, direction) => {
+        const scrollable = target.closest('[data-deck-scroll], details[open], textarea');
+        if (!scrollable) return false;
+        if (direction > 0) return scrollable.scrollTop + scrollable.clientHeight < scrollable.scrollHeight - 1;
+        return scrollable.scrollTop > 1;
+      };
+
+      const onWheel = (event) => {
+        if (!enabled || Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+        const direction = Math.sign(event.deltaY);
+        if (canScrollInside(event.target, direction)) return;
+        event.preventDefault();
+        if (transitioning) return;
+
+        wheelTotal += event.deltaY;
+        window.clearTimeout(wheelResetTimer);
+        wheelResetTimer = window.setTimeout(() => { wheelTotal = 0; }, 180);
+        if (Math.abs(wheelTotal) < 44) return;
+
+        goTo(activeIndex + Math.sign(wheelTotal), Math.sign(wheelTotal));
+        wheelTotal = 0;
+      };
+
+      const onKeydown = (event) => {
+        if (!enabled || isTextInput(event.target)) return;
+        if (['ArrowDown', 'PageDown', ' '].includes(event.key)) {
+          event.preventDefault();
+          goTo(activeIndex + 1, 1);
+        } else if (['ArrowUp', 'PageUp'].includes(event.key)) {
+          event.preventDefault();
+          goTo(activeIndex - 1, -1);
+        } else if (event.key === 'Home') {
+          event.preventDefault();
+          goTo(0, -1);
+        } else if (event.key === 'End') {
+          event.preventDefault();
+          goTo(chapters.length - 1, 1);
+        }
+      };
+
+      const onTouchStart = (event) => {
+        if (!enabled || event.touches.length !== 1 || isInteractive(event.target)) return;
+        touchStartX = event.touches[0].clientX;
+        touchStartY = event.touches[0].clientY;
+      };
+
+      const onTouchEnd = (event) => {
+        if (!enabled || !touchStartY || event.changedTouches.length !== 1) return;
+        const deltaX = event.changedTouches[0].clientX - touchStartX;
+        const deltaY = event.changedTouches[0].clientY - touchStartY;
+        touchStartX = 0;
+        touchStartY = 0;
+        if (Math.abs(deltaY) < 58 || Math.abs(deltaY) <= Math.abs(deltaX)) return;
+        goTo(activeIndex + (deltaY < 0 ? 1 : -1), deltaY < 0 ? 1 : -1);
+      };
+
+      const onHashNavigation = (event) => {
+        const link = event.target.closest('a[href^="#"]');
+        if (!link || !enabled) return;
+        const destination = chapters.findIndex((chapter) => `#${chapter.id}` === link.getAttribute('href'));
+        if (destination < 0) return;
+        event.preventDefault();
+        const forwardDistance = (destination - activeIndex + chapters.length) % chapters.length;
+        const backwardDistance = (activeIndex - destination + chapters.length) % chapters.length;
+        goTo(destination, forwardDistance <= backwardDistance ? 1 : -1);
+      };
+
+      const enable = () => {
+        if (enabled || !desktopDeck.matches || window.Shopify?.designMode) return;
+        enabled = true;
+        deck.dataset.nabzDeckReady = 'true';
+        document.body.classList.add('nabz-deck-active');
+        setInitialStates();
+        document.addEventListener('wheel', onWheel, { passive: false });
+        deck.addEventListener('touchstart', onTouchStart, { passive: true });
+        deck.addEventListener('touchend', onTouchEnd, { passive: true });
+        document.addEventListener('keydown', onKeydown);
+        document.addEventListener('click', onHashNavigation);
+      };
+
+      const disable = () => {
+        if (!enabled) return;
+        enabled = false;
+        document.body.classList.remove('nabz-deck-active');
+        chapters.forEach((chapter) => {
+          chapter.removeAttribute('data-deck-state');
+          chapter.removeAttribute('aria-hidden');
+          if ('inert' in chapter) chapter.inert = false;
+        });
+        document.removeEventListener('wheel', onWheel);
+        deck.removeEventListener('touchstart', onTouchStart);
+        deck.removeEventListener('touchend', onTouchEnd);
+        document.removeEventListener('keydown', onKeydown);
+        document.removeEventListener('click', onHashNavigation);
+      };
+
+      previousButton?.addEventListener('click', () => goTo(activeIndex - 1, -1));
+      nextButton?.addEventListener('click', () => goTo(activeIndex + 1, 1));
+      desktopDeck.addEventListener('change', () => {
+        if (desktopDeck.matches) enable();
+        else disable();
+      });
+
+      enable();
+    });
+  };
+
   const boot = (root = document) => {
     bootProductGallery(root);
     bootFitStory(root);
     bootFitSelector(root);
+    bootChapterDeck(root);
   };
 
   if (document.readyState === 'loading') {

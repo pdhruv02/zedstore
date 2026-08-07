@@ -1,11 +1,7 @@
 {{ 'nabz-clean-home.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'nabz-clean-home.js' | asset_url }}" defer></script>
 
-<div
-  class="nabz-clean-home"
-  data-nabz-home
-  style="--nabz-hero-image: url('{{ 'nabz-hero-self-contour.webp' | asset_url }}')"
->
+<div class="nabz-clean-home" data-nabz-home>
   <section class="nabz-chapter nabz-chapter--hero" id="hero" data-nabz-chapter>
     <div class="nabz-chapter__frame nabz-hero">
       <div class="nabz-hero__copy">
@@ -14,27 +10,39 @@
           <span>Not a plain shirt.</span>
           <span>The space between.</span>
         </h1>
-        <p>India’s textile language, re-cut into everyday shirts. Clean from a distance. Unforgettable up close.</p>
       </div>
 
-      <div class="nabz-hero__visual" data-detail-source>
+      <div class="nabz-hero__visual">
         <img
-          src="{{ 'nabz-hero-self-contour.webp' | asset_url }}"
-          alt="NABZ Self-Contour shirt in midnight indigo"
-          width="1024"
+          class="nabz-hero__image"
+          src="{{ 'nabz-hero-air-cable.webp' | asset_url }}"
+          alt="Air Cable shirt by NABZ"
+          width="1584"
           height="1536"
           fetchpriority="high"
         >
-        <div class="nabz-hero__detail" data-detail-lens aria-hidden="true"></div>
+        <figure class="nabz-hero__detail">
+          <img
+            src="{{ 'nabz-embroidery-close-up.webp' | asset_url }}"
+            alt="Close-up of the Air Cable embroidery and fabric"
+            width="476"
+            height="496"
+            fetchpriority="high"
+          >
+          <figcaption>Thread, seen closer</figcaption>
+        </figure>
       </div>
     </div>
   </section>
 
   <section class="nabz-chapter nabz-chapter--products" id="products" data-nabz-chapter>
     <div class="nabz-chapter__frame nabz-products">
-      <h2>Unforgettable up close.</h2>
+      <h2>
+        <span>India’s textile language, re-cut into everyday shirts.</span>
+        <em>Clean from a distance. Unforgettable up close.</em>
+      </h2>
       <div class="nabz-product-gallery" data-product-gallery>
-        {% assign product_assets = 'nabz-product-air-cable.webp|Air Cable,nabz-product-phulkari-pixels.webp|Phulkari Pixels,nabz-product-dissolving-oxford.webp|Dissolving Oxford,nabz-product-moire.webp|Moiré in Motion,nabz-product-jali-air.webp|Jali Air,nabz-product-body-map.webp|Body Map,nabz-product-microcosm.webp|Microcosm,nabz-product-fault-line.webp|Fault Line' | split: ',' %}
+        {% assign product_assets = 'nabz-product-phulkari-pixels.webp|Phulkari Pixels,nabz-product-dissolving-oxford.webp|Dissolving Oxford,nabz-product-moire.webp|Moiré in Motion,nabz-product-jali-air.webp|Jali Air,nabz-product-body-map.webp|Body Map,nabz-product-microcosm.webp|Microcosm,nabz-product-fault-line.webp|Fault Line' | split: ',' %}
         {% for product_asset in product_assets %}
           {% assign product_parts = product_asset | split: '|' %}
           <button
@@ -59,12 +67,30 @@
 
   <section class="nabz-chapter nabz-chapter--fit" id="fit" data-nabz-chapter>
     <div class="nabz-chapter__frame nabz-fit">
-      <div class="nabz-fit__copy">
-        <h2>S or M size is too narrow and tight for you? and the next size is comfortably loose but becomes unnecessarily long?</h2>
-        <p class="nabz-fit__read">read this one...</p>
-        <p>Shirts longer than your torso makes you appear shorter, and ruins the overall proportion.</p>
-        <h3>NABZ separates size and length</h3>
-        <p>Up to 5′8″? Start with Standard. Above 5′8″? Start with Extended. Refer to the size chart for precise fit.</p>
+      <div class="nabz-fit-card" data-fit-story>
+        <article class="nabz-fit-card__state is-active" data-fit-story-state="problem" aria-hidden="false">
+          <span class="nabz-kicker">The usual problem</span>
+          <h2>Your shirt size shouldn’t decide your shirt length.</h2>
+          <p>Your usual size feels tight. You go one size up, it fits better around your body, but now the shirt is too long.</p>
+          <p>That extra length can make your body look shorter and throw off the proportion.</p>
+          <button class="nabz-fit-card__next" type="button" data-fit-story-next>
+            Read this one <span aria-hidden="true">→</span>
+          </button>
+        </article>
+
+        <article class="nabz-fit-card__state" data-fit-story-state="solution" aria-hidden="true">
+          <button class="nabz-fit-card__back" type="button" data-fit-story-back>
+            <span aria-hidden="true">←</span> Back
+          </button>
+          <span class="nabz-kicker">The NABZ system</span>
+          <h2>NABZ separates size and length.</h2>
+          <p>Choose your size for the fit around your body. Then choose the length:</p>
+          <div class="nabz-fit-card__rules">
+            <p><span>Up to 5′8″</span><strong>Standard</strong></p>
+            <p><span>Above 5′8″</span><strong>Extended</strong></p>
+          </div>
+          <p class="nabz-fit-card__note">Check the size chart for the exact garment length.</p>
+        </article>
       </div>
 
       <div class="nabz-fit-tool" data-fit-selector>
@@ -77,42 +103,72 @@
           }
         </script>
 
+        <div class="nabz-fit-tool__head">
+          <span class="nabz-kicker">Build your proportion</span>
+          <span class="nabz-fit-tool__axis">Size changes width · Length changes hem</span>
+        </div>
+
         <div class="nabz-fit-tool__diagram">
           <svg viewBox="0 0 380 430" role="img" aria-labelledby="NabzFitDiagramTitle NabzFitDiagramDescription">
             <title id="NabzFitDiagramTitle">Interactive NABZ shirt proportions</title>
-            <desc id="NabzFitDiagramDescription">The shirt widens when the size changes and lengthens independently when Standard or Extended is selected.</desc>
-            <path class="nabz-fit-shirt__collar" d="M164 76 L178 54 L190 69 L202 54 L216 76"></path>
+            <desc id="NabzFitDiagramDescription">The tailored shirt widens when the size changes and lengthens independently when Standard or Extended is selected.</desc>
+            <defs>
+              <linearGradient id="NabzShirtFabric" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#283440"></stop>
+                <stop offset="0.52" stop-color="#17212a"></stop>
+                <stop offset="1" stop-color="#0d141b"></stop>
+              </linearGradient>
+              <linearGradient id="NabzShirtLight" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#e8d9c4" stop-opacity=".18"></stop>
+                <stop offset="1" stop-color="#e8d9c4" stop-opacity="0"></stop>
+              </linearGradient>
+            </defs>
+            <path class="nabz-fit-shirt__shadow" data-shirt-shadow></path>
             <path class="nabz-fit-shirt__outline" data-shirt-outline></path>
+            <path class="nabz-fit-shirt__yoke" data-shirt-yoke></path>
+            <path class="nabz-fit-shirt__collar-left" d="M190 69 L178 52 L160 74 L181 91 Z"></path>
+            <path class="nabz-fit-shirt__collar-right" d="M190 69 L202 52 L220 74 L199 91 Z"></path>
+            <path class="nabz-fit-shirt__neck" d="M178 52 Q190 64 202 52"></path>
             <path class="nabz-fit-shirt__placket" data-shirt-placket></path>
+            <path class="nabz-fit-shirt__pocket" data-shirt-pocket></path>
+            <g class="nabz-fit-shirt__buttons" data-shirt-buttons></g>
+            <path class="nabz-fit-shirt__embroidery" data-shirt-embroidery></path>
             <path class="nabz-fit-shirt__hem" data-shirt-hem></path>
             <line class="nabz-fit-shirt__measure" data-shirt-measure x1="338" y1="104" x2="338" y2="326"></line>
             <line class="nabz-fit-shirt__measure-cap" data-shirt-measure-top x1="330" y1="104" x2="346" y2="104"></line>
             <line class="nabz-fit-shirt__measure-cap" data-shirt-measure-bottom x1="330" y1="326" x2="346" y2="326"></line>
             <text class="nabz-fit-shirt__measure-text" data-shirt-measure-text x="354" y="220">27&quot;</text>
-            <text class="nabz-fit-shirt__size-text" data-shirt-size-text x="190" y="214">M</text>
+            <text class="nabz-fit-shirt__size-text" data-shirt-size-text x="190" y="229">M</text>
           </svg>
         </div>
 
         <div class="nabz-fit-tool__controls">
-          <div class="nabz-fit-tool__group" data-size-buttons aria-label="Size">
-            <button type="button" data-size="S" aria-pressed="false">S</button>
-            <button class="is-active" type="button" data-size="M" aria-pressed="true">M</button>
-            <button type="button" data-size="L" aria-pressed="false">L</button>
-            <button type="button" data-size="XL" aria-pressed="false">XL</button>
+          <div class="nabz-fit-tool__control-row">
+            <span class="nabz-fit-tool__label">Body size</span>
+            <div class="nabz-fit-tool__group" data-size-buttons aria-label="Size">
+              <button type="button" data-size="S" aria-pressed="false">S</button>
+              <button class="is-active" type="button" data-size="M" aria-pressed="true">M</button>
+              <button type="button" data-size="L" aria-pressed="false">L</button>
+              <button type="button" data-size="XL" aria-pressed="false">XL</button>
+            </div>
           </div>
-          <div class="nabz-fit-tool__group" data-length-buttons aria-label="Length">
-            <button class="is-active" type="button" data-length="Standard" aria-pressed="true">Standard</button>
-            <button type="button" data-length="Extended" aria-pressed="false">Extended</button>
+          <div class="nabz-fit-tool__control-row">
+            <span class="nabz-fit-tool__label">Shirt length</span>
+            <div class="nabz-fit-tool__group" data-length-buttons aria-label="Length">
+              <button class="is-active" type="button" data-length="Standard" aria-pressed="true">Standard</button>
+              <button type="button" data-length="Extended" aria-pressed="false" title="Not offered at launch for S and XL">Extended</button>
+            </div>
           </div>
         </div>
 
         <output class="nabz-fit-tool__output" data-fit-output aria-live="polite">M · Standard · 27&quot;</output>
-        <div class="nabz-size-table-wrap">
+        <details class="nabz-size-table-wrap">
+          <summary>View full size chart <span aria-hidden="true">+</span></summary>
           <table class="nabz-size-table">
             <thead><tr><th scope="col">Size</th><th scope="col">Standard</th><th scope="col">Extended</th></tr></thead>
             <tbody data-fit-table-body></tbody>
           </table>
-        </div>
+        </details>
       </div>
     </div>
   </section>
@@ -121,22 +177,22 @@
     <div class="nabz-chapter__frame nabz-shoulders">
       <div class="nabz-shoulders__visual">
         <img
-          src="{{ 'nabz-product-air-cable.webp' | asset_url }}"
-          alt="Air Cable shirt showing a clean, square shoulder line"
-          width="972"
-          height="1619"
+          src="{{ 'nabz-shoulder-structure.webp' | asset_url }}"
+          alt="NABZ structured shoulder construction on a midnight blue shirt"
+          width="1114"
+          height="1394"
           loading="lazy"
         >
       </div>
       <div class="nabz-shoulders__copy">
-        <h2>shirts that feel like suit</h2>
-        <p>shoulder fabric extra padded to give square shoulders look.</p>
-        <p>say no to dropped or downsloping shoulders</p>
-        <svg class="nabz-shoulders__line" viewBox="0 0 440 124" aria-hidden="true">
-          <path class="nabz-shoulders__line-old" d="M20 38 C96 39 134 72 184 100"></path>
-          <path class="nabz-shoulders__line-cut" d="M72 20 L154 108"></path>
-          <path class="nabz-shoulders__line-new" d="M250 72 C310 54 361 50 420 50"></path>
-        </svg>
+        <span class="nabz-kicker">Shoulder structure</span>
+        <h2>Shirts that feel like a suit at the shoulder.</h2>
+        <p>An extra layer of fabric adds subtle structure, creating a cleaner, squarer shoulder line without looking padded.</p>
+        <div class="nabz-shoulders__proof" aria-label="NABZ shoulder fit principles">
+          <span>Square line</span>
+          <span>Natural drape</span>
+        </div>
+        <p class="nabz-shoulders__statement">No dropped shoulders.<br>No downward slope.</p>
       </div>
     </div>
   </section>
@@ -144,20 +200,25 @@
   <section class="nabz-chapter nabz-chapter--contact" id="contact" data-nabz-chapter>
     <div class="nabz-chapter__frame nabz-contact">
       <div class="nabz-contact__intro">
-        <h2>wanna promote our product? wanna provide feedback? wanna talk?</h2>
-        <p>we are here to respond!</p>
+        <span class="nabz-kicker">The line is open</span>
+        <div class="nabz-contact__topics" aria-label="Ways to contact NABZ">
+          <span>Promote NABZ.</span>
+          <span>Give feedback.</span>
+          <span>Just talk.</span>
+        </div>
+        <h2>Whatever it is, we’re here to respond.</h2>
       </div>
 
       {% form 'contact', class: 'nabz-contact-form' %}
-        {% if form.posted_successfully? %}<p class="nabz-contact-form__status" role="status">we are here to respond!</p>{% endif %}
+        {% if form.posted_successfully? %}<p class="nabz-contact-form__status" role="status">Message received. We’ll respond soon.</p>{% endif %}
         {{ form.errors | default_errors }}
         <label for="NabzContactName">Name</label>
         <input id="NabzContactName" type="text" name="contact[name]" autocomplete="name">
         <label for="NabzContactEmail">Email</label>
         <input id="NabzContactEmail" type="email" name="contact[email]" autocomplete="email" required>
         <label for="NabzContactMessage">Message</label>
-        <textarea id="NabzContactMessage" name="contact[body]" rows="5" required></textarea>
-        <button type="submit">Send</button>
+        <textarea id="NabzContactMessage" name="contact[body]" rows="4" required></textarea>
+        <button type="submit">Send message <span aria-hidden="true">↗</span></button>
       {% endform %}
     </div>
   </section>

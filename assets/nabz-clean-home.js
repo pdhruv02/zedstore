@@ -26,21 +26,27 @@
     });
   };
 
-  const bootDetailLens = (root) => {
-    root.querySelectorAll('[data-detail-source]').forEach((source) => {
-      if (source.dataset.nabzLensReady === 'true') return;
-      source.dataset.nabzLensReady = 'true';
+  const bootFitStory = (root) => {
+    root.querySelectorAll('[data-fit-story]').forEach((story) => {
+      if (story.dataset.nabzReady === 'true') return;
+      story.dataset.nabzReady = 'true';
 
-      const lens = source.querySelector('[data-detail-lens]');
-      if (!lens || reducedMotion) return;
+      const problem = story.querySelector('[data-fit-story-state="problem"]');
+      const solution = story.querySelector('[data-fit-story-state="solution"]');
+      const next = story.querySelector('[data-fit-story-next]');
+      const back = story.querySelector('[data-fit-story-back]');
 
-      source.addEventListener('pointermove', (event) => {
-        const bounds = source.getBoundingClientRect();
-        const x = Math.min(68, Math.max(37, ((event.clientX - bounds.left) / bounds.width) * 100));
-        const y = Math.min(73, Math.max(39, ((event.clientY - bounds.top) / bounds.height) * 100));
-        lens.style.setProperty('--detail-x', `${x}%`);
-        lens.style.setProperty('--detail-y', `${y}%`);
-      });
+      const show = (target, departing) => {
+        departing.classList.add('is-leaving');
+        departing.classList.remove('is-active');
+        departing.setAttribute('aria-hidden', 'true');
+        target.classList.remove('is-leaving');
+        target.classList.add('is-active');
+        target.setAttribute('aria-hidden', 'false');
+      };
+
+      next.addEventListener('click', () => show(solution, problem));
+      back.addEventListener('click', () => show(problem, solution));
     });
   };
 
@@ -56,7 +62,12 @@
       const output = selector.querySelector('[data-fit-output]');
       const tableBody = selector.querySelector('[data-fit-table-body]');
       const outline = selector.querySelector('[data-shirt-outline]');
+      const shadow = selector.querySelector('[data-shirt-shadow]');
+      const yoke = selector.querySelector('[data-shirt-yoke]');
       const placket = selector.querySelector('[data-shirt-placket]');
+      const pocket = selector.querySelector('[data-shirt-pocket]');
+      const buttons = selector.querySelector('[data-shirt-buttons]');
+      const embroidery = selector.querySelector('[data-shirt-embroidery]');
       const hem = selector.querySelector('[data-shirt-hem]');
       const measure = selector.querySelector('[data-shirt-measure]');
       const measureTop = selector.querySelector('[data-shirt-measure-top]');
@@ -84,25 +95,44 @@
         const shoulderRight = center + width + 21;
         const bodyLeft = center - width;
         const bodyRight = center + width;
+        const sleeveLeft = shoulderLeft - 36;
+        const sleeveRight = shoulderRight + 36;
+        const shirtPath = [
+          'M160 75',
+          `L${shoulderLeft + 4} 86`,
+          `Q${shoulderLeft - 5} 87 ${shoulderLeft - 15} 92`,
+          `L${sleeveLeft} 113`,
+          `Q${sleeveLeft - 5} 119 ${sleeveLeft - 2} 130`,
+          `L${sleeveLeft + 13} 191`,
+          `Q${sleeveLeft + 16} 201 ${sleeveLeft + 27} 197`,
+          `L${bodyLeft + 2} 184`,
+          `L${bodyLeft} ${hemY - 18}`,
+          `Q${bodyLeft + 20} ${hemY - 3} ${center} ${hemY}`,
+          `Q${bodyRight - 20} ${hemY - 3} ${bodyRight} ${hemY - 18}`,
+          `L${bodyRight - 2} 184`,
+          `L${sleeveRight - 27} 197`,
+          `Q${sleeveRight - 16} 201 ${sleeveRight - 13} 191`,
+          `L${sleeveRight + 2} 130`,
+          `Q${sleeveRight + 5} 119 ${sleeveRight} 113`,
+          `L${shoulderRight + 15} 92`,
+          `Q${shoulderRight + 5} 87 ${shoulderRight - 4} 86`,
+          'L220 75',
+          'Q205 82 190 69',
+          'Q175 82 160 75',
+          'Z',
+        ].join(' ');
 
-        outline.setAttribute('d', [
-          'M164 76',
-          `L${shoulderLeft} 91`,
-          `Q${shoulderLeft - 16} 96 ${shoulderLeft - 34} 116`,
-          `L${shoulderLeft - 18} 192`,
-          `L${bodyLeft} 180`,
-          `L${bodyLeft} ${hemY - 17}`,
-          `Q${bodyLeft + 20} ${hemY} ${center} ${hemY}`,
-          `Q${bodyRight - 20} ${hemY} ${bodyRight} ${hemY - 17}`,
-          `L${bodyRight} 180`,
-          `L${shoulderRight + 18} 192`,
-          `L${shoulderRight + 34} 116`,
-          `Q${shoulderRight + 16} 96 ${shoulderRight} 91`,
-          'L216 76',
-        ].join(' '));
-
-        placket.setAttribute('d', `M190 69 L190 ${hemY - 4}`);
-        hem.setAttribute('d', `M${bodyLeft + 7} ${hemY - 15} Q190 ${hemY + 5} ${bodyRight - 7} ${hemY - 15}`);
+        outline.setAttribute('d', shirtPath);
+        shadow.setAttribute('d', shirtPath);
+        yoke.setAttribute('d', `M${shoulderLeft - 11} 95 Q190 124 ${shoulderRight + 11} 95 L${shoulderRight - 2} 124 Q190 141 ${bodyLeft + 2} 124 Z`);
+        placket.setAttribute('d', `M190 69 L190 ${hemY - 3} M184 91 L184 ${hemY - 5} M196 91 L196 ${hemY - 5}`);
+        pocket.setAttribute('d', `M${center + 21} 143 L${center + Math.min(63, width - 15)} 149 L${center + Math.min(60, width - 18)} 207 Q${center + 41} 214 ${center + 22} 205 Z`);
+        embroidery.setAttribute('d', `M${bodyLeft + 18} 151 C${bodyLeft + 35} 174 ${bodyLeft + 8} 204 ${bodyLeft + 26} 228 S${bodyLeft + 46} 278 ${bodyLeft + 25} ${Math.min(hemY - 24, 312)}`);
+        hem.setAttribute('d', `M${bodyLeft + 7} ${hemY - 16} Q190 ${hemY + 5} ${bodyRight - 7} ${hemY - 16}`);
+        buttons.innerHTML = [116, 151, 186, 221, 256, 291, 326]
+          .filter((y) => y < hemY - 17)
+          .map((y) => `<circle cx="190" cy="${y}" r="2.5"></circle>`)
+          .join('');
 
         const measureX = Math.min(344, bodyRight + 40);
         measure.setAttribute('x1', measureX);
@@ -204,7 +234,7 @@
 
   const boot = (root = document) => {
     bootProductGallery(root);
-    bootDetailLens(root);
+    bootFitStory(root);
     bootFitSelector(root);
   };
 

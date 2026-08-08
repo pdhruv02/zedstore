@@ -21,27 +21,31 @@ body:has(.nabz-home-marker) .shopify-section:has(.nabz-site-footer) {
 }
 
 :root {
-  --nabz-ink: #0b0a09;
-  --nabz-cloth: #eee3d2;
-  --nabz-copper: #a95f3a;
-  --nabz-line: rgba(238, 227, 210, .2);
+  --nabz-ink: #06142c;
+  --nabz-cloth: #f1e8dc;
+  --nabz-copper: #d46f38;
+  --nabz-line: rgba(218, 228, 245, .18);
+  --nabz-glass: rgba(5, 17, 39, .7);
+  --nabz-glass-strong: rgba(3, 13, 31, .84);
+  --nabz-glass-soft: rgba(9, 28, 58, .5);
   --nabz-serif: "Iowan Old Style", Baskerville, "Times New Roman", serif;
   --nabz-sans: Inter, Helvetica, Arial, sans-serif;
-  --nabz-max: 1500px;
-  --nabz-gutter: clamp(20px, 4vw, 64px);
+  --nabz-max: 1360px;
+  --nabz-deck-frame: min(1300px, calc(100% - 124px));
+  --nabz-gutter: clamp(14px, 2.2vw, 30px);
 }
 
-html { background: var(--nabz-ink); }
+html { background: #06142c; }
 body {
   margin: 0;
   min-width: 320px;
   color: var(--nabz-cloth);
-  background-color: var(--nabz-ink);
+  background-color: #06142c;
   background-image:
-    linear-gradient(rgba(4, 4, 4, .46), rgba(4, 4, 4, .64)),
-    url("https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-background-study-04.png?v=1784820062");
+    linear-gradient(115deg, rgba(2, 10, 25, .18), rgba(9, 27, 55, .04) 44%, rgba(1, 7, 18, .26)),
+    var(--nabz-background-image);
   background-size: cover;
-  background-position: center top;
+  background-position: center center;
   background-attachment: fixed;
   font-family: var(--nabz-sans);
   -webkit-font-smoothing: antialiased;
@@ -53,7 +57,7 @@ img { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
 button, input, select, textarea { font: inherit; }
 button { cursor: pointer; }
-button:focus-visible, a:focus-visible { outline: 2px solid #dfa080; outline-offset: 4px; }
+button:focus-visible, a:focus-visible { outline: 2px solid #e78a54; outline-offset: 4px; }
 
 .nabz-shell {
   width: min(var(--nabz-max), 100%);
@@ -64,7 +68,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid #dfa080; outline-offs
 .nabz-site-header {
   position: relative;
   z-index: 20;
-  padding-top: clamp(10px, 1.2vw, 16px);
+  padding-top: clamp(8px, 1vw, 12px);
   background: transparent;
 }
 
@@ -72,26 +76,22 @@ button:focus-visible, a:focus-visible { outline: 2px solid #dfa080; outline-offs
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  min-height: 64px;
+  min-height: 58px;
   gap: clamp(14px, 2vw, 30px);
-  padding: 4px clamp(16px, 2vw, 28px);
-  border: 1px solid rgba(238, 227, 211, .16);
-  border-radius: 28px;
-  background:
-    linear-gradient(105deg, rgba(7, 7, 6, .88), rgba(18, 14, 11, .72)),
-    url("https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-background-study-04.png?v=1784820062");
-  background-size: cover;
-  background-position: center 8%;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, .18), inset 0 1px 0 rgba(255, 244, 226, .05);
-  backdrop-filter: blur(10px) saturate(106%);
+  padding: 3px clamp(14px, 1.7vw, 22px);
+  border: 1px solid rgba(218, 228, 245, .2);
+  border-radius: 22px;
+  background: linear-gradient(115deg, rgba(3, 14, 34, .87), rgba(8, 28, 58, .7));
+  box-shadow: 0 14px 38px rgba(0, 5, 18, .34), inset 0 1px 0 rgba(232, 240, 255, .07);
+  backdrop-filter: blur(18px) saturate(118%);
 }
 
 .nabz-site-header__brand {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: clamp(124px, 10vw, 146px);
-  height: clamp(46px, 4vw, 54px);
+  width: clamp(112px, 9vw, 132px);
+  height: clamp(42px, 3.4vw, 48px);
 }
 
 .nabz-site-header__brand img,
@@ -105,19 +105,150 @@ button:focus-visible, a:focus-visible { outline: 2px solid #dfa080; outline-offs
 .nabz-site-header__nav {
   display: flex;
   justify-content: center;
-  gap: clamp(18px, 3vw, 42px);
+  gap: clamp(18px, 2.4vw, 34px);
 }
 
 .nabz-site-header__nav a,
 .nabz-site-header__bag {
-  font-size: .68rem;
+  font-size: .64rem;
   font-weight: 700;
   letter-spacing: .11em;
   text-transform: uppercase;
 }
 
 .nabz-site-header__nav a:hover,
-.nabz-site-header__bag:hover { color: #dfa080; }
+.nabz-site-header__bag:hover { color: #e78a54; }
+
+/* Landing entrance: the textile itself opens to reveal the first chapter. */
+.nabz-entry {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  overflow: hidden;
+  background: transparent;
+  pointer-events: auto;
+  animation: nabz-entry-release .01s linear 3.18s forwards;
+  isolation: isolate;
+}
+
+.nabz-entry__panel {
+  position: absolute;
+  inset-block: 0;
+  width: calc(50% + 2px);
+  background-color: #06142c;
+  background-image:
+    linear-gradient(rgba(2, 10, 25, .1), rgba(1, 7, 18, .24)),
+    var(--nabz-background-image);
+  background-repeat: no-repeat;
+  background-size: 100vw 100vh;
+  will-change: transform;
+}
+
+.nabz-entry__panel--left {
+  left: 0;
+  background-position: left center;
+  box-shadow: 18px 0 44px rgba(0, 4, 15, .24);
+  animation: nabz-entry-left 1.08s cubic-bezier(.76, 0, .18, 1) 1.92s forwards;
+}
+
+.nabz-entry__panel--right {
+  right: 0;
+  background-position: right center;
+  box-shadow: -18px 0 44px rgba(0, 4, 15, .24);
+  animation: nabz-entry-right 1.08s cubic-bezier(.76, 0, .18, 1) 1.92s forwards;
+}
+
+.nabz-entry__vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: radial-gradient(circle at center, rgba(7, 25, 51, .06), rgba(0, 5, 15, .62));
+  pointer-events: none;
+  animation: nabz-entry-vignette .5s ease 1.78s forwards;
+}
+
+.nabz-entry__seam {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  left: 50%;
+  width: 1px;
+  height: 0;
+  background: linear-gradient(transparent, #e87836 12%, #f09a64 50%, #e87836 88%, transparent);
+  box-shadow: 0 0 16px rgba(232, 120, 54, .55);
+  transform: translate(-50%, -50%);
+  animation:
+    nabz-entry-seam .7s cubic-bezier(.2, .76, .18, 1) 1.06s forwards,
+    nabz-entry-seam-fade .18s ease 1.92s forwards;
+}
+
+.nabz-entry__mark {
+  position: absolute;
+  z-index: 4;
+  top: 50%;
+  left: 50%;
+  width: clamp(142px, 15vw, 206px);
+  aspect-ratio: 1;
+  overflow: hidden;
+  transform: translate(-50%, -50%);
+  clip-path: inset(0 100% 0 0);
+  animation:
+    nabz-entry-stitch .92s cubic-bezier(.24, .72, .2, 1) .22s forwards,
+    nabz-entry-mark-away .45s cubic-bezier(.7, 0, 1, 1) 1.64s forwards;
+}
+
+.nabz-entry__mark::after {
+  position: absolute;
+  inset: -25%;
+  content: "";
+  background: linear-gradient(105deg, transparent 37%, rgba(255, 249, 237, .7) 50%, transparent 63%);
+  transform: translateX(-85%);
+  animation: nabz-entry-sheen .56s ease .86s forwards;
+  mix-blend-mode: screen;
+}
+
+.nabz-entry__mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 14px 28px rgba(0, 2, 12, .5));
+}
+
+@keyframes nabz-entry-stitch {
+  to { clip-path: inset(0 0 0 0); }
+}
+
+@keyframes nabz-entry-sheen {
+  to { transform: translateX(85%); }
+}
+
+@keyframes nabz-entry-seam {
+  to { height: 100%; }
+}
+
+@keyframes nabz-entry-seam-fade {
+  to { opacity: 0; }
+}
+
+@keyframes nabz-entry-mark-away {
+  to { opacity: 0; transform: translate(-50%, -50%) scale(.78); }
+}
+
+@keyframes nabz-entry-vignette {
+  to { opacity: 0; }
+}
+
+@keyframes nabz-entry-left {
+  to { transform: translate3d(-103%, 0, 0) skewX(-1.2deg); }
+}
+
+@keyframes nabz-entry-right {
+  to { transform: translate3d(103%, 0, 0) skewX(1.2deg); }
+}
+
+@keyframes nabz-entry-release {
+  to { opacity: 0; visibility: hidden; pointer-events: none; }
+}
 
 .nabz-site-footer {
   border-top: 1px solid var(--nabz-line);
@@ -126,7 +257,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid #dfa080; outline-offs
 }
 
 .nabz-site-footer__inner {
-  min-height: 138px;
+  min-height: 88px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -135,8 +266,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid #dfa080; outline-offs
 
 .nabz-site-footer__brand {
   display: flex;
-  width: 132px;
-  height: 62px;
+  width: 96px;
+  height: 42px;
   align-items: center;
   justify-content: center;
 }
@@ -146,7 +277,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid #dfa080; outline-offs
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 24px 34px;
+  gap: 16px 24px;
 }
 
 .nabz-site-footer__meta,
@@ -166,11 +297,29 @@ button:focus-visible, a:focus-visible { outline: 2px solid #dfa080; outline-offs
   .nabz-site-header__bag { justify-self: end; }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .nabz-entry {
+    animation: nabz-entry-release .22s ease .3s forwards;
+  }
+
+  .nabz-entry__panel,
+  .nabz-entry__vignette,
+  .nabz-entry__seam,
+  .nabz-entry__mark,
+  .nabz-entry__mark::after {
+    animation: none;
+  }
+
+  .nabz-entry__mark {
+    clip-path: none;
+  }
+}
+
 @media (max-width: 640px) {
   .nabz-site-header { padding-top: 8px; }
   .nabz-site-header__bar { min-height: 58px; padding: 3px 12px; border-radius: 24px; }
   .nabz-site-header__brand { width: 110px; height: 46px; }
   .nabz-site-header__bag { font-size: .63rem; letter-spacing: .09em; }
-  .nabz-site-footer__inner { padding-block: 32px; align-items: flex-start; flex-direction: column; }
+  .nabz-site-footer__inner { min-height: auto; padding-block: 22px; align-items: flex-start; flex-direction: column; gap: 18px; }
   .nabz-site-footer__meta { justify-content: flex-start; }
 }

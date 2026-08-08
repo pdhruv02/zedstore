@@ -45,20 +45,47 @@
         {% assign product_assets = 'nabz-product-phulkari-pixels.webp|Phulkari Pixels,nabz-product-dissolving-oxford.webp|Dissolving Oxford,nabz-product-moire.webp|Moiré in Motion,nabz-product-jali-air.webp|Jali Air,nabz-product-body-map.webp|Body Map,nabz-product-microcosm.webp|Microcosm,nabz-product-fault-line.webp|Fault Line' | split: ',' %}
         {% for product_asset in product_assets %}
           {% assign product_parts = product_asset | split: '|' %}
+          {% case forloop.index %}
+            {% when 1 %}{% assign detail_shift = '-45%' %}{% assign reverse_shift = '0%' %}{% assign peek_position = '38% center' %}
+            {% when 2 %}{% assign detail_shift = '0%' %}{% assign reverse_shift = '-56%' %}{% assign peek_position = '35% center' %}
+            {% when 3 %}{% assign detail_shift = '-2%' %}{% assign reverse_shift = '-58%' %}{% assign peek_position = '34% center' %}
+            {% when 4 %}{% assign detail_shift = '0%' %}{% assign reverse_shift = '-50%' %}{% assign peek_position = '35% center' %}
+            {% when 5 %}{% assign detail_shift = '0%' %}{% assign reverse_shift = '-68%' %}{% assign peek_position = '35% center' %}
+            {% when 6 %}{% assign detail_shift = '-29%' %}{% assign reverse_shift = '-63%' %}{% assign peek_position = '35% center' %}
+            {% when 7 %}{% assign detail_shift = '0%' %}{% assign reverse_shift = '-43%' %}{% assign peek_position = '35% center' %}
+          {% endcase %}
           <button
             class="nabz-product{% if forloop.first %} is-active{% endif %}"
             type="button"
             data-product-panel
             aria-label="Show {{ product_parts[1] }}"
             aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"
+            style="--nabz-detail-shift: {{ detail_shift }}; --nabz-reverse-shift: {{ reverse_shift }}; --nabz-peek-position: {{ peek_position }};"
           >
-            <img
-              src="{{ product_parts[0] | asset_url }}"
-              alt="{{ product_parts[1] }} embroidered shirt concept"
-              width="1003"
-              height="1568"
-              loading="{% if forloop.index < 3 %}eager{% else %}lazy{% endif %}"
-            >
+            <span class="nabz-product__peek" aria-hidden="true">
+              <img src="{{ product_parts[0] | asset_url }}" alt="" width="1003" height="1568" loading="lazy">
+            </span>
+            <span class="nabz-product__atlas">
+              <span class="nabz-product__board">
+                <img
+                  src="{{ product_parts[0] | asset_url }}"
+                  alt="{{ product_parts[1] }} embroidered shirt shown from the front, in detail, and from the back"
+                  width="1003"
+                  height="1568"
+                  loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                >
+              </span>
+              <span class="nabz-product__studies" aria-hidden="true">
+                <span class="nabz-product__study nabz-product__study--detail">
+                  <img src="{{ product_parts[0] | asset_url }}" alt="" width="1003" height="1568" loading="lazy">
+                  <span>Textile detail</span>
+                </span>
+                <span class="nabz-product__study nabz-product__study--reverse">
+                  <img src="{{ product_parts[0] | asset_url }}" alt="" width="1003" height="1568" loading="lazy">
+                  <span>Reverse view</span>
+                </span>
+              </span>
+            </span>
           </button>
         {% endfor %}
       </div>

@@ -19,8 +19,16 @@
 
       panels.forEach((panel) => {
         panel.addEventListener('click', () => activate(panel));
+        panel.addEventListener('focus', () => activate(panel));
         panel.addEventListener('pointerenter', () => {
           if (window.matchMedia('(hover: hover)').matches) activate(panel);
+        });
+        panel.addEventListener('keydown', (event) => {
+          if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+          event.preventDefault();
+          const direction = event.key === 'ArrowRight' ? 1 : -1;
+          const nextIndex = (panels.indexOf(panel) + direction + panels.length) % panels.length;
+          panels[nextIndex].focus();
         });
       });
     });

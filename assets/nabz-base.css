@@ -27,8 +27,8 @@ body:has(.nabz-home-marker) .shopify-section:has(.nabz-site-footer) {
   --nabz-line: rgba(238, 227, 210, .2);
   --nabz-serif: "Iowan Old Style", Baskerville, "Times New Roman", serif;
   --nabz-sans: Inter, Helvetica, Arial, sans-serif;
-  --nabz-max: 1500px;
-  --nabz-gutter: clamp(20px, 4vw, 64px);
+  --nabz-max: 1360px;
+  --nabz-gutter: clamp(14px, 2.2vw, 30px);
 }
 
 html { background: var(--nabz-ink); }
@@ -64,7 +64,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid #dfa080; outline-offs
 .nabz-site-header {
   position: relative;
   z-index: 20;
-  padding-top: clamp(10px, 1.2vw, 16px);
+  padding-top: clamp(8px, 1vw, 12px);
   background: transparent;
 }
 
@@ -72,11 +72,11 @@ button:focus-visible, a:focus-visible { outline: 2px solid #dfa080; outline-offs
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  min-height: 64px;
+  min-height: 58px;
   gap: clamp(14px, 2vw, 30px);
-  padding: 4px clamp(16px, 2vw, 28px);
+  padding: 3px clamp(14px, 1.7vw, 22px);
   border: 1px solid rgba(238, 227, 211, .16);
-  border-radius: 28px;
+  border-radius: 22px;
   background:
     linear-gradient(105deg, rgba(7, 7, 6, .88), rgba(18, 14, 11, .72)),
     url("https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-background-study-04.png?v=1784820062");
@@ -90,8 +90,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid #dfa080; outline-offs
   display: flex;
   align-items: center;
   justify-content: center;
-  width: clamp(124px, 10vw, 146px);
-  height: clamp(46px, 4vw, 54px);
+  width: clamp(112px, 9vw, 132px);
+  height: clamp(42px, 3.4vw, 48px);
 }
 
 .nabz-site-header__brand img,
@@ -105,12 +105,12 @@ button:focus-visible, a:focus-visible { outline: 2px solid #dfa080; outline-offs
 .nabz-site-header__nav {
   display: flex;
   justify-content: center;
-  gap: clamp(18px, 3vw, 42px);
+  gap: clamp(18px, 2.4vw, 34px);
 }
 
 .nabz-site-header__nav a,
 .nabz-site-header__bag {
-  font-size: .68rem;
+  font-size: .64rem;
   font-weight: 700;
   letter-spacing: .11em;
   text-transform: uppercase;

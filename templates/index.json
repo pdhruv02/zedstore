@@ -1,8 +1,7 @@
 {
   "sections": {
     "nabz_header": { "type": "nabz-site-header", "settings": {} },
-    "main": { "type": "nabz-clean-home", "settings": {} },
-    "nabz_footer": { "type": "nabz-site-footer", "settings": {} }
+    "main": { "type": "nabz-clean-home", "settings": {} }
   },
-  "order": ["nabz_header", "main", "nabz_footer"]
+  "order": ["nabz_header", "main"]
 }

@@ -3,6 +3,25 @@
 
   const formatLength = (value) => `${Number.isInteger(value) ? value : value.toFixed(2).replace(/0$/, '')}"`;
 
+  const bootEntry = () => {
+    const entry = document.querySelector('[data-nabz-entry]');
+    if (!entry || entry.dataset.nabzReady === 'true') return;
+    entry.dataset.nabzReady = 'true';
+
+    let completed = false;
+    const finish = () => {
+      if (completed) return;
+      completed = true;
+      entry.remove();
+      document.dispatchEvent(new CustomEvent('nabz:intro-complete'));
+    };
+
+    entry.addEventListener('animationend', (event) => {
+      if (event.target === entry && event.animationName === 'nabz-entry-release') finish();
+    });
+    window.setTimeout(finish, reducedMotion ? 650 : 3450);
+  };
+
   const bootProductGallery = (root) => {
     root.querySelectorAll('[data-product-gallery]').forEach((gallery) => {
       if (gallery.dataset.nabzReady === 'true') return;
@@ -400,7 +419,7 @@
       };
 
       const enable = () => {
-        if (enabled || !desktopDeck.matches || window.Shopify?.designMode) return;
+        if (enabled || !desktopDeck.matches || window.Shopify?.designMode || document.querySelector('[data-nabz-entry]')) return;
         enabled = true;
         deck.dataset.nabzDeckReady = 'true';
         document.body.classList.add('nabz-deck-active');
@@ -435,11 +454,16 @@
         else disable();
       });
 
-      enable();
+      if (document.querySelector('[data-nabz-entry]')) {
+        document.addEventListener('nabz:intro-complete', enable, { once: true });
+      } else {
+        enable();
+      }
     });
   };
 
   const boot = (root = document) => {
+    if (root === document) bootEntry();
     bootProductGallery(root);
     bootFitStory(root);
     bootFitSelector(root);

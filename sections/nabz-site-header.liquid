@@ -1,10 +1,21 @@
 {{ 'nabz-base.css' | asset_url | stylesheet_tag }}
 <style>
   body:has(.nabz-home-marker) {
-    --nabz-background-image: url('{{ 'nabz-cream-embroidered-background.webp' | asset_url }}');
+    --nabz-background-image: url('{{ 'nabz-navy-stitched-background.webp' | asset_url }}');
   }
 </style>
 <div class="nabz-home-marker" hidden aria-hidden="true"></div>
+{% unless request.design_mode %}
+  <div class="nabz-entry" data-nabz-entry aria-hidden="true">
+    <div class="nabz-entry__panel nabz-entry__panel--left"></div>
+    <div class="nabz-entry__panel nabz-entry__panel--right"></div>
+    <div class="nabz-entry__vignette"></div>
+    <div class="nabz-entry__seam"></div>
+    <div class="nabz-entry__mark">
+      <img src="{{ 'nabz-entry-mark.png' | asset_url }}" alt="" width="706" height="720" fetchpriority="high">
+    </div>
+  </div>
+{% endunless %}
 <header class="nabz-site-header">
   <div class="nabz-shell">
     <div class="nabz-site-header__bar">

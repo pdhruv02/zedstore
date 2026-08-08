@@ -13,6 +13,11 @@
         href="{{ settings.favicon | image_url: width: 32, height: 32 }}"
       >
     {%- endif -%}
+    <link rel="icon" type="image/png" sizes="256x256" href="{{ 'nabz-favicon.png' | asset_url }}">
+    <link rel="apple-touch-icon" sizes="256x256" href="{{ 'nabz-favicon.png' | asset_url }}">
+    {% if template.name == 'index' %}
+      {{ 'nabz-navy-stitched-background.webp' | asset_url | preload_tag: as: 'image' }}
+    {% endif %}
 
     {% comment %}
       Opt into cross-document (MPA) view transitions and hold first paint until #MainContent

@@ -1,55 +1,210 @@
 (() => {
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.documentElement.classList.add('nabz-js');
 
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const desktopRunway = window.matchMedia('(min-width: 961px)');
+  const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
   const formatLength = (value) => `${Number.isInteger(value) ? value : value.toFixed(2).replace(/0$/, '')}"`;
 
   const bootEntry = () => {
     const entry = document.querySelector('[data-nabz-entry]');
     if (!entry || entry.dataset.nabzReady === 'true') return;
     entry.dataset.nabzReady = 'true';
+    document.documentElement.classList.add('nabz-entry-active');
 
     let completed = false;
     const finish = () => {
       if (completed) return;
       completed = true;
-      entry.remove();
-      document.dispatchEvent(new CustomEvent('nabz:intro-complete'));
+      document.documentElement.classList.remove('nabz-entry-active');
+      entry.animate([{ opacity: 1 }, { opacity: 0 }], {
+        duration: reducedMotion ? 80 : 180,
+        easing: 'ease-out',
+        fill: 'forwards',
+      }).finished.finally(() => {
+        entry.remove();
+        document.dispatchEvent(new CustomEvent('nabz:intro-complete'));
+      });
     };
 
-    entry.addEventListener('animationend', (event) => {
-      if (event.target === entry && event.animationName === 'nabz-entry-release') finish();
-    });
-    window.setTimeout(finish, reducedMotion ? 650 : 3450);
+    entry.querySelector('[data-nabz-entry-skip]')?.addEventListener('click', finish);
+    window.setTimeout(finish, reducedMotion ? 720 : 3100);
   };
 
-  const bootProductGallery = (root) => {
-    root.querySelectorAll('[data-product-gallery]').forEach((gallery) => {
-      if (gallery.dataset.nabzReady === 'true') return;
-      gallery.dataset.nabzReady = 'true';
+  const bootReveals = (root) => {
+    const revealItems = [...root.querySelectorAll('[data-reveal], [data-shoulder-visual]')];
+    if (!revealItems.length) return;
 
-      const panels = [...gallery.querySelectorAll('[data-product-panel]')];
-      const activate = (selected) => {
-        panels.forEach((panel) => {
-          const active = panel === selected;
-          panel.classList.toggle('is-active', active);
-          panel.setAttribute('aria-pressed', String(active));
-        });
+    if (reducedMotion || !('IntersectionObserver' in window)) {
+      revealItems.forEach((item) => item.classList.add('is-visible'));
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.18, rootMargin: '0px 0px -7% 0px' });
+
+    revealItems.forEach((item) => observer.observe(item));
+  };
+
+  const bootPageChrome = (root) => {
+    const home = root.querySelector('[data-nabz-home]');
+    const header = document.querySelector('[data-nabz-header]');
+    if (!home || home.dataset.nabzChromeReady === 'true') return;
+    home.dataset.nabzChromeReady = 'true';
+
+    const scenes = [...home.querySelectorAll('[data-nabz-scene]')];
+    const links = [...home.querySelectorAll('[data-thread-link]')];
+    const progress = home.querySelector('[data-thread-progress]');
+    let lastY = window.scrollY;
+    let ticking = false;
+
+    const update = () => {
+      const scrollY = window.scrollY;
+      const scrollRange = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const percentage = clamp(scrollY / scrollRange, 0, 1) * 100;
+      if (progress) progress.style.setProperty('--nabz-page-progress', `${percentage}%`);
+
+      if (header) {
+        const movingDown = scrollY > lastY + 8;
+        const movingUp = scrollY < lastY - 8;
+        if (movingDown && scrollY > 180) header.classList.add('is-hidden');
+        else if (movingUp || scrollY < 100) header.classList.remove('is-hidden');
+      }
+      lastY = scrollY;
+
+      const hero = home.querySelector('#hero');
+      const portrait = home.querySelector('[data-hero-portrait] img');
+      const macro = home.querySelector('[data-hero-macro]');
+      if (hero && portrait && scrollY < hero.offsetHeight * 1.2) {
+        const heroProgress = clamp(scrollY / hero.offsetHeight, 0, 1);
+        portrait.style.transform = `scale(${1.015 + heroProgress * .045}) translateY(${heroProgress * 1.8}%)`;
+        if (macro) macro.style.transform = `translateY(${heroProgress * -22}px) rotate(${2.2 - heroProgress * 1.4}deg)`;
+      }
+
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(update);
+    };
+
+    const sceneObserver = new IntersectionObserver((entries) => {
+      const visible = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (!visible) return;
+      links.forEach((link) => link.classList.toggle('is-active', link.getAttribute('href') === `#${visible.target.id}`));
+    }, { threshold: [0.24, 0.42, 0.62], rootMargin: '-10% 0px -22% 0px' });
+
+    scenes.forEach((scene) => sceneObserver.observe(scene));
+    window.addEventListener('scroll', onScroll, { passive: true });
+    update();
+  };
+
+  const bootProductRunway = (root) => {
+    root.querySelectorAll('[data-product-runway]').forEach((runway) => {
+      if (runway.dataset.nabzReady === 'true') return;
+      runway.dataset.nabzReady = 'true';
+
+      const plates = [...runway.querySelectorAll('[data-product-plate]')];
+      const jumpButtons = [...runway.querySelectorAll('[data-product-jump]')];
+      const current = runway.querySelector('[data-product-current]');
+      const stage = runway.querySelector('.nabz-product-runway__stage');
+      let activeIndex = 0;
+      let ticking = false;
+
+      const twoDigits = (value) => String(value).padStart(2, '0');
+
+      const setPlateVariables = (plate, index, selected) => {
+        const distance = Math.abs(index - selected);
+        const past = index < selected;
+        plate.style.setProperty('--plate-distance', String(distance));
+        plate.style.setProperty('--plate-shift-y', `${distance * (past ? 10 : 7)}px`);
+        plate.style.setProperty('--plate-scale', String(Math.max(.68, (past ? .83 : .91) - distance * (past ? .025 : .035))));
+        plate.style.setProperty('--plate-angle', `${(past ? -7 : 5) + distance * (past ? -1.4 : 1.2)}deg`);
+        plate.style.setProperty('--plate-opacity', String(Math.max(.06, (past ? .36 : .58) - distance * (past ? .07 : .14))));
       };
 
-      panels.forEach((panel) => {
-        panel.addEventListener('click', () => activate(panel));
-        panel.addEventListener('focus', () => activate(panel));
-        panel.addEventListener('pointerenter', () => {
-          if (window.matchMedia('(hover: hover)').matches) activate(panel);
+      const activate = (index) => {
+        const selected = clamp(index, 0, plates.length - 1);
+        if (selected === activeIndex && plates[0].dataset.stateReady === 'true') return;
+        activeIndex = selected;
+
+        plates.forEach((plate, plateIndex) => {
+          const state = plateIndex === selected ? 'active' : plateIndex < selected ? 'past' : 'next';
+          plate.classList.toggle('is-active', state === 'active');
+          plate.classList.toggle('is-past', state === 'past');
+          plate.classList.toggle('is-next', state === 'next');
+          plate.dataset.stateReady = 'true';
+          setPlateVariables(plate, plateIndex, selected);
         });
-        panel.addEventListener('keydown', (event) => {
-          if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
-          event.preventDefault();
-          const direction = event.key === 'ArrowRight' ? 1 : -1;
-          const nextIndex = (panels.indexOf(panel) + direction + panels.length) % panels.length;
-          panels[nextIndex].focus();
+
+        jumpButtons.forEach((button, buttonIndex) => {
+          const active = buttonIndex === selected;
+          button.classList.toggle('is-active', active);
+          button.setAttribute('aria-selected', String(active));
+        });
+        if (current) current.textContent = twoDigits(selected + 1);
+      };
+
+      const updateFromScroll = () => {
+        if (!desktopRunway.matches) {
+          ticking = false;
+          return;
+        }
+        const rect = runway.getBoundingClientRect();
+        const travel = Math.max(1, runway.offsetHeight - window.innerHeight);
+        const progress = clamp(-rect.top / travel, 0, 1);
+        activate(Math.round(progress * (plates.length - 1)));
+        ticking = false;
+      };
+
+      const onScroll = () => {
+        if (ticking || !desktopRunway.matches) return;
+        ticking = true;
+        window.requestAnimationFrame(updateFromScroll);
+      };
+
+      jumpButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          const index = Number(button.dataset.productJump);
+          const travel = Math.max(1, runway.offsetHeight - window.innerHeight);
+          const destination = window.scrollY + runway.getBoundingClientRect().top + (index / Math.max(1, plates.length - 1)) * travel;
+          window.scrollTo({ top: destination, behavior: reducedMotion ? 'auto' : 'smooth' });
         });
       });
+
+      if (stage) {
+        let mobileTimer = 0;
+        stage.addEventListener('scroll', () => {
+          if (desktopRunway.matches) return;
+          window.clearTimeout(mobileTimer);
+          mobileTimer = window.setTimeout(() => {
+            const center = stage.scrollLeft + stage.clientWidth / 2;
+            const nearest = plates.reduce((best, plate, index) => {
+              const plateCenter = plate.offsetLeft + plate.offsetWidth / 2;
+              const distance = Math.abs(center - plateCenter);
+              return distance < best.distance ? { index, distance } : best;
+            }, { index: 0, distance: Infinity });
+            activate(nearest.index);
+          }, 70);
+        }, { passive: true });
+      }
+
+      desktopRunway.addEventListener('change', () => {
+        if (desktopRunway.matches) updateFromScroll();
+        else activate(0);
+      });
+      window.addEventListener('scroll', onScroll, { passive: true });
+      activate(0);
+      updateFromScroll();
     });
   };
 
@@ -57,23 +212,22 @@
     root.querySelectorAll('[data-fit-story]').forEach((story) => {
       if (story.dataset.nabzReady === 'true') return;
       story.dataset.nabzReady = 'true';
-
       const problem = story.querySelector('[data-fit-story-state="problem"]');
       const solution = story.querySelector('[data-fit-story-state="solution"]');
-      const next = story.querySelector('[data-fit-story-next]');
-      const back = story.querySelector('[data-fit-story-back]');
 
-      const show = (target, departing) => {
-        departing.classList.add('is-leaving');
-        departing.classList.remove('is-active');
-        departing.setAttribute('aria-hidden', 'true');
-        target.classList.remove('is-leaving');
+      const show = (target, other) => {
         target.classList.add('is-active');
         target.setAttribute('aria-hidden', 'false');
+        other.classList.remove('is-active');
+        other.setAttribute('aria-hidden', 'true');
+        if ('inert' in target) target.inert = false;
+        if ('inert' in other) other.inert = true;
       };
 
-      next.addEventListener('click', () => show(solution, problem));
-      back.addEventListener('click', () => show(problem, solution));
+      if ('inert' in solution) solution.inert = true;
+
+      story.querySelector('[data-fit-story-next]')?.addEventListener('click', () => show(solution, problem));
+      story.querySelector('[data-fit-story-back]')?.addEventListener('click', () => show(problem, solution));
     });
   };
 
@@ -129,44 +283,41 @@
         const sleeveRight = shoulderRight + 58;
         const shirtPath = [
           'M169 69',
-          `C${shoulderLeft + 48} 77 ${shoulderLeft + 21} 86 ${shoulderLeft + 8} 93`,
-          `Q${shoulderLeft - 2} 98 ${shoulderLeft - 10} 110`,
-          `L${sleeveLeft} 168`,
-          `L${sleeveLeft + 28} 188`,
-          `L${bodyLeft} 156`,
+          `C${shoulderLeft + 48} 75 ${shoulderLeft + 24} 83 ${shoulderLeft + 9} 92`,
+          `Q${shoulderLeft - 3} 98 ${shoulderLeft - 11} 110`,
+          `L${sleeveLeft} 163`,
+          `Q${sleeveLeft - 3} 168 ${sleeveLeft + 2} 173`,
+          `L${sleeveLeft + 27} 191`,
+          `Q${sleeveLeft + 31} 193 ${sleeveLeft + 35} 188`,
+          `L${bodyLeft} 157`,
           `L${bodyLeft} ${hemY - 18}`,
-          `Q${bodyLeft + 7} ${hemY - 4} ${center} ${hemY + 8}`,
-          `Q${bodyRight - 7} ${hemY - 4} ${bodyRight} ${hemY - 18}`,
-          `L${bodyRight} 156`,
-          `L${sleeveRight - 28} 188`,
-          `L${sleeveRight} 168`,
-          `L${shoulderRight + 10} 110`,
-          `Q${shoulderRight + 2} 98 ${shoulderRight - 8} 93`,
-          `C${shoulderRight - 21} 86 ${shoulderRight - 48} 77 251 69`,
+          `Q${bodyLeft + 8} ${hemY - 3} ${center} ${hemY + 8}`,
+          `Q${bodyRight - 8} ${hemY - 3} ${bodyRight} ${hemY - 18}`,
+          `L${bodyRight} 157`,
+          `L${sleeveRight - 35} 188`,
+          `Q${sleeveRight - 31} 193 ${sleeveRight - 27} 191`,
+          `L${sleeveRight - 2} 173`,
+          `Q${sleeveRight + 3} 168 ${sleeveRight} 163`,
+          `L${shoulderRight + 11} 110`,
+          `Q${shoulderRight + 3} 98 ${shoulderRight - 9} 92`,
+          `C${shoulderRight - 24} 83 ${shoulderRight - 48} 75 251 69`,
           'Q235 73 232 68',
-          'Q210 82 188 68',
+          'Q210 81 188 68',
           'Q185 73 169 69',
           'Z',
         ].join(' ');
 
-        outline.setAttribute('d', shirtPath);
-        shadow.setAttribute('d', shirtPath);
-        grain.setAttribute('d', shirtPath);
-        yoke.setAttribute('d', `M${shoulderLeft - 5} 105 Q${center} 132 ${shoulderRight + 5} 105`);
-        armholes.setAttribute('d', `M${shoulderLeft - 6} 104Q${bodyLeft + 15} 127 ${bodyLeft} 156 M${shoulderRight + 6} 104Q${bodyRight - 15} 127 ${bodyRight} 156`);
-        sleeveSeams.setAttribute('d', [
-          `M${sleeveLeft + 4} 169L${sleeveLeft + 31} 188`,
-          `M${sleeveLeft + 11} 160L${sleeveLeft + 38} 180`,
-          `M${sleeveRight - 4} 169L${sleeveRight - 31} 188`,
-          `M${sleeveRight - 11} 160L${sleeveRight - 38} 180`,
-        ].join(' '));
+        [outline, shadow, grain].forEach((path) => path.setAttribute('d', shirtPath));
+        yoke.setAttribute('d', `M${shoulderLeft - 5} 105 Q${center} 129 ${shoulderRight + 5} 105`);
+        armholes.setAttribute('d', `M${shoulderLeft - 6} 104Q${bodyLeft + 16} 128 ${bodyLeft} 157 M${shoulderRight + 6} 104Q${bodyRight - 16} 128 ${bodyRight} 157`);
+        sleeveSeams.setAttribute('d', `M${sleeveLeft + 2} 163L${sleeveLeft + 30} 184 M${sleeveRight - 2} 163L${sleeveRight - 30} 184`);
         placket.setAttribute('d', `M204 91L204 ${hemY + 5} M216 91L216 ${hemY + 5}`);
         pocket.setAttribute('d', `M${center + 31} 139H${center + 78}V187Q${center + 55} 198 ${center + 31} 187Z`);
         pocketFlap.setAttribute('d', `M${center + 29} 138H${center + 80}V150H${center + 29}Z`);
         hem.setAttribute('d', `M${bodyLeft + 6} ${hemY - 7}Q${center} ${hemY + 13} ${bodyRight - 6} ${hemY - 7}`);
         buttons.innerHTML = [108, 139, 170, 201, 232, 263, 294, 325, 356]
-          .filter((y) => y < hemY - 10)
-          .map((y) => `<circle cx="210" cy="${y}" r="2"></circle>`)
+          .filter((buttonY) => buttonY < hemY - 10)
+          .map((buttonY) => `<circle cx="210" cy="${buttonY}" r="2"></circle>`)
           .join('');
 
         const measureX = Math.min(407, sleeveRight + 20);
@@ -194,11 +345,10 @@
           drawShirt(currentWidth, currentHem);
           return;
         }
-
         const startWidth = currentWidth;
         const startHem = currentHem;
         const startTime = performance.now();
-        const duration = 340;
+        const duration = 360;
 
         const frame = (time) => {
           const progress = Math.min(1, (time - startTime) / duration);
@@ -208,7 +358,6 @@
           drawShirt(currentWidth, currentHem);
           if (progress < 1) animationFrame = requestAnimationFrame(frame);
         };
-
         animationFrame = requestAnimationFrame(frame);
       };
 
@@ -217,7 +366,6 @@
         const extendedAvailable = values[size].Extended !== null;
         extendedButton.disabled = !extendedAvailable;
         extendedButton.setAttribute('aria-disabled', String(!extendedAvailable));
-
         if (!extendedAvailable && length === 'Extended') length = 'Standard';
 
         sizeButtons.forEach((button) => {
@@ -225,20 +373,13 @@
           button.classList.toggle('is-active', active);
           button.setAttribute('aria-pressed', String(active));
         });
-
         lengthButtons.forEach((button) => {
           const active = button.dataset.length === length;
           button.classList.toggle('is-active', active);
           button.setAttribute('aria-pressed', String(active));
         });
-
-        fitLayout.querySelectorAll('[data-row]').forEach((row) => {
-          row.classList.toggle('is-active', row.dataset.row === size);
-        });
-
-        fitLayout.querySelectorAll('[data-cell]').forEach((cell) => {
-          cell.classList.toggle('is-active', cell.dataset.cell === `${size}-${length}`);
-        });
+        fitLayout.querySelectorAll('[data-row]').forEach((row) => row.classList.toggle('is-active', row.dataset.row === size));
+        fitLayout.querySelectorAll('[data-cell]').forEach((cell) => cell.classList.toggle('is-active', cell.dataset.cell === `${size}-${length}`));
 
         const selectedLength = values[size][length];
         const displayedLength = formatLength(selectedLength);
@@ -247,227 +388,19 @@
         animateShirt(values[size].width, lengthToHem(selectedLength));
       };
 
-      sizeButtons.forEach((button) => {
-        button.addEventListener('click', () => {
-          size = button.dataset.size;
-          render();
-        });
-      });
-
-      lengthButtons.forEach((button) => {
-        button.addEventListener('click', () => {
-          if (button.disabled) return;
-          length = button.dataset.length;
-          render();
-        });
-      });
-
+      sizeButtons.forEach((button) => button.addEventListener('click', () => { size = button.dataset.size; render(); }));
+      lengthButtons.forEach((button) => button.addEventListener('click', () => { if (!button.disabled) { length = button.dataset.length; render(); } }));
       render();
-    });
-  };
-
-  const bootChapterDeck = (root) => {
-    root.querySelectorAll('[data-nabz-home]').forEach((deck) => {
-      if (deck.dataset.nabzDeckReady === 'true') return;
-
-      const desktopDeck = window.matchMedia('(min-width: 961px) and (min-height: 620px)');
-      const chapters = [...deck.querySelectorAll('[data-nabz-chapter]')];
-      const previousButton = deck.querySelector('[data-deck-previous]');
-      const nextButton = deck.querySelector('[data-deck-next]');
-      const count = deck.querySelector('[data-deck-count]');
-      const label = deck.querySelector('[data-deck-label]');
-      const live = deck.querySelector('[data-deck-live]');
-      const labels = chapters.map((chapter) => chapter.dataset.chapterLabel || 'NABZ');
-
-      if (chapters.length < 2) return;
-
-      let activeIndex = Math.max(0, chapters.findIndex((chapter) => `#${chapter.id}` === window.location.hash));
-      let transitioning = false;
-      let transitionTimer = 0;
-      let wheelTotal = 0;
-      let wheelResetTimer = 0;
-      let touchStartX = 0;
-      let touchStartY = 0;
-      let enabled = false;
-
-      const twoDigits = (value) => String(value).padStart(2, '0');
-      const isTextInput = (target) => target.matches('input, textarea, select, [contenteditable="true"]');
-      const isInteractive = (target) => Boolean(target.closest('button, a, input, textarea, select, summary, [contenteditable="true"]'));
-
-      const setChapterState = (chapter, state) => {
-        chapter.dataset.deckState = state;
-        const isActive = state === 'active';
-        chapter.setAttribute('aria-hidden', String(!isActive));
-        if ('inert' in chapter) chapter.inert = !isActive;
-      };
-
-      const updateUi = (announce = false) => {
-        if (count) count.textContent = `${twoDigits(activeIndex + 1)} / ${twoDigits(chapters.length)}`;
-        if (label) label.textContent = labels[activeIndex];
-        if (live && announce) live.textContent = `Chapter ${activeIndex + 1} of ${chapters.length}: ${labels[activeIndex]}`;
-        chapters.forEach((chapter, index) => {
-          chapter.classList.toggle('is-active', index === activeIndex);
-        });
-      };
-
-      const setInitialStates = () => {
-        chapters.forEach((chapter, index) => {
-          if (index === activeIndex) setChapterState(chapter, 'active');
-          else setChapterState(chapter, index < activeIndex ? 'past' : 'future');
-        });
-        updateUi(false);
-      };
-
-      const goTo = (nextIndex, direction = 1, announce = true) => {
-        if (!enabled || transitioning) return;
-        const normalizedIndex = (nextIndex + chapters.length) % chapters.length;
-        if (normalizedIndex === activeIndex) return;
-
-        transitioning = true;
-        const current = chapters[activeIndex];
-        const incoming = chapters[normalizedIndex];
-
-        incoming.classList.add('is-deck-preparing');
-        setChapterState(incoming, direction > 0 ? 'future' : 'past');
-        incoming.getBoundingClientRect();
-        incoming.classList.remove('is-deck-preparing');
-
-        window.requestAnimationFrame(() => {
-          setChapterState(current, direction > 0 ? 'past' : 'future');
-          setChapterState(incoming, 'active');
-          activeIndex = normalizedIndex;
-          updateUi(announce);
-
-          if (history.replaceState) history.replaceState(null, '', `#${chapters[activeIndex].id}`);
-        });
-
-        window.clearTimeout(transitionTimer);
-        transitionTimer = window.setTimeout(() => {
-          chapters.forEach((chapter, index) => {
-            if (index === activeIndex) return;
-            setChapterState(chapter, direction > 0 ? 'past' : 'future');
-          });
-          transitioning = false;
-        }, reducedMotion ? 40 : 920);
-      };
-
-      const canScrollInside = (target, direction) => {
-        const scrollable = target.closest('[data-deck-scroll], details[open], textarea');
-        if (!scrollable) return false;
-        if (direction > 0) return scrollable.scrollTop + scrollable.clientHeight < scrollable.scrollHeight - 1;
-        return scrollable.scrollTop > 1;
-      };
-
-      const onWheel = (event) => {
-        if (!enabled || Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
-        const direction = Math.sign(event.deltaY);
-        if (canScrollInside(event.target, direction)) return;
-        event.preventDefault();
-        if (transitioning) return;
-
-        wheelTotal += event.deltaY;
-        window.clearTimeout(wheelResetTimer);
-        wheelResetTimer = window.setTimeout(() => { wheelTotal = 0; }, 180);
-        if (Math.abs(wheelTotal) < 44) return;
-
-        goTo(activeIndex + Math.sign(wheelTotal), Math.sign(wheelTotal));
-        wheelTotal = 0;
-      };
-
-      const onKeydown = (event) => {
-        if (!enabled || isTextInput(event.target)) return;
-        if (['ArrowDown', 'PageDown', ' '].includes(event.key)) {
-          event.preventDefault();
-          goTo(activeIndex + 1, 1);
-        } else if (['ArrowUp', 'PageUp'].includes(event.key)) {
-          event.preventDefault();
-          goTo(activeIndex - 1, -1);
-        } else if (event.key === 'Home') {
-          event.preventDefault();
-          goTo(0, -1);
-        } else if (event.key === 'End') {
-          event.preventDefault();
-          goTo(chapters.length - 1, 1);
-        }
-      };
-
-      const onTouchStart = (event) => {
-        if (!enabled || event.touches.length !== 1 || isInteractive(event.target)) return;
-        touchStartX = event.touches[0].clientX;
-        touchStartY = event.touches[0].clientY;
-      };
-
-      const onTouchEnd = (event) => {
-        if (!enabled || !touchStartY || event.changedTouches.length !== 1) return;
-        const deltaX = event.changedTouches[0].clientX - touchStartX;
-        const deltaY = event.changedTouches[0].clientY - touchStartY;
-        touchStartX = 0;
-        touchStartY = 0;
-        if (Math.abs(deltaY) < 58 || Math.abs(deltaY) <= Math.abs(deltaX)) return;
-        goTo(activeIndex + (deltaY < 0 ? 1 : -1), deltaY < 0 ? 1 : -1);
-      };
-
-      const onHashNavigation = (event) => {
-        const link = event.target.closest('a[href^="#"]');
-        if (!link || !enabled) return;
-        const destination = chapters.findIndex((chapter) => `#${chapter.id}` === link.getAttribute('href'));
-        if (destination < 0) return;
-        event.preventDefault();
-        const forwardDistance = (destination - activeIndex + chapters.length) % chapters.length;
-        const backwardDistance = (activeIndex - destination + chapters.length) % chapters.length;
-        goTo(destination, forwardDistance <= backwardDistance ? 1 : -1);
-      };
-
-      const enable = () => {
-        if (enabled || !desktopDeck.matches || window.Shopify?.designMode || document.querySelector('[data-nabz-entry]')) return;
-        enabled = true;
-        deck.dataset.nabzDeckReady = 'true';
-        document.body.classList.add('nabz-deck-active');
-        setInitialStates();
-        document.addEventListener('wheel', onWheel, { passive: false });
-        deck.addEventListener('touchstart', onTouchStart, { passive: true });
-        deck.addEventListener('touchend', onTouchEnd, { passive: true });
-        document.addEventListener('keydown', onKeydown);
-        document.addEventListener('click', onHashNavigation);
-      };
-
-      const disable = () => {
-        if (!enabled) return;
-        enabled = false;
-        document.body.classList.remove('nabz-deck-active');
-        chapters.forEach((chapter) => {
-          chapter.removeAttribute('data-deck-state');
-          chapter.removeAttribute('aria-hidden');
-          if ('inert' in chapter) chapter.inert = false;
-        });
-        document.removeEventListener('wheel', onWheel);
-        deck.removeEventListener('touchstart', onTouchStart);
-        deck.removeEventListener('touchend', onTouchEnd);
-        document.removeEventListener('keydown', onKeydown);
-        document.removeEventListener('click', onHashNavigation);
-      };
-
-      previousButton?.addEventListener('click', () => goTo(activeIndex - 1, -1));
-      nextButton?.addEventListener('click', () => goTo(activeIndex + 1, 1));
-      desktopDeck.addEventListener('change', () => {
-        if (desktopDeck.matches) enable();
-        else disable();
-      });
-
-      if (document.querySelector('[data-nabz-entry]')) {
-        document.addEventListener('nabz:intro-complete', enable, { once: true });
-      } else {
-        enable();
-      }
     });
   };
 
   const boot = (root = document) => {
     if (root === document) bootEntry();
-    bootProductGallery(root);
+    bootReveals(root);
+    bootPageChrome(root);
+    bootProductRunway(root);
     bootFitStory(root);
     bootFitSelector(root);
-    bootChapterDeck(root);
   };
 
   if (document.readyState === 'loading') {

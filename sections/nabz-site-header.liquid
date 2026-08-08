@@ -1,37 +1,36 @@
 {{ 'nabz-base.css' | asset_url | stylesheet_tag }}
-<style>
-  body:has(.nabz-home-marker) {
-    --nabz-background-image: url('{{ 'nabz-navy-stitched-background.webp' | asset_url }}');
-  }
-</style>
 <div class="nabz-home-marker" hidden aria-hidden="true"></div>
+
 {% unless request.design_mode %}
-  <div class="nabz-entry" data-nabz-entry aria-hidden="true">
-    <div class="nabz-entry__panel nabz-entry__panel--left"></div>
-    <div class="nabz-entry__panel nabz-entry__panel--right"></div>
-    <div class="nabz-entry__vignette"></div>
-    <div class="nabz-entry__seam"></div>
-    <div class="nabz-entry__mark">
-      <img src="{{ 'nabz-entry-mark.png' | asset_url }}" alt="" width="706" height="720" fetchpriority="high">
+  <div class="nabz-entry" data-nabz-entry aria-label="NABZ is opening">
+    <div class="nabz-entry__loom">
+      <div class="nabz-entry__mark">
+        <img src="{{ 'nabz-entry-mark.png' | asset_url }}" alt="" width="706" height="720" fetchpriority="high">
+      </div>
+      <svg class="nabz-entry__thread" viewBox="0 0 1200 24" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 12C180 12 240 3 385 12S620 21 770 12 995 4 1200 12"></path>
+      </svg>
+      <span class="nabz-entry__needle" aria-hidden="true"></span>
     </div>
+    <button class="nabz-entry__skip" type="button" data-nabz-entry-skip>Enter</button>
   </div>
 {% endunless %}
-<header class="nabz-site-header">
-  <div class="nabz-shell">
-    <div class="nabz-site-header__bar">
-      <a class="nabz-site-header__brand" href="{{ routes.root_url }}" aria-label="NABZ home">
-        <img src="{{ 'nabz-wordmark.png' | asset_url }}" alt="NABZ" width="396" height="180" fetchpriority="high">
-      </a>
-      <nav class="nabz-site-header__nav" aria-label="Primary navigation">
-        <a href="#products">Surface</a>
-        <a href="#fit">Fit</a>
-        <a href="#shoulders">Shoulders</a>
-        <a href="#contact">Contact</a>
-      </nav>
-      <a class="nabz-site-header__bag" href="{{ routes.cart_url }}">Bag ({{ cart.item_count }})</a>
-    </div>
+
+<header class="nabz-site-header" data-nabz-header>
+  <div class="nabz-shell nabz-site-header__bar">
+    <nav class="nabz-site-header__nav" aria-label="Primary navigation">
+      <a href="#products">Surface</a>
+      <a href="#fit">Fit</a>
+      <a href="#shoulders">Shoulders</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a class="nabz-site-header__brand" href="{{ routes.root_url }}" aria-label="NABZ home">
+      <img src="{{ 'nabz-wordmark.png' | asset_url }}" alt="NABZ" width="396" height="180" fetchpriority="high">
+    </a>
+    <a class="nabz-site-header__bag" href="{{ routes.cart_url }}">Bag ({{ cart.item_count }})</a>
   </div>
 </header>
+
 {% schema %}
 {"name":"NABZ header","settings":[],"presets":[{"name":"NABZ header"}]}
 {% endschema %}

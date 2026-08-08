@@ -215,23 +215,23 @@
 /* Fit */
 .nabz-fit {
   display: grid;
-  grid-template-columns: minmax(360px, .88fr) minmax(470px, 1.12fr);
-  gap: clamp(18px, 2vw, 28px);
+  grid-template-columns: minmax(360px, .86fr) minmax(500px, 1.14fr);
+  gap: clamp(16px, 1.6vw, 22px);
   align-items: stretch;
-  padding: clamp(18px, 2vw, 28px);
+  padding: clamp(20px, 2vw, 26px);
 }
 
 .nabz-fit__left {
   display: grid;
-  grid-template-rows: minmax(0, 1fr) auto;
-  gap: 12px;
+  grid-template-rows: minmax(330px, 3fr) minmax(180px, 2fr);
+  gap: 14px;
   min-width: 0;
   min-height: 0;
 }
 
 .nabz-fit-card {
   position: relative;
-  min-height: 320px;
+  min-height: 0;
   overflow: hidden;
   border: 1px solid rgba(238, 227, 210, .16);
   border-radius: 20px;
@@ -246,7 +246,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: clamp(24px, 3vw, 38px);
+  padding: clamp(26px, 2.7vw, 36px);
   opacity: 0;
   visibility: hidden;
   transform: translateX(28px);
@@ -274,14 +274,14 @@
 
 .nabz-fit-card h2 {
   max-width: 14ch;
-  margin-top: 12px;
-  font-size: clamp(29px, 2.9vw, 41px);
+  margin-top: 14px;
+  font-size: clamp(29px, 2.75vw, 39px);
   line-height: 1.02;
 }
 
 .nabz-fit-card p {
   max-width: 52ch;
-  margin: 12px 0 0;
+  margin: 13px 0 0;
   color: rgba(238, 227, 210, .73);
   font-size: 12.5px;
   line-height: 1.5;
@@ -358,11 +358,12 @@
 }
 
 .nabz-fit-tool {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: auto minmax(245px, 1fr) auto auto;
+  gap: 14px;
   min-width: 0;
   min-height: 0;
-  padding: clamp(17px, 2vw, 24px);
+  padding: clamp(20px, 2vw, 26px);
   border: 1px solid rgba(238, 227, 210, .17);
   border-radius: 20px;
   background: rgba(6, 5, 5, .58);
@@ -385,10 +386,8 @@
 }
 
 .nabz-fit-tool__diagram {
-  flex: 1 1 auto;
-  min-height: 230px;
-  max-height: 330px;
-  margin-block: 2px;
+  min-height: 0;
+  margin: 0;
 }
 
 .nabz-fit-tool__diagram svg {
@@ -408,7 +407,7 @@
   stroke: rgba(231, 237, 241, .92);
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: 1.35;
+  stroke-width: 1.5;
   vector-effect: non-scaling-stroke;
 }
 
@@ -419,24 +418,33 @@
   vector-effect: non-scaling-stroke;
 }
 
+.nabz-fit-shirt__grain {
+  fill: url(#NabzFabricGrain);
+  stroke: none;
+  pointer-events: none;
+}
+
+.nabz-fit-shirt__collar-stand,
 .nabz-fit-shirt__collar-left,
 .nabz-fit-shirt__collar-right {
-  fill: #202b35;
+  fill: #151e25;
   stroke: rgba(231, 237, 241, .9);
   stroke-linejoin: round;
-  stroke-width: 1.05;
+  stroke-width: 1.15;
 }
 
 .nabz-fit-shirt__neck,
 .nabz-fit-shirt__placket,
 .nabz-fit-shirt__pocket,
+.nabz-fit-shirt__pocket-flap,
 .nabz-fit-shirt__hem,
+.nabz-fit-shirt__armholes,
 .nabz-fit-shirt__sleeve-seams {
   fill: none;
   stroke: rgba(231, 237, 241, .5);
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: .8;
+  stroke-width: .9;
   vector-effect: non-scaling-stroke;
 }
 
@@ -474,7 +482,7 @@
 
 .nabz-fit-tool__controls {
   display: grid;
-  gap: 9px;
+  gap: 10px;
 }
 
 .nabz-fit-tool__control-row {
@@ -524,7 +532,9 @@
 
 .nabz-fit-tool__output {
   display: block;
-  margin: 13px 0 0 96px;
+  min-height: 36px;
+  margin: 0 0 0 96px;
+  padding-top: 2px;
   color: var(--nabz-cloth);
   font-family: var(--nabz-serif);
   font-size: clamp(21px, 2vw, 29px);
@@ -532,6 +542,9 @@
 }
 
 .nabz-size-chart-panel {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-height: 0;
   overflow: hidden;
   border: 1px solid rgba(238, 227, 210, .16);
   border-radius: 18px;
@@ -542,7 +555,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 11px 13px 8px;
+  padding: 12px 15px 10px;
 }
 
 .nabz-size-chart-panel__head > span:last-child {
@@ -555,6 +568,7 @@
 
 .nabz-size-table {
   width: 100%;
+  height: 100%;
   border-collapse: collapse;
   color: rgba(238, 227, 210, .66);
   font-size: 10px;
@@ -562,7 +576,7 @@
 
 .nabz-size-table th,
 .nabz-size-table td {
-  padding: 6px 12px;
+  padding: 7px 15px;
   text-align: left;
   border-top: 1px solid rgba(238, 227, 210, .1);
 }
@@ -606,7 +620,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 31%;
+  object-position: center top;
 }
 
 .nabz-shoulders__copy {
@@ -959,7 +973,11 @@
 
   body.nabz-deck-active .nabz-site-header .nabz-shell,
   .nabz-clean-home[data-nabz-deck-ready="true"] .nabz-chapter__frame {
-    width: min(1360px, calc(100% - 108px));
+    width: var(--nabz-deck-frame);
+  }
+
+  body.nabz-deck-active .nabz-site-header .nabz-shell {
+    padding-inline: 0;
   }
 
   .nabz-clean-home[data-nabz-deck-ready="true"] {
@@ -1056,18 +1074,17 @@
     position: absolute;
     z-index: 12;
     top: 50%;
-    right: max(7px, calc((100vw - 1360px) / 2 - 47px));
+    right: max(9px, calc((100vw - 1300px) / 2 - 52px));
     display: grid;
     grid-template-columns: 1fr;
     grid-template-areas:
       "meta"
-      "label"
       "controls";
     justify-items: center;
-    gap: 9px;
+    gap: 12px;
     width: 44px;
     min-width: 0;
-    padding: 10px 0;
+    padding: 12px 0;
     border: 0;
     border-left: 1px solid rgba(238, 227, 210, .15);
     background: none;
@@ -1080,17 +1097,6 @@
     font-size: 9px;
     font-weight: 700;
     letter-spacing: .12em;
-  }
-
-  .nabz-deck-ui__label {
-    grid-area: label;
-    color: rgba(238, 227, 210, .62);
-    font-size: 8px;
-    letter-spacing: .09em;
-    line-height: 1;
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
-    white-space: nowrap;
   }
 
   .nabz-deck-ui__controls {
@@ -1130,8 +1136,9 @@
   }
 
   .nabz-clean-home[data-nabz-deck-ready="true"] .nabz-fit {
-    gap: 14px;
-    padding: 14px;
+    grid-template-columns: minmax(340px, .84fr) minmax(480px, 1.16fr);
+    gap: 16px;
+    padding: 16px;
   }
 
   .nabz-clean-home[data-nabz-deck-ready="true"] .nabz-fit-card {
@@ -1139,12 +1146,11 @@
   }
 
   .nabz-clean-home[data-nabz-deck-ready="true"] .nabz-fit-tool__diagram {
-    min-height: 190px;
-    max-height: 230px;
+    min-height: 210px;
   }
 
   .nabz-clean-home[data-nabz-deck-ready="true"] .nabz-fit-card__state {
-    padding: 20px 24px;
+    padding: 22px 26px;
   }
 
   .nabz-clean-home[data-nabz-deck-ready="true"] .nabz-fit-card h2 {
@@ -1162,7 +1168,7 @@
 
   .nabz-clean-home[data-nabz-deck-ready="true"] .nabz-size-table th,
   .nabz-clean-home[data-nabz-deck-ready="true"] .nabz-size-table td {
-    padding-block: 4px;
+    padding-block: 5px;
   }
 
   .nabz-clean-home[data-nabz-deck-ready="true"] .nabz-shoulders__copy,

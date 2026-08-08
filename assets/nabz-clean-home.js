@@ -117,6 +117,8 @@
       const jumpButtons = [...runway.querySelectorAll('[data-product-jump]')];
       const current = runway.querySelector('[data-product-current]');
       const stage = runway.querySelector('.nabz-product-runway__stage');
+      const sticky = runway.querySelector('.nabz-product-runway__sticky');
+      if (!plates.length || !stage || !sticky) return;
       let activeIndex = 0;
       let ticking = false;
 
@@ -160,7 +162,7 @@
           return;
         }
         const rect = runway.getBoundingClientRect();
-        const travel = Math.max(1, runway.offsetHeight - window.innerHeight);
+        const travel = Math.max(1, runway.offsetHeight - sticky.offsetHeight);
         const progress = clamp(-rect.top / travel, 0, 1);
         activate(Math.round(progress * (plates.length - 1)));
         ticking = false;
@@ -175,7 +177,7 @@
       jumpButtons.forEach((button) => {
         button.addEventListener('click', () => {
           const index = Number(button.dataset.productJump);
-          const travel = Math.max(1, runway.offsetHeight - window.innerHeight);
+          const travel = Math.max(1, runway.offsetHeight - sticky.offsetHeight);
           const destination = window.scrollY + runway.getBoundingClientRect().top + (index / Math.max(1, plates.length - 1)) * travel;
           window.scrollTo({ top: destination, behavior: reducedMotion ? 'auto' : 'smooth' });
         });
@@ -198,13 +200,17 @@
         }, { passive: true });
       }
 
-      desktopRunway.addEventListener('change', () => {
-        if (desktopRunway.matches) updateFromScroll();
+      const setRunwayMode = () => {
+        const enhanced = desktopRunway.matches;
+        runway.classList.toggle('is-enhanced', enhanced);
+        if (enhanced) window.requestAnimationFrame(updateFromScroll);
         else activate(0);
-      });
+      };
+
+      desktopRunway.addEventListener('change', setRunwayMode);
       window.addEventListener('scroll', onScroll, { passive: true });
       activate(0);
-      updateFromScroll();
+      setRunwayMode();
     });
   };
 
@@ -395,12 +401,17 @@
   };
 
   const boot = (root = document) => {
-    if (root === document) bootEntry();
-    bootReveals(root);
-    bootPageChrome(root);
-    bootProductRunway(root);
-    bootFitStory(root);
-    bootFitSelector(root);
+    const features = root === document
+      ? [() => bootEntry(), () => bootReveals(root), () => bootPageChrome(root), () => bootProductRunway(root), () => bootFitStory(root), () => bootFitSelector(root)]
+      : [() => bootReveals(root), () => bootPageChrome(root), () => bootProductRunway(root), () => bootFitStory(root), () => bootFitSelector(root)];
+
+    features.forEach((initialize) => {
+      try {
+        initialize();
+      } catch (error) {
+        console.error('NABZ feature initialization failed.', error);
+      }
+    });
   };
 
   if (document.readyState === 'loading') {

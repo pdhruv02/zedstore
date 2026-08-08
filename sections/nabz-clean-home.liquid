@@ -73,7 +73,8 @@
                     alt="{{ product_parts[1] }} embroidered shirt shown from the front, in textile detail, and from the back"
                     width="1003"
                     height="1568"
-                    loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                    loading="eager"
+                    decoding="async"
                   >
                 </span>
                 <figcaption><span>{{ forloop.index | prepend: '0' | slice: -2, 2 }} / 07</span>{{ product_parts[1] }}</figcaption>
@@ -187,7 +188,8 @@
 
     <section class="nabz-scene nabz-shoulders" id="shoulders" data-nabz-scene>
       <div class="nabz-shoulders__visual" data-shoulder-visual>
-        <img src="{{ 'nabz-shoulder-structure.webp' | asset_url }}" alt="NABZ structured shoulder construction on a midnight blue shirt" width="1122" height="1402" loading="lazy">
+        <img src="{{ 'nabz-shoulder-structure.webp' | asset_url }}" alt="NABZ structured shoulder construction on a midnight blue shirt" width="1122" height="1402" loading="eager" decoding="async">
+        <span class="nabz-shoulders__veil" aria-hidden="true"></span>
       </div>
       <div class="nabz-shoulders__copy" data-reveal>
         <span class="nabz-scene-number">04 / Shoulder structure</span>

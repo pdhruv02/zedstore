@@ -126,42 +126,49 @@
         </div>
 
         <div class="nabz-fit-tool__diagram">
-          <svg viewBox="0 0 400 390" role="img" aria-labelledby="NabzFitDiagramTitle NabzFitDiagramDescription">
+          <svg viewBox="0 0 460 390" role="img" aria-labelledby="NabzFitDiagramTitle NabzFitDiagramDescription">
             <title id="NabzFitDiagramTitle">Interactive NABZ shirt proportions</title>
             <desc id="NabzFitDiagramDescription">The tailored shirt widens when the size changes and lengthens independently when Standard or Extended is selected.</desc>
             <defs>
               <linearGradient id="NabzShirtFabric" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0" stop-color="#283440"></stop>
-                <stop offset="0.52" stop-color="#17212a"></stop>
-                <stop offset="1" stop-color="#0d141b"></stop>
+                <stop offset="0" stop-color="#202a32"></stop>
+                <stop offset="0.5" stop-color="#111820"></stop>
+                <stop offset="1" stop-color="#080d12"></stop>
               </linearGradient>
               <linearGradient id="NabzShirtLight" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0" stop-color="#e8d9c4" stop-opacity=".13"></stop>
                 <stop offset="1" stop-color="#e8d9c4" stop-opacity="0"></stop>
               </linearGradient>
               <pattern id="NabzPatternGrid" width="24" height="24" patternUnits="userSpaceOnUse">
-                <path d="M24 0H0V24" fill="none" stroke="#d8e0e6" stroke-opacity=".07" stroke-width=".7"></path>
+                <path d="M24 0H0V24" fill="none" stroke="#d8e0e6" stroke-opacity=".055" stroke-width=".7"></path>
+              </pattern>
+              <pattern id="NabzFabricGrain" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+                <line x1="0" y1="0" x2="0" y2="7" stroke="#edf2f4" stroke-opacity=".025" stroke-width="1"></line>
               </pattern>
               <marker id="NabzMeasureArrow" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                 <path d="M1 4L7 1V7Z" fill="#d98254"></path>
               </marker>
             </defs>
-            <rect class="nabz-fit-shirt__grid" x="22" y="23" width="350" height="340" rx="10" fill="url(#NabzPatternGrid)"></rect>
+            <rect class="nabz-fit-shirt__grid" x="38" y="24" width="354" height="342" rx="10" fill="url(#NabzPatternGrid)"></rect>
             <path class="nabz-fit-shirt__shadow" data-shirt-shadow></path>
             <path class="nabz-fit-shirt__outline" data-shirt-outline></path>
+            <path class="nabz-fit-shirt__grain" data-shirt-grain></path>
             <path class="nabz-fit-shirt__yoke" data-shirt-yoke></path>
+            <path class="nabz-fit-shirt__armholes" data-shirt-armholes></path>
             <path class="nabz-fit-shirt__sleeve-seams" data-shirt-sleeve-seams></path>
-            <path class="nabz-fit-shirt__collar-left" d="M190 66L177 54L159 76L176 96Z"></path>
-            <path class="nabz-fit-shirt__collar-right" d="M190 66L203 54L221 76L204 96Z"></path>
-            <path class="nabz-fit-shirt__neck" d="M177 54Q190 65 203 54"></path>
+            <path class="nabz-fit-shirt__collar-stand" d="M188 68L198 52Q210 47 222 52L232 68Q210 79 188 68Z"></path>
+            <path class="nabz-fit-shirt__collar-left" d="M188 65L207 74L188 100L170 71Z"></path>
+            <path class="nabz-fit-shirt__collar-right" d="M232 65L213 74L232 100L250 71Z"></path>
+            <path class="nabz-fit-shirt__neck" d="M198 52Q210 59 222 52 M188 68Q210 81 232 68"></path>
             <path class="nabz-fit-shirt__placket" data-shirt-placket></path>
             <path class="nabz-fit-shirt__pocket" data-shirt-pocket></path>
+            <path class="nabz-fit-shirt__pocket-flap" data-shirt-pocket-flap></path>
             <g class="nabz-fit-shirt__buttons" data-shirt-buttons></g>
             <path class="nabz-fit-shirt__hem" data-shirt-hem></path>
             <line class="nabz-fit-shirt__guide" data-shirt-guide-top></line>
             <line class="nabz-fit-shirt__guide" data-shirt-guide-bottom></line>
-            <line class="nabz-fit-shirt__measure" data-shirt-measure x1="338" y1="104" x2="338" y2="326"></line>
-            <text class="nabz-fit-shirt__measure-text" data-shirt-measure-text x="354" y="220">27&quot;</text>
+            <line class="nabz-fit-shirt__measure" data-shirt-measure x1="405" y1="104" x2="405" y2="326"></line>
+            <text class="nabz-fit-shirt__measure-text" data-shirt-measure-text x="420" y="220">27&quot;</text>
           </svg>
         </div>
 
@@ -241,7 +248,6 @@
 
   <div class="nabz-deck-ui" data-deck-ui aria-label="Chapter navigation">
     <span class="nabz-deck-ui__count" data-deck-count>01 / 05</span>
-    <span class="nabz-deck-ui__label" data-deck-label>The space between</span>
     <div class="nabz-deck-ui__controls">
       <button type="button" data-deck-previous aria-label="Previous chapter"><span aria-hidden="true">↑</span></button>
       <button type="button" data-deck-next aria-label="Next chapter"><span aria-hidden="true">↓</span></button>

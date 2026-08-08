@@ -32,17 +32,17 @@ body:has(.nabz-home-marker) .shopify-section:has(.nabz-site-footer) {
   --nabz-gutter: clamp(14px, 2.2vw, 30px);
 }
 
-html { background: var(--nabz-ink); }
+html { background: #eee7dc; }
 body {
   margin: 0;
   min-width: 320px;
   color: var(--nabz-cloth);
-  background-color: var(--nabz-ink);
+  background-color: #eee7dc;
   background-image:
-    linear-gradient(rgba(4, 4, 4, .46), rgba(4, 4, 4, .64)),
-    url("https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-background-study-04.png?v=1784820062");
+    linear-gradient(rgba(250, 247, 241, .06), rgba(229, 219, 204, .1)),
+    var(--nabz-background-image);
   background-size: cover;
-  background-position: center top;
+  background-position: center center;
   background-attachment: fixed;
   font-family: var(--nabz-sans);
   -webkit-font-smoothing: antialiased;
@@ -79,8 +79,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid #dfa080; outline-offs
   border: 1px solid rgba(238, 227, 211, .16);
   border-radius: 22px;
   background:
-    linear-gradient(105deg, rgba(7, 7, 6, .88), rgba(18, 14, 11, .72)),
-    url("https://cdn.shopify.com/s/files/1/0766/4042/0034/files/nabz-background-study-04.png?v=1784820062");
+    linear-gradient(105deg, rgba(25, 20, 16, .94), rgba(39, 31, 25, .86)),
+    var(--nabz-background-image);
   background-size: cover;
   background-position: center 8%;
   box-shadow: 0 10px 28px rgba(0, 0, 0, .18), inset 0 1px 0 rgba(255, 244, 226, .05);

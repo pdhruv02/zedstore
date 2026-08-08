@@ -1,4 +1,9 @@
 {{ 'nabz-base.css' | asset_url | stylesheet_tag }}
+<style>
+  body:has(.nabz-home-marker) {
+    --nabz-background-image: url('{{ 'nabz-cream-embroidered-background.webp' | asset_url }}');
+  }
+</style>
 <div class="nabz-home-marker" hidden aria-hidden="true"></div>
 <header class="nabz-site-header">
   <div class="nabz-shell">

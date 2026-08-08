@@ -64,10 +64,13 @@
       const tableBody = fitLayout.querySelector('[data-fit-table-body]');
       const outline = selector.querySelector('[data-shirt-outline]');
       const shadow = selector.querySelector('[data-shirt-shadow]');
+      const grain = selector.querySelector('[data-shirt-grain]');
       const yoke = selector.querySelector('[data-shirt-yoke]');
+      const armholes = selector.querySelector('[data-shirt-armholes]');
       const sleeveSeams = selector.querySelector('[data-shirt-sleeve-seams]');
       const placket = selector.querySelector('[data-shirt-placket]');
       const pocket = selector.querySelector('[data-shirt-pocket]');
+      const pocketFlap = selector.querySelector('[data-shirt-pocket-flap]');
       const buttons = selector.querySelector('[data-shirt-buttons]');
       const hem = selector.querySelector('[data-shirt-hem]');
       const guideTop = selector.querySelector('[data-shirt-guide-top]');
@@ -90,61 +93,70 @@
       const lengthToHem = (inches) => 315 + ((inches - 26.75) / 2.5) * 54;
 
       const drawShirt = (width, hemY) => {
-        const center = 190;
+        const center = 210;
         const shoulderLeft = center - width - 21;
         const shoulderRight = center + width + 21;
         const bodyLeft = center - width;
         const bodyRight = center + width;
-        const sleeveLeft = shoulderLeft - 36;
-        const sleeveRight = shoulderRight + 36;
+        const sleeveLeft = shoulderLeft - 58;
+        const sleeveRight = shoulderRight + 58;
         const shirtPath = [
-          'M159 76',
-          `L${shoulderLeft + 6} 84`,
-          `Q${shoulderLeft - 4} 86 ${shoulderLeft - 14} 94`,
-          `L${sleeveLeft} 122`,
-          `L${sleeveLeft + 22} 154`,
-          `L${bodyLeft} 136`,
-          `L${bodyLeft} ${hemY - 14}`,
-          `Q${bodyLeft + 5} ${hemY - 2} ${center} ${hemY + 6}`,
-          `Q${bodyRight - 5} ${hemY - 2} ${bodyRight} ${hemY - 14}`,
-          `L${bodyRight} 136`,
-          `L${sleeveRight - 22} 154`,
-          `L${sleeveRight} 122`,
-          `L${shoulderRight + 14} 94`,
-          `Q${shoulderRight + 4} 86 ${shoulderRight - 6} 84`,
-          'L221 76',
-          'Q204 76 190 66',
-          'Q176 76 159 76',
+          'M169 69',
+          `C${shoulderLeft + 48} 77 ${shoulderLeft + 21} 86 ${shoulderLeft + 8} 93`,
+          `Q${shoulderLeft - 2} 98 ${shoulderLeft - 10} 110`,
+          `L${sleeveLeft} 168`,
+          `L${sleeveLeft + 28} 188`,
+          `L${bodyLeft} 156`,
+          `L${bodyLeft} ${hemY - 18}`,
+          `Q${bodyLeft + 7} ${hemY - 4} ${center} ${hemY + 8}`,
+          `Q${bodyRight - 7} ${hemY - 4} ${bodyRight} ${hemY - 18}`,
+          `L${bodyRight} 156`,
+          `L${sleeveRight - 28} 188`,
+          `L${sleeveRight} 168`,
+          `L${shoulderRight + 10} 110`,
+          `Q${shoulderRight + 2} 98 ${shoulderRight - 8} 93`,
+          `C${shoulderRight - 21} 86 ${shoulderRight - 48} 77 251 69`,
+          'Q235 73 232 68',
+          'Q210 82 188 68',
+          'Q185 73 169 69',
           'Z',
         ].join(' ');
 
         outline.setAttribute('d', shirtPath);
         shadow.setAttribute('d', shirtPath);
-        yoke.setAttribute('d', `M${shoulderLeft - 9} 95 Q190 119 ${shoulderRight + 9} 95`);
-        sleeveSeams.setAttribute('d', `M${sleeveLeft + 10} 137L${sleeveLeft + 28} 151 M${sleeveRight - 10} 137L${sleeveRight - 28} 151`);
-        placket.setAttribute('d', `M184 92L184 ${hemY + 2} M196 92L196 ${hemY + 2}`);
-        pocket.setAttribute('d', `M${center + 27} 136H${center + 67}V179Q${center + 47} 188 ${center + 27} 179Z`);
-        hem.setAttribute('d', `M${bodyLeft + 5} ${hemY - 4}Q190 ${hemY + 10} ${bodyRight - 5} ${hemY - 4}`);
-        buttons.innerHTML = [111, 145, 179, 213, 247, 281, 315, 349]
+        grain.setAttribute('d', shirtPath);
+        yoke.setAttribute('d', `M${shoulderLeft - 5} 105 Q${center} 132 ${shoulderRight + 5} 105`);
+        armholes.setAttribute('d', `M${shoulderLeft - 6} 104Q${bodyLeft + 15} 127 ${bodyLeft} 156 M${shoulderRight + 6} 104Q${bodyRight - 15} 127 ${bodyRight} 156`);
+        sleeveSeams.setAttribute('d', [
+          `M${sleeveLeft + 4} 169L${sleeveLeft + 31} 188`,
+          `M${sleeveLeft + 11} 160L${sleeveLeft + 38} 180`,
+          `M${sleeveRight - 4} 169L${sleeveRight - 31} 188`,
+          `M${sleeveRight - 11} 160L${sleeveRight - 38} 180`,
+        ].join(' '));
+        placket.setAttribute('d', `M204 91L204 ${hemY + 5} M216 91L216 ${hemY + 5}`);
+        pocket.setAttribute('d', `M${center + 31} 139H${center + 78}V187Q${center + 55} 198 ${center + 31} 187Z`);
+        pocketFlap.setAttribute('d', `M${center + 29} 138H${center + 80}V150H${center + 29}Z`);
+        hem.setAttribute('d', `M${bodyLeft + 6} ${hemY - 7}Q${center} ${hemY + 13} ${bodyRight - 6} ${hemY - 7}`);
+        buttons.innerHTML = [108, 139, 170, 201, 232, 263, 294, 325, 356]
           .filter((y) => y < hemY - 10)
-          .map((y) => `<circle cx="190" cy="${y}" r="2.1"></circle>`)
+          .map((y) => `<circle cx="210" cy="${y}" r="2"></circle>`)
           .join('');
 
-        const measureX = Math.min(354, bodyRight + 45);
+        const measureX = Math.min(407, sleeveRight + 20);
         guideTop.setAttribute('x1', bodyRight + 8);
         guideTop.setAttribute('x2', measureX - 7);
-        guideTop.setAttribute('y1', 94);
-        guideTop.setAttribute('y2', 94);
+        guideTop.setAttribute('y1', 103);
+        guideTop.setAttribute('y2', 103);
         guideBottom.setAttribute('x1', bodyRight + 8);
         guideBottom.setAttribute('x2', measureX - 7);
         guideBottom.setAttribute('y1', hemY);
         guideBottom.setAttribute('y2', hemY);
         measure.setAttribute('x1', measureX);
         measure.setAttribute('x2', measureX);
-        measure.setAttribute('y1', 98);
+        measure.setAttribute('y1', 107);
         measure.setAttribute('y2', hemY);
         measureText.setAttribute('x', measureX + 10);
-        measureText.setAttribute('y', 98 + ((hemY - 98) / 2));
+        measureText.setAttribute('y', 107 + ((hemY - 107) / 2));
       };
 
       const animateShirt = (targetWidth, targetHem) => {

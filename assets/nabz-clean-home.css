@@ -1170,7 +1170,7 @@
     consumed while the current sticky scene remains perfectly framed, so it
     creates dwell time without adding a blank screen or intercepting the wheel.
   */
-  .nabz-scene:nth-child(1) { --nabz-reading-hold: 38svh; }
+  .nabz-scene:nth-child(1) { --nabz-reading-hold: 0px; }
   .nabz-scene:nth-child(2) { --nabz-reading-hold: 72svh; }
   .nabz-scene:nth-child(3) { --nabz-reading-hold: 82svh; }
   .nabz-scene:nth-child(4) { --nabz-reading-hold: 58svh; }

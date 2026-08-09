@@ -2,7 +2,6 @@
   document.documentElement.classList.add('nabz-js');
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const desktopRunway = window.matchMedia('(min-width: 961px)');
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
   const formatLength = (value) => `${Number.isInteger(value) ? value : value.toFixed(2).replace(/0$/, '')}"`;
 
@@ -62,6 +61,7 @@
     const progress = home.querySelector('[data-thread-progress]');
     let lastY = window.scrollY;
     let ticking = false;
+    const deckViewport = window.matchMedia('(min-width: 961px) and (min-height: 680px)');
 
     const update = () => {
       const scrollY = window.scrollY;
@@ -70,10 +70,14 @@
       if (progress) progress.style.setProperty('--nabz-page-progress', `${percentage}%`);
 
       if (header) {
-        const movingDown = scrollY > lastY + 8;
-        const movingUp = scrollY < lastY - 8;
-        if (movingDown && scrollY > 180) header.classList.add('is-hidden');
-        else if (movingUp || scrollY < 100) header.classList.remove('is-hidden');
+        if (deckViewport.matches) {
+          header.classList.remove('is-hidden');
+        } else {
+          const movingDown = scrollY > lastY + 8;
+          const movingUp = scrollY < lastY - 8;
+          if (movingDown && scrollY > 180) header.classList.add('is-hidden');
+          else if (movingUp || scrollY < 100) header.classList.remove('is-hidden');
+        }
       }
       lastY = scrollY;
 
@@ -108,6 +112,49 @@
     update();
   };
 
+  const bootFolioDeck = (root) => {
+    const home = root.querySelector('[data-nabz-home]');
+    if (!home || home.dataset.nabzDeckReady === 'true') return;
+    home.dataset.nabzDeckReady = 'true';
+
+    const scenes = [...home.querySelectorAll('[data-nabz-scene]')];
+    const viewport = window.matchMedia('(min-width: 961px) and (min-height: 680px)');
+    if (!scenes.length) return;
+
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      if (!viewport.matches || reducedMotion) {
+        scenes.forEach((scene) => scene.style.removeProperty('--nabz-cover-opacity'));
+        return;
+      }
+
+      const headerHeight = Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nabz-header-h')) || 60;
+      const transitionDistance = Math.min(window.innerHeight * .62, 460);
+
+      scenes.forEach((scene, index) => {
+        const nextScene = scenes[index + 1];
+        if (!nextScene) {
+          scene.style.setProperty('--nabz-cover-opacity', '0');
+          return;
+        }
+        const distance = nextScene.getBoundingClientRect().top - headerHeight;
+        const progress = clamp(1 - (distance / transitionDistance), 0, 1);
+        scene.style.setProperty('--nabz-cover-opacity', (progress * .16).toFixed(3));
+      });
+    };
+
+    const requestUpdate = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(update);
+    };
+
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', requestUpdate, { passive: true });
+    viewport.addEventListener?.('change', requestUpdate);
+    update();
+  };
+
   const bootProductRunway = (root) => {
     root.querySelectorAll('[data-product-runway]').forEach((runway) => {
       if (runway.dataset.nabzReady === 'true') return;
@@ -117,35 +164,28 @@
       const jumpButtons = [...runway.querySelectorAll('[data-product-jump]')];
       const current = runway.querySelector('[data-product-current]');
       const stage = runway.querySelector('.nabz-product-runway__stage');
-      const sticky = runway.querySelector('.nabz-product-runway__sticky');
-      if (!plates.length || !stage || !sticky) return;
+      const previous = runway.querySelector('[data-product-prev]');
+      const next = runway.querySelector('[data-product-next]');
+      if (!plates.length || !stage) return;
       let activeIndex = 0;
-      let ticking = false;
 
       const twoDigits = (value) => String(value).padStart(2, '0');
 
-      const setPlateVariables = (plate, index, selected) => {
-        const distance = Math.abs(index - selected);
-        const past = index < selected;
-        plate.style.setProperty('--plate-distance', String(distance));
-        plate.style.setProperty('--plate-shift-y', `${distance * (past ? 10 : 7)}px`);
-        plate.style.setProperty('--plate-scale', String(Math.max(.68, (past ? .83 : .91) - distance * (past ? .025 : .035))));
-        plate.style.setProperty('--plate-angle', `${(past ? -7 : 5) + distance * (past ? -1.4 : 1.2)}deg`);
-        plate.style.setProperty('--plate-opacity', String(Math.max(.06, (past ? .36 : .58) - distance * (past ? .07 : .14))));
-      };
-
-      const activate = (index) => {
-        const selected = clamp(index, 0, plates.length - 1);
+      const activate = (index, direction = 1) => {
+        const selected = (index + plates.length) % plates.length;
         if (selected === activeIndex && plates[0].dataset.stateReady === 'true') return;
         activeIndex = selected;
+        runway.dataset.direction = direction < 0 ? 'backward' : 'forward';
 
         plates.forEach((plate, plateIndex) => {
-          const state = plateIndex === selected ? 'active' : plateIndex < selected ? 'past' : 'next';
+          const forwardDistance = (plateIndex - selected + plates.length) % plates.length;
+          const backwardDistance = (selected - plateIndex + plates.length) % plates.length;
+          const state = plateIndex === selected ? 'active' : forwardDistance <= backwardDistance ? 'next' : 'past';
           plate.classList.toggle('is-active', state === 'active');
           plate.classList.toggle('is-past', state === 'past');
           plate.classList.toggle('is-next', state === 'next');
+          plate.classList.toggle('is-adjacent', Math.min(forwardDistance, backwardDistance) === 1);
           plate.dataset.stateReady = 'true';
-          setPlateVariables(plate, plateIndex, selected);
         });
 
         jumpButtons.forEach((button, buttonIndex) => {
@@ -156,61 +196,22 @@
         if (current) current.textContent = twoDigits(selected + 1);
       };
 
-      const updateFromScroll = () => {
-        if (!desktopRunway.matches) {
-          ticking = false;
-          return;
-        }
-        const rect = runway.getBoundingClientRect();
-        const travel = Math.max(1, runway.offsetHeight - sticky.offsetHeight);
-        const progress = clamp(-rect.top / travel, 0, 1);
-        activate(Math.round(progress * (plates.length - 1)));
-        ticking = false;
-      };
-
-      const onScroll = () => {
-        if (ticking || !desktopRunway.matches) return;
-        ticking = true;
-        window.requestAnimationFrame(updateFromScroll);
-      };
-
       jumpButtons.forEach((button) => {
         button.addEventListener('click', () => {
           const index = Number(button.dataset.productJump);
-          const travel = Math.max(1, runway.offsetHeight - sticky.offsetHeight);
-          const destination = window.scrollY + runway.getBoundingClientRect().top + (index / Math.max(1, plates.length - 1)) * travel;
-          window.scrollTo({ top: destination, behavior: reducedMotion ? 'auto' : 'smooth' });
+          activate(index, index < activeIndex ? -1 : 1);
         });
       });
 
-      if (stage) {
-        let mobileTimer = 0;
-        stage.addEventListener('scroll', () => {
-          if (desktopRunway.matches) return;
-          window.clearTimeout(mobileTimer);
-          mobileTimer = window.setTimeout(() => {
-            const center = stage.scrollLeft + stage.clientWidth / 2;
-            const nearest = plates.reduce((best, plate, index) => {
-              const plateCenter = plate.offsetLeft + plate.offsetWidth / 2;
-              const distance = Math.abs(center - plateCenter);
-              return distance < best.distance ? { index, distance } : best;
-            }, { index: 0, distance: Infinity });
-            activate(nearest.index);
-          }, 70);
-        }, { passive: true });
-      }
+      previous?.addEventListener('click', () => activate(activeIndex - 1, -1));
+      next?.addEventListener('click', () => activate(activeIndex + 1, 1));
+      stage.addEventListener('keydown', (event) => {
+        if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+        event.preventDefault();
+        activate(activeIndex + (event.key === 'ArrowLeft' ? -1 : 1), event.key === 'ArrowLeft' ? -1 : 1);
+      });
 
-      const setRunwayMode = () => {
-        const enhanced = desktopRunway.matches;
-        runway.classList.toggle('is-enhanced', enhanced);
-        if (enhanced) window.requestAnimationFrame(updateFromScroll);
-        else activate(0);
-      };
-
-      desktopRunway.addEventListener('change', setRunwayMode);
-      window.addEventListener('scroll', onScroll, { passive: true });
       activate(0);
-      setRunwayMode();
     });
   };
 
@@ -402,8 +403,8 @@
 
   const boot = (root = document) => {
     const features = root === document
-      ? [() => bootEntry(), () => bootReveals(root), () => bootPageChrome(root), () => bootProductRunway(root), () => bootFitStory(root), () => bootFitSelector(root)]
-      : [() => bootReveals(root), () => bootPageChrome(root), () => bootProductRunway(root), () => bootFitStory(root), () => bootFitSelector(root)];
+      ? [() => bootEntry(), () => bootReveals(root), () => bootPageChrome(root), () => bootFolioDeck(root), () => bootProductRunway(root), () => bootFitStory(root), () => bootFitSelector(root)]
+      : [() => bootReveals(root), () => bootPageChrome(root), () => bootFolioDeck(root), () => bootProductRunway(root), () => bootFitStory(root), () => bootFitSelector(root)];
 
     features.forEach((initialize) => {
       try {

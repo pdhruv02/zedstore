@@ -32,8 +32,10 @@ body:has(.nabz-home-marker) .shopify-section:has(.nabz-site-footer) {
   --nabz-rule: rgba(24, 34, 31, .18);
   --nabz-serif: "Iowan Old Style", "Baskerville", "Times New Roman", serif;
   --nabz-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --nabz-frame: min(1420px, calc(100% - clamp(42px, 8vw, 138px)));
-  --nabz-header-h: 68px;
+  --nabz-frame: min(1320px, calc(100% - clamp(36px, 6vw, 100px)));
+  --nabz-header-h: 60px;
+  --nabz-stage-h: calc(100svh - var(--nabz-header-h));
+  --nabz-deck-radius: 18px;
 }
 
 html {

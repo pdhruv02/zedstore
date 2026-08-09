@@ -12,12 +12,29 @@
     document.documentElement.classList.add('nabz-entry-active');
 
     let completed = false;
-    const finish = () => {
+    let fallbackTimer = 0;
+    let touchStartY = null;
+    const loom = entry.querySelector('.nabz-entry__loom');
+
+    const finish = (scrollDelta = 0) => {
       if (completed) return;
       completed = true;
+      window.clearTimeout(fallbackTimer);
+      entry.removeEventListener('wheel', handleWheel);
+      entry.removeEventListener('touchstart', handleTouchStart);
+      entry.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('keydown', handleKeydown);
       document.documentElement.classList.remove('nabz-entry-active');
+      entry.style.pointerEvents = 'none';
+
+      if (scrollDelta) {
+        window.requestAnimationFrame(() => {
+          window.scrollTo(0, Math.max(0, window.scrollY + scrollDelta));
+        });
+      }
+
       entry.animate([{ opacity: 1 }, { opacity: 0 }], {
-        duration: reducedMotion ? 80 : 180,
+        duration: reducedMotion ? 60 : 120,
         easing: 'ease-out',
         fill: 'forwards',
       }).finished.finally(() => {
@@ -26,8 +43,43 @@
       });
     };
 
-    entry.querySelector('[data-nabz-entry-skip]')?.addEventListener('click', finish);
-    window.setTimeout(finish, reducedMotion ? 720 : 3100);
+    const handleWheel = (event) => {
+      if (!event.deltaY) return;
+      event.preventDefault();
+      finish(event.deltaY);
+    };
+
+    const handleTouchStart = (event) => {
+      touchStartY = event.touches[0]?.clientY ?? null;
+    };
+
+    const handleTouchMove = (event) => {
+      const currentY = event.touches[0]?.clientY;
+      if (touchStartY === null || currentY === undefined) return;
+      const distance = touchStartY - currentY;
+      if (Math.abs(distance) < 8) return;
+      event.preventDefault();
+      finish(distance);
+    };
+
+    const handleKeydown = (event) => {
+      const distance = event.key === 'PageDown' || event.key === ' ' ? window.innerHeight * .82
+        : event.key === 'ArrowDown' ? 120
+          : 0;
+      if (!distance) return;
+      event.preventDefault();
+      finish(distance);
+    };
+
+    entry.addEventListener('wheel', handleWheel, { passive: false });
+    entry.addEventListener('touchstart', handleTouchStart, { passive: true });
+    entry.addEventListener('touchmove', handleTouchMove, { passive: false });
+    document.addEventListener('keydown', handleKeydown);
+    entry.querySelector('[data-nabz-entry-skip]')?.addEventListener('click', () => finish());
+    loom?.addEventListener('animationend', (event) => {
+      if (event.animationName === 'nabz-loom-lift') finish();
+    }, { once: true });
+    fallbackTimer = window.setTimeout(() => finish(), reducedMotion ? 700 : 3200);
   };
 
   const bootReveals = (root) => {

@@ -876,24 +876,54 @@
   display: grid;
   min-width: 0;
   min-height: 0;
+  padding: clamp(20px, 2vw, 30px) clamp(26px, 2.8vw, 42px) clamp(22px, 2.2vw, 34px);
   grid-template-rows: minmax(0, 1fr) auto;
+  gap: clamp(16px, 1.8vw, 24px);
   border-right: 1px solid rgba(238, 231, 218, .18);
   background: var(--nabz-indigo);
 }
 
-.nabz-fit-ledger__story { border-right: 0; }
+.nabz-fit-ledger__story {
+  padding-top: 52px;
+  border-right: 0;
+  background: transparent;
+}
+
+.nabz-fit-ledger__story > .nabz-folio-mark {
+  top: 3px;
+  left: 0;
+}
+
+.nabz-fit-ledger__story-tabs {
+  width: 100%;
+  margin: 0;
+}
+
+.nabz-fit-ledger__problem,
+.nabz-fit-ledger__solution {
+  padding: clamp(48px, 6.2vh, 72px) 0 18px;
+  justify-content: flex-start;
+}
+
+.nabz-fit-ledger__story h2 { max-width: 15ch; }
 
 .nabz-fit-ledger__chart {
   grid-column: auto;
-  padding: 14px clamp(28px, 3vw, 44px) 18px;
+  padding: 14px 16px 15px;
   color: var(--nabz-charcoal);
-  border-top: 1px solid rgba(37, 39, 37, .2);
-  background: var(--nabz-cotton-deep);
+  border: 1px solid rgba(37, 39, 37, .2);
+  background: var(--nabz-cotton);
 }
 
 .nabz-fit-ledger__chart .nabz-kicker { color: var(--nabz-madder); }
+.nabz-fit-ledger__chart > div > span:last-child { color: rgba(37, 39, 37, .68); }
+.nabz-fit-ledger__chart thead th { color: rgba(37, 39, 37, .58); }
+.nabz-fit-ledger__chart tbody th { color: rgba(37, 39, 37, .78); }
+.nabz-fit-ledger__chart th,
+.nabz-fit-ledger__chart td { border-top-color: rgba(37, 39, 37, .13); }
 .nabz-fit-ledger__chart tr.is-active td { color: var(--nabz-madder); }
-.nabz-fit-ledger__chart td.is-active { background: rgba(141, 57, 49, .1); }
+.nabz-fit-ledger__chart tr.is-active th { color: var(--nabz-madder); }
+.nabz-fit-ledger__chart td.is-active { background: rgba(141, 57, 49, .115); }
 
 .nabz-fit-ledger__instrument {
   position: relative;
@@ -929,7 +959,7 @@
 .nabz-fit-ledger__instrument .nabz-kicker { color: var(--nabz-brass); }
 
 .nabz-fit-ledger__instrument-head > span:last-child {
-  color: rgba(238, 231, 218, .5);
+  color: rgba(238, 231, 218, .68);
   line-height: 1.5;
   text-align: right;
 }
@@ -1012,7 +1042,7 @@
 
 .nabz-fit-ledger__controls { grid-template-columns: 1fr 1.3fr; gap: 16px; }
 
-.nabz-fit-ledger__control > span { color: rgba(238, 231, 218, .53); }
+.nabz-fit-ledger__control > span { color: rgba(238, 231, 218, .68); }
 
 .nabz-fit-ledger__control > div {
   display: grid;
@@ -1033,6 +1063,7 @@
 
 .nabz-fit-ledger__control button:last-child { border-right: 0; }
 .nabz-fit-ledger__control button.is-active { color: var(--nabz-indigo); background: var(--nabz-cotton); }
+.nabz-fit-ledger__control button:disabled { opacity: .42; }
 
 .nabz-fit-ledger__output {
   display: flex;
@@ -1433,9 +1464,9 @@
     right: max(7px, calc((100vw - 1320px) / 2 - 50px));
     display: grid;
     width: 48px;
-    padding: 11px 6px;
+    padding: 9px 6px;
     justify-items: center;
-    gap: 10px;
+    gap: 8px;
     color: var(--nabz-cotton);
     border: 1px solid rgba(238, 231, 218, .28);
     background: rgba(16, 23, 36, .94);
@@ -1443,23 +1474,15 @@
     transform: translateY(-50%);
   }
 
-  .nabz-deck-ui__label {
-    max-width: 96px;
-    overflow: hidden;
-    color: var(--nabz-brass);
-    font-size: 7px;
-    font-weight: 720;
-    letter-spacing: .11em;
-    text-overflow: ellipsis;
-    text-transform: uppercase;
-    writing-mode: vertical-rl;
-  }
-
   .nabz-deck-ui__count {
-    font-size: 7px;
+    display: block;
+    color: var(--nabz-brass);
+    font-size: 8px;
     font-weight: 760;
-    letter-spacing: .09em;
-    writing-mode: vertical-rl;
+    letter-spacing: .05em;
+    line-height: 1;
+    white-space: nowrap;
+    writing-mode: horizontal-tb;
   }
 
   .nabz-deck-ui__controls {
@@ -1560,7 +1583,7 @@
   .nabz-archive__controls { grid-row: 4; padding: 12px 22px 30px; }
 
   .nabz-fit-ledger { display: block; }
-  .nabz-fit-ledger__editorial { display: grid; grid-template-rows: minmax(520px, auto) auto; border-right: 0; }
+  .nabz-fit-ledger__editorial { display: grid; padding: 18px; grid-template-rows: minmax(520px, auto) auto; border-right: 0; }
   .nabz-fit-ledger__story { display: grid; min-height: 520px; padding-top: 64px; border-right: 0; }
   .nabz-fit-ledger__problem,
   .nabz-fit-ledger__solution { padding: 30px 22px 28px; }

@@ -101,21 +101,128 @@
     root.querySelectorAll('[data-fit-selector]').forEach((selector) => {
       if (selector.dataset.nabzReady === 'true') return;
       selector.dataset.nabzReady = 'true';
+
       const values = JSON.parse(selector.querySelector('[data-fit-data]').textContent);
       const sizes = Object.keys(values);
       const sizeButtons = [...selector.querySelectorAll('[data-size]')];
       const lengthButtons = [...selector.querySelectorAll('[data-length]')];
       const output = selector.querySelector('[data-fit-output]');
-      const cloth = selector.querySelector('[data-fit-cloth]');
       const tableBody = selector.querySelector('[data-fit-table-body]');
+      const outline = selector.querySelector('[data-shirt-outline]');
+      const shadow = selector.querySelector('[data-shirt-shadow]');
+      const grain = selector.querySelector('[data-shirt-grain]');
+      const yoke = selector.querySelector('[data-shirt-yoke]');
+      const armholes = selector.querySelector('[data-shirt-armholes]');
+      const sleeveSeams = selector.querySelector('[data-shirt-sleeve-seams]');
+      const placket = selector.querySelector('[data-shirt-placket]');
+      const pocket = selector.querySelector('[data-shirt-pocket]');
+      const pocketFlap = selector.querySelector('[data-shirt-pocket-flap]');
+      const buttons = selector.querySelector('[data-shirt-buttons]');
+      const hem = selector.querySelector('[data-shirt-hem]');
+      const guideTop = selector.querySelector('[data-shirt-guide-top]');
+      const guideBottom = selector.querySelector('[data-shirt-guide-bottom]');
+      const measure = selector.querySelector('[data-shirt-measure]');
+      const measureText = selector.querySelector('[data-shirt-measure-text]');
       let size = 'M';
       let length = 'Standard';
+      let currentWidth = values.M.width;
+      let currentHem = 321;
+      let animationFrame = 0;
 
       tableBody.innerHTML = sizes.map((item) => {
         const standard = formatLength(values[item].Standard);
         const extended = values[item].Extended === null ? 'Not initially offered' : formatLength(values[item].Extended);
         return `<tr data-row="${item}"><th scope="row">${item}</th><td data-cell="${item}-Standard">${standard}</td><td data-cell="${item}-Extended">${extended}</td></tr>`;
       }).join('');
+
+      const lengthToHem = (inches) => 315 + ((inches - 26.75) / 2.5) * 54;
+
+      const drawShirt = (width, hemY) => {
+        const center = 210;
+        const shoulderLeft = center - width - 21;
+        const shoulderRight = center + width + 21;
+        const bodyLeft = center - width;
+        const bodyRight = center + width;
+        const sleeveLeft = shoulderLeft - 58;
+        const sleeveRight = shoulderRight + 58;
+        const shirtPath = [
+          'M169 69',
+          `C${shoulderLeft + 48} 75 ${shoulderLeft + 24} 83 ${shoulderLeft + 9} 92`,
+          `Q${shoulderLeft - 3} 98 ${shoulderLeft - 11} 110`,
+          `L${sleeveLeft} 163`,
+          `Q${sleeveLeft - 3} 168 ${sleeveLeft + 2} 173`,
+          `L${sleeveLeft + 27} 191`,
+          `Q${sleeveLeft + 31} 193 ${sleeveLeft + 35} 188`,
+          `L${bodyLeft} 157`,
+          `L${bodyLeft} ${hemY - 18}`,
+          `Q${bodyLeft + 8} ${hemY - 3} ${center} ${hemY + 8}`,
+          `Q${bodyRight - 8} ${hemY - 3} ${bodyRight} ${hemY - 18}`,
+          `L${bodyRight} 157`,
+          `L${sleeveRight - 35} 188`,
+          `Q${sleeveRight - 31} 193 ${sleeveRight - 27} 191`,
+          `L${sleeveRight - 2} 173`,
+          `Q${sleeveRight + 3} 168 ${sleeveRight} 163`,
+          `L${shoulderRight + 11} 110`,
+          `Q${shoulderRight + 3} 98 ${shoulderRight - 9} 92`,
+          `C${shoulderRight - 24} 83 ${shoulderRight - 48} 75 251 69`,
+          'Q235 73 232 68',
+          'Q210 81 188 68',
+          'Q185 73 169 69',
+          'Z',
+        ].join(' ');
+
+        [outline, shadow, grain].forEach((path) => path.setAttribute('d', shirtPath));
+        yoke.setAttribute('d', `M${shoulderLeft - 5} 105 Q${center} 129 ${shoulderRight + 5} 105`);
+        armholes.setAttribute('d', `M${shoulderLeft - 6} 104Q${bodyLeft + 16} 128 ${bodyLeft} 157 M${shoulderRight + 6} 104Q${bodyRight - 16} 128 ${bodyRight} 157`);
+        sleeveSeams.setAttribute('d', `M${sleeveLeft + 2} 163L${sleeveLeft + 30} 184 M${sleeveRight - 2} 163L${sleeveRight - 30} 184`);
+        placket.setAttribute('d', `M204 91L204 ${hemY + 5} M216 91L216 ${hemY + 5}`);
+        pocket.setAttribute('d', `M${center + 31} 139H${center + 78}V187Q${center + 55} 198 ${center + 31} 187Z`);
+        pocketFlap.setAttribute('d', `M${center + 29} 138H${center + 80}V150H${center + 29}Z`);
+        hem.setAttribute('d', `M${bodyLeft + 6} ${hemY - 7}Q${center} ${hemY + 13} ${bodyRight - 6} ${hemY - 7}`);
+        buttons.innerHTML = [108, 139, 170, 201, 232, 263, 294, 325, 356]
+          .filter((buttonY) => buttonY < hemY - 10)
+          .map((buttonY) => `<circle cx="210" cy="${buttonY}" r="2"></circle>`)
+          .join('');
+
+        const measureX = Math.min(407, sleeveRight + 20);
+        guideTop.setAttribute('x1', bodyRight + 8);
+        guideTop.setAttribute('x2', measureX - 7);
+        guideTop.setAttribute('y1', 103);
+        guideTop.setAttribute('y2', 103);
+        guideBottom.setAttribute('x1', bodyRight + 8);
+        guideBottom.setAttribute('x2', measureX - 7);
+        guideBottom.setAttribute('y1', hemY);
+        guideBottom.setAttribute('y2', hemY);
+        measure.setAttribute('x1', measureX);
+        measure.setAttribute('x2', measureX);
+        measure.setAttribute('y1', 107);
+        measure.setAttribute('y2', hemY);
+        measureText.setAttribute('x', measureX + 10);
+        measureText.setAttribute('y', 107 + ((hemY - 107) / 2));
+      };
+
+      const animateShirt = (targetWidth, targetHem) => {
+        cancelAnimationFrame(animationFrame);
+        if (reducedMotion) {
+          currentWidth = targetWidth;
+          currentHem = targetHem;
+          drawShirt(currentWidth, currentHem);
+          return;
+        }
+        const startWidth = currentWidth;
+        const startHem = currentHem;
+        const startTime = performance.now();
+        const duration = 360;
+        const frame = (time) => {
+          const progress = Math.min(1, (time - startTime) / duration);
+          const eased = 1 - ((1 - progress) ** 3);
+          currentWidth = startWidth + ((targetWidth - startWidth) * eased);
+          currentHem = startHem + ((targetHem - startHem) * eased);
+          drawShirt(currentWidth, currentHem);
+          if (progress < 1) animationFrame = requestAnimationFrame(frame);
+        };
+        animationFrame = requestAnimationFrame(frame);
+      };
 
       const render = () => {
         const extendedButton = selector.querySelector('[data-length="Extended"]');
@@ -136,10 +243,10 @@
         selector.querySelectorAll('[data-row]').forEach((row) => row.classList.toggle('is-active', row.dataset.row === size));
         selector.querySelectorAll('[data-cell]').forEach((cell) => cell.classList.toggle('is-active', cell.dataset.cell === `${size}-${length}`));
         const selectedLength = values[size][length];
-        const height = 48 + ((selectedLength - 26.75) / 2.5) * 28;
-        cloth.style.setProperty('--fit-width', `${values[size].width / 1.7}%`);
-        cloth.style.setProperty('--fit-height', `${height}%`);
-        output.textContent = `${size} · ${length} · ${formatLength(selectedLength)}`;
+        const displayedLength = formatLength(selectedLength);
+        output.textContent = `${size} · ${length} · ${displayedLength}`;
+        measureText.textContent = displayedLength;
+        animateShirt(values[size].width, lengthToHem(selectedLength));
       };
       sizeButtons.forEach((button) => button.addEventListener('click', () => {
         size = button.dataset.size;
@@ -280,7 +387,7 @@
         goTo(destination, forwardDistance <= backwardDistance ? 1 : -1);
       };
       const enable = () => {
-        if (enabled || !desktopDeck.matches || window.Shopify?.designMode || document.querySelector('[data-nabz-entry]')) return;
+        if (enabled || !desktopDeck.matches || window.Shopify?.designMode) return;
         enabled = true;
         deck.dataset.nabzDeckReady = 'true';
         document.body.classList.add('nabz-deck-active');
@@ -310,8 +417,7 @@
       deck.querySelector('[data-deck-previous]')?.addEventListener('click', () => goTo(activeIndex - 1, -1));
       deck.querySelector('[data-deck-next]')?.addEventListener('click', () => goTo(activeIndex + 1, 1));
       desktopDeck.addEventListener('change', () => desktopDeck.matches ? enable() : disable());
-      if (document.querySelector('[data-nabz-entry]')) document.addEventListener('nabz:intro-complete', enable, { once: true });
-      else enable();
+      enable();
     });
   };
 

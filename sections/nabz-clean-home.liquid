@@ -2,9 +2,11 @@
 <script src="{{ 'nabz-clean-home.js' | asset_url }}" defer></script>
 
 <div class="nabz-clean-home" data-nabz-home>
+  <div class="nabz-ambient-thread" aria-hidden="true"><span></span></div>
   <section class="nabz-chapter nabz-chapter--hero" id="hero" data-nabz-chapter data-chapter-label="The space between">
     <div class="nabz-chapter__frame nabz-hero">
       <div class="nabz-hero__copy">
+        <span class="nabz-hero__rule" aria-hidden="true"></span>
         <h1>
           <span>Not ethnic wear.</span>
           <span>Not a plain shirt.</span>
@@ -31,6 +33,7 @@
           >
           <figcaption>Thread, seen closer</figcaption>
         </figure>
+        <span class="nabz-hero__focus" aria-hidden="true"></span>
       </div>
     </div>
   </section>
@@ -62,8 +65,12 @@
             aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"
             style="--nabz-detail-shift: {{ detail_shift }}; --nabz-reverse-shift: {{ reverse_shift }}; --nabz-peek-position: {{ peek_position }};"
           >
+            <span class="nabz-product__tab" aria-hidden="true">
+              <b>{{ forloop.index | prepend: '0' | slice: -2, 2 }}</b>
+              <em>{{ product_parts[1] }}</em>
+            </span>
             <span class="nabz-product__peek" aria-hidden="true">
-              <img src="{{ product_parts[0] | asset_url }}" alt="" width="1003" height="1568" loading="lazy">
+              <img src="{{ product_parts[0] | asset_url }}" alt="" width="1003" height="1568" loading="eager" decoding="async">
             </span>
             <span class="nabz-product__atlas">
               <span class="nabz-product__board">
@@ -72,16 +79,17 @@
                   alt="{{ product_parts[1] }} embroidered shirt shown from the front, in detail, and from the back"
                   width="1003"
                   height="1568"
-                  loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                  loading="eager"
+                  decoding="async"
                 >
               </span>
               <span class="nabz-product__studies" aria-hidden="true">
                 <span class="nabz-product__study nabz-product__study--detail">
-                  <img src="{{ product_parts[0] | asset_url }}" alt="" width="1003" height="1568" loading="lazy">
+                  <img src="{{ product_parts[0] | asset_url }}" alt="" width="1003" height="1568" loading="eager" decoding="async">
                   <span>Textile detail</span>
                 </span>
                 <span class="nabz-product__study nabz-product__study--reverse">
-                  <img src="{{ product_parts[0] | asset_url }}" alt="" width="1003" height="1568" loading="lazy">
+                  <img src="{{ product_parts[0] | asset_url }}" alt="" width="1003" height="1568" loading="eager" decoding="async">
                   <span>Reverse view</span>
                 </span>
               </span>
@@ -231,8 +239,15 @@
           alt="NABZ structured shoulder construction on a midnight blue shirt"
           width="1114"
           height="1394"
-          loading="lazy"
+          loading="eager"
+          decoding="async"
         >
+        <svg class="nabz-shoulders__construction" viewBox="0 0 640 760" aria-hidden="true" preserveAspectRatio="none">
+          <path d="M72 214C166 169 277 164 382 198C456 222 514 268 577 321"></path>
+          <circle cx="72" cy="214" r="5"></circle>
+          <circle cx="382" cy="198" r="5"></circle>
+          <circle cx="577" cy="321" r="5"></circle>
+        </svg>
       </div>
       <div class="nabz-shoulders__copy">
         <span class="nabz-kicker">Shoulder structure</span>
@@ -249,6 +264,7 @@
 
   <section class="nabz-chapter nabz-chapter--contact" id="contact" data-nabz-chapter data-chapter-label="Talk to NABZ">
     <div class="nabz-chapter__frame nabz-contact">
+      <img class="nabz-contact__mark" src="{{ 'nabz-wordmark.png' | asset_url }}" alt="" width="396" height="180" loading="lazy">
       <div class="nabz-contact__intro">
         <h2>The line is open.</h2>
         <p class="nabz-contact__support">Whatever it is, we’re here to respond.</p>
@@ -275,6 +291,7 @@
 
   <div class="nabz-deck-ui" data-deck-ui aria-label="Chapter navigation">
     <span class="nabz-deck-ui__count" data-deck-count>01 / 05</span>
+    <span class="nabz-deck-ui__rail" aria-hidden="true"><i data-deck-progress></i></span>
     <div class="nabz-deck-ui__controls">
       <button type="button" data-deck-previous aria-label="Previous chapter"><span aria-hidden="true">↑</span></button>
       <button type="button" data-deck-next aria-label="Next chapter"><span aria-hidden="true">↓</span></button>

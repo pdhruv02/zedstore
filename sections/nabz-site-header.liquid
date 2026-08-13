@@ -7,16 +7,20 @@
 <div class="nabz-home-marker" hidden aria-hidden="true"></div>
 {% unless request.design_mode %}
   <div class="nabz-entry" data-nabz-entry aria-hidden="true">
-    <div class="nabz-entry__panel nabz-entry__panel--left"></div>
-    <div class="nabz-entry__panel nabz-entry__panel--right"></div>
-    <div class="nabz-entry__vignette"></div>
-    <div class="nabz-entry__seam"></div>
-    <div class="nabz-entry__mark">
-      <img src="{{ 'nabz-entry-mark.png' | asset_url }}" alt="" width="706" height="720" fetchpriority="high">
+    <div class="nabz-entry__deck">
+      <span class="nabz-entry__sheet nabz-entry__sheet--5"></span>
+      <span class="nabz-entry__sheet nabz-entry__sheet--4"></span>
+      <span class="nabz-entry__sheet nabz-entry__sheet--3"></span>
+      <span class="nabz-entry__sheet nabz-entry__sheet--2"></span>
+      <span class="nabz-entry__sheet nabz-entry__sheet--1"></span>
+      <div class="nabz-entry__mark">
+        <img src="{{ 'nabz-entry-mark.png' | asset_url }}" alt="" width="706" height="720" fetchpriority="high">
+      </div>
     </div>
+    <span class="nabz-entry__thread"></span>
   </div>
 {% endunless %}
-<header class="nabz-site-header">
+<header class="nabz-site-header" data-nabz-header>
   <div class="nabz-shell">
     <div class="nabz-site-header__bar">
       <a class="nabz-site-header__brand" href="{{ routes.root_url }}" aria-label="NABZ home">

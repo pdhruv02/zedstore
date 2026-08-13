@@ -1,6 +1,6 @@
 (() => {
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
+  const clamp = (value, minimum = 0, maximum = 1) => Math.min(maximum, Math.max(minimum, value));
   const formatLength = (value) => `${Number.isInteger(value) ? value : value.toFixed(2).replace(/0$/, '')}"`;
 
   const bootEntry = () => {
@@ -9,17 +9,29 @@
     entry.dataset.nabzReady = 'true';
 
     let completed = false;
+    let fallbackTimer = 0;
+    const inputEvents = ['touchstart', 'pointerdown'];
+
     const finish = () => {
       if (completed) return;
       completed = true;
-      entry.remove();
+      window.clearTimeout(fallbackTimer);
+      inputEvents.forEach((eventName) => window.removeEventListener(eventName, finish, true));
+      window.removeEventListener('scroll', finish, true);
+      window.removeEventListener('keydown', finish, true);
+      entry.classList.add('is-finished');
+      window.requestAnimationFrame(() => entry.remove());
       document.dispatchEvent(new CustomEvent('nabz:intro-complete'));
     };
 
     entry.addEventListener('animationend', (event) => {
       if (event.target === entry && event.animationName === 'nabz-entry-release') finish();
     });
-    window.setTimeout(finish, reducedMotion ? 650 : 3450);
+
+    inputEvents.forEach((eventName) => window.addEventListener(eventName, finish, { capture: true, passive: true, once: true }));
+    window.addEventListener('scroll', finish, { capture: true, passive: true, once: true });
+    window.addEventListener('keydown', finish, { capture: true, once: true });
+    fallbackTimer = window.setTimeout(finish, reducedMotion ? 520 : 2350);
   };
 
   const bootProductGallery = (root) => {
@@ -28,6 +40,8 @@
       gallery.dataset.nabzReady = 'true';
 
       const panels = [...gallery.querySelectorAll('[data-product-panel]')];
+      if (!panels.length) return;
+
       const activate = (selected) => {
         panels.forEach((panel) => {
           const active = panel === selected;
@@ -60,8 +74,7 @@
 
       const problem = story.querySelector('[data-fit-story-state="problem"]');
       const solution = story.querySelector('[data-fit-story-state="solution"]');
-      const next = story.querySelector('[data-fit-story-next]');
-      const back = story.querySelector('[data-fit-story-back]');
+      if (!problem || !solution) return;
 
       const show = (target, departing) => {
         departing.classList.add('is-leaving');
@@ -70,10 +83,12 @@
         target.classList.remove('is-leaving');
         target.classList.add('is-active');
         target.setAttribute('aria-hidden', 'false');
+        if ('inert' in departing) departing.inert = true;
+        if ('inert' in target) target.inert = false;
       };
 
-      next.addEventListener('click', () => show(solution, problem));
-      back.addEventListener('click', () => show(problem, solution));
+      story.querySelector('[data-fit-story-next]')?.addEventListener('click', () => show(solution, problem));
+      story.querySelector('[data-fit-story-back]')?.addEventListener('click', () => show(problem, solution));
     });
   };
 
@@ -82,12 +97,15 @@
       if (selector.dataset.nabzReady === 'true') return;
       selector.dataset.nabzReady = 'true';
 
-      const values = JSON.parse(selector.querySelector('[data-fit-data]').textContent);
+      const dataNode = selector.querySelector('[data-fit-data]');
+      const fitLayout = selector.closest('.nabz-fit');
+      if (!dataNode || !fitLayout) return;
+
+      const values = JSON.parse(dataNode.textContent);
       const sizes = Object.keys(values);
       const sizeButtons = [...selector.querySelectorAll('[data-size]')];
       const lengthButtons = [...selector.querySelectorAll('[data-length]')];
       const output = selector.querySelector('[data-fit-output]');
-      const fitLayout = selector.closest('.nabz-fit');
       const tableBody = fitLayout.querySelector('[data-fit-table-body]');
       const outline = selector.querySelector('[data-shirt-outline]');
       const shadow = selector.querySelector('[data-shirt-shadow]');
@@ -104,6 +122,8 @@
       const guideBottom = selector.querySelector('[data-shirt-guide-bottom]');
       const measure = selector.querySelector('[data-shirt-measure]');
       const measureText = selector.querySelector('[data-shirt-measure-text]');
+
+      if (!output || !tableBody || !outline || !shadow || !grain || !yoke || !armholes || !sleeveSeams || !placket || !pocket || !pocketFlap || !buttons || !hem || !guideTop || !guideBottom || !measure || !measureText) return;
 
       let size = 'M';
       let length = 'Standard';
@@ -187,7 +207,7 @@
       };
 
       const animateShirt = (targetWidth, targetHem) => {
-        cancelAnimationFrame(animationFrame);
+        window.cancelAnimationFrame(animationFrame);
         if (reducedMotion) {
           currentWidth = targetWidth;
           currentHem = targetHem;
@@ -206,18 +226,19 @@
           currentWidth = startWidth + ((targetWidth - startWidth) * eased);
           currentHem = startHem + ((targetHem - startHem) * eased);
           drawShirt(currentWidth, currentHem);
-          if (progress < 1) animationFrame = requestAnimationFrame(frame);
+          if (progress < 1) animationFrame = window.requestAnimationFrame(frame);
         };
 
-        animationFrame = requestAnimationFrame(frame);
+        animationFrame = window.requestAnimationFrame(frame);
       };
 
       const render = () => {
         const extendedButton = selector.querySelector('[data-length="Extended"]');
         const extendedAvailable = values[size].Extended !== null;
-        extendedButton.disabled = !extendedAvailable;
-        extendedButton.setAttribute('aria-disabled', String(!extendedAvailable));
-
+        if (extendedButton) {
+          extendedButton.disabled = !extendedAvailable;
+          extendedButton.setAttribute('aria-disabled', String(!extendedAvailable));
+        }
         if (!extendedAvailable && length === 'Extended') length = 'Standard';
 
         sizeButtons.forEach((button) => {
@@ -232,13 +253,8 @@
           button.setAttribute('aria-pressed', String(active));
         });
 
-        fitLayout.querySelectorAll('[data-row]').forEach((row) => {
-          row.classList.toggle('is-active', row.dataset.row === size);
-        });
-
-        fitLayout.querySelectorAll('[data-cell]').forEach((cell) => {
-          cell.classList.toggle('is-active', cell.dataset.cell === `${size}-${length}`);
-        });
+        fitLayout.querySelectorAll('[data-row]').forEach((row) => row.classList.toggle('is-active', row.dataset.row === size));
+        fitLayout.querySelectorAll('[data-cell]').forEach((cell) => cell.classList.toggle('is-active', cell.dataset.cell === `${size}-${length}`));
 
         const selectedLength = values[size][length];
         const displayedLength = formatLength(selectedLength);
@@ -247,20 +263,16 @@
         animateShirt(values[size].width, lengthToHem(selectedLength));
       };
 
-      sizeButtons.forEach((button) => {
-        button.addEventListener('click', () => {
-          size = button.dataset.size;
-          render();
-        });
-      });
+      sizeButtons.forEach((button) => button.addEventListener('click', () => {
+        size = button.dataset.size;
+        render();
+      }));
 
-      lengthButtons.forEach((button) => {
-        button.addEventListener('click', () => {
-          if (button.disabled) return;
-          length = button.dataset.length;
-          render();
-        });
-      });
+      lengthButtons.forEach((button) => button.addEventListener('click', () => {
+        if (button.disabled) return;
+        length = button.dataset.length;
+        render();
+      }));
 
       render();
     });
@@ -269,196 +281,121 @@
   const bootChapterDeck = (root) => {
     root.querySelectorAll('[data-nabz-home]').forEach((deck) => {
       if (deck.dataset.nabzDeckReady === 'true') return;
+      deck.dataset.nabzDeckReady = 'true';
 
-      const desktopDeck = window.matchMedia('(min-width: 961px) and (min-height: 620px)');
       const chapters = [...deck.querySelectorAll('[data-nabz-chapter]')];
-      const previousButton = deck.querySelector('[data-deck-previous]');
-      const nextButton = deck.querySelector('[data-deck-next]');
       const count = deck.querySelector('[data-deck-count]');
-      const label = deck.querySelector('[data-deck-label]');
+      const progress = deck.querySelector('[data-deck-progress]');
+      const previous = deck.querySelector('[data-deck-previous]');
+      const next = deck.querySelector('[data-deck-next]');
       const live = deck.querySelector('[data-deck-live]');
-      const labels = chapters.map((chapter) => chapter.dataset.chapterLabel || 'NABZ');
+      const desktop = window.matchMedia('(min-width: 961px) and (min-height: 640px)');
+      const threadPositions = [31, 66, 47, 72, 39];
+      let activeIndex = 0;
+      let frame = 0;
 
-      if (chapters.length < 2) return;
-
-      let activeIndex = Math.max(0, chapters.findIndex((chapter) => `#${chapter.id}` === window.location.hash));
-      let transitioning = false;
-      let transitionTimer = 0;
-      let wheelTotal = 0;
-      let wheelResetTimer = 0;
-      let touchStartX = 0;
-      let touchStartY = 0;
-      let enabled = false;
+      if (!chapters.length) return;
 
       const twoDigits = (value) => String(value).padStart(2, '0');
-      const isTextInput = (target) => target.matches('input, textarea, select, [contenteditable="true"]');
-      const isInteractive = (target) => Boolean(target.closest('button, a, input, textarea, select, summary, [contenteditable="true"]'));
 
-      const setChapterState = (chapter, state) => {
-        chapter.dataset.deckState = state;
-        const isActive = state === 'active';
-        chapter.setAttribute('aria-hidden', String(!isActive));
-        if ('inert' in chapter) chapter.inert = !isActive;
-      };
-
-      const updateUi = (announce = false) => {
+      const announce = (index) => {
+        if (index === activeIndex && chapters[index].classList.contains('is-current')) return;
+        activeIndex = index;
+        chapters.forEach((chapter, chapterIndex) => {
+          const current = chapterIndex === activeIndex;
+          chapter.classList.toggle('is-current', current);
+          if (current) chapter.setAttribute('aria-current', 'true');
+          else chapter.removeAttribute('aria-current');
+        });
         if (count) count.textContent = `${twoDigits(activeIndex + 1)} / ${twoDigits(chapters.length)}`;
-        if (label) label.textContent = labels[activeIndex];
-        if (live && announce) live.textContent = `Chapter ${activeIndex + 1} of ${chapters.length}: ${labels[activeIndex]}`;
+        if (live) live.textContent = `Chapter ${activeIndex + 1} of ${chapters.length}: ${chapters[activeIndex].dataset.chapterLabel || 'NABZ'}`;
+        previous?.toggleAttribute('disabled', activeIndex === 0);
+        next?.toggleAttribute('disabled', activeIndex === chapters.length - 1);
+        deck.style.setProperty('--nabz-thread-x', `${threadPositions[activeIndex] || 50}%`);
+        deck.style.setProperty('--nabz-glow-x', `${threadPositions[activeIndex] || 50}%`);
+      };
+
+      const update = () => {
+        frame = 0;
+        const viewportHeight = Math.max(1, window.innerHeight);
+        let nearestIndex = 0;
+        let nearestDistance = Number.POSITIVE_INFINITY;
+
         chapters.forEach((chapter, index) => {
-          chapter.classList.toggle('is-active', index === activeIndex);
+          const rect = chapter.getBoundingClientRect();
+          const distance = (rect.top + (rect.height / 2) - (viewportHeight / 2)) / viewportHeight;
+          const absoluteDistance = Math.abs(distance);
+          if (absoluteDistance < nearestDistance) {
+            nearestDistance = absoluteDistance;
+            nearestIndex = index;
+          }
+
+          const focus = clamp(1 - absoluteDistance, 0, 1);
+          chapter.style.setProperty('--chapter-focus', focus.toFixed(4));
+          const inverseFocus = 1 - focus;
+          chapter.style.setProperty('--nabz-hero-rule-scale', (.55 + focus * .45).toFixed(4));
+          chapter.style.setProperty('--nabz-hero-copy-opacity', (.58 + focus * .42).toFixed(4));
+          chapter.style.setProperty('--nabz-hero-line-x', `${(inverseFocus * -14).toFixed(2)}px`);
+          chapter.style.setProperty('--nabz-hero-accent-x', `${(inverseFocus * 18).toFixed(2)}px`);
+          chapter.style.setProperty('--nabz-hero-image-scale', (1.035 + inverseFocus * .035).toFixed(4));
+          chapter.style.setProperty('--nabz-hero-image-x', `${(inverseFocus * 1.5).toFixed(3)}%`);
+          chapter.style.setProperty('--nabz-hero-detail-y', `${(inverseFocus * 24).toFixed(2)}px`);
+          chapter.style.setProperty('--nabz-hero-detail-rotate', `${(inverseFocus * 2).toFixed(3)}deg`);
+          chapter.style.setProperty('--nabz-hero-focus-opacity', (.2 + focus * .8).toFixed(4));
+          chapter.style.setProperty('--nabz-hero-focus-scale', (.74 + focus * .26).toFixed(4));
+          chapter.style.setProperty('--nabz-shoulder-image-scale', (1.02 + inverseFocus * .035).toFixed(4));
+          chapter.style.setProperty('--nabz-shoulder-line-offset', (760 - focus * 760).toFixed(2));
+          chapter.style.setProperty('--nabz-shoulder-circle-opacity', focus.toFixed(4));
+          chapter.style.setProperty('--nabz-shoulder-circle-scale', (.3 + focus * .7).toFixed(4));
+
+          if (desktop.matches && !reducedMotion) {
+            const limited = clamp(distance, -1.15, 1.15);
+            const magnitude = Math.abs(limited);
+            const incoming = limited > 0;
+            const y = incoming ? magnitude * 34 : magnitude * -18;
+            const scale = 1 - magnitude * (incoming ? .052 : .032);
+            const rotateX = limited * -2.7;
+            const rotateZ = limited * (index % 2 === 0 ? .42 : -.42);
+            const opacity = .38 + focus * .62;
+            const shade = (1 - focus) * .26;
+            chapter.style.setProperty('--nabz-card-y', `${y.toFixed(2)}px`);
+            chapter.style.setProperty('--nabz-card-scale', scale.toFixed(4));
+            chapter.style.setProperty('--nabz-card-rotate-x', `${rotateX.toFixed(3)}deg`);
+            chapter.style.setProperty('--nabz-card-rotate-z', `${rotateZ.toFixed(3)}deg`);
+            chapter.style.setProperty('--nabz-card-opacity', opacity.toFixed(4));
+            chapter.style.setProperty('--nabz-card-shade', shade.toFixed(4));
+            chapter.style.setProperty('--nabz-contact-shade', (shade * .6).toFixed(4));
+          } else {
+            ['--nabz-card-y', '--nabz-card-scale', '--nabz-card-rotate-x', '--nabz-card-rotate-z', '--nabz-card-opacity', '--nabz-card-shade']
+              .forEach((property) => chapter.style.removeProperty(property));
+            chapter.style.removeProperty('--nabz-contact-shade');
+          }
         });
+
+        announce(nearestIndex);
+        const scrollRange = Math.max(1, document.documentElement.scrollHeight - viewportHeight);
+        const pageProgress = clamp(window.scrollY / scrollRange, 0, 1) * 100;
+        deck.style.setProperty('--nabz-deck-progress', `${pageProgress.toFixed(2)}%`);
+        deck.style.setProperty('--nabz-thread-progress', `${pageProgress.toFixed(2)}%`);
+        if (progress) progress.style.setProperty('--nabz-deck-progress', `${pageProgress.toFixed(2)}%`);
       };
 
-      const setInitialStates = () => {
-        chapters.forEach((chapter, index) => {
-          if (index === activeIndex) setChapterState(chapter, 'active');
-          else setChapterState(chapter, index < activeIndex ? 'past' : 'future');
-        });
-        updateUi(false);
+      const requestUpdate = () => {
+        if (frame) return;
+        frame = window.requestAnimationFrame(update);
       };
 
-      const goTo = (nextIndex, direction = 1, announce = true) => {
-        if (!enabled || transitioning) return;
-        const normalizedIndex = (nextIndex + chapters.length) % chapters.length;
-        if (normalizedIndex === activeIndex) return;
-
-        transitioning = true;
-        const current = chapters[activeIndex];
-        const incoming = chapters[normalizedIndex];
-
-        incoming.classList.add('is-deck-preparing');
-        setChapterState(incoming, direction > 0 ? 'future' : 'past');
-        incoming.getBoundingClientRect();
-        incoming.classList.remove('is-deck-preparing');
-
-        window.requestAnimationFrame(() => {
-          setChapterState(current, direction > 0 ? 'past' : 'future');
-          setChapterState(incoming, 'active');
-          activeIndex = normalizedIndex;
-          updateUi(announce);
-
-          if (history.replaceState) history.replaceState(null, '', `#${chapters[activeIndex].id}`);
-        });
-
-        window.clearTimeout(transitionTimer);
-        transitionTimer = window.setTimeout(() => {
-          chapters.forEach((chapter, index) => {
-            if (index === activeIndex) return;
-            setChapterState(chapter, direction > 0 ? 'past' : 'future');
-          });
-          transitioning = false;
-        }, reducedMotion ? 40 : 920);
+      const goTo = (index) => {
+        const target = chapters[clamp(index, 0, chapters.length - 1)];
+        target?.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' });
       };
 
-      const canScrollInside = (target, direction) => {
-        const scrollable = target.closest('[data-deck-scroll], details[open], textarea');
-        if (!scrollable) return false;
-        if (direction > 0) return scrollable.scrollTop + scrollable.clientHeight < scrollable.scrollHeight - 1;
-        return scrollable.scrollTop > 1;
-      };
-
-      const onWheel = (event) => {
-        if (!enabled || Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
-        const direction = Math.sign(event.deltaY);
-        if (canScrollInside(event.target, direction)) return;
-        event.preventDefault();
-        if (transitioning) return;
-
-        wheelTotal += event.deltaY;
-        window.clearTimeout(wheelResetTimer);
-        wheelResetTimer = window.setTimeout(() => { wheelTotal = 0; }, 180);
-        if (Math.abs(wheelTotal) < 44) return;
-
-        goTo(activeIndex + Math.sign(wheelTotal), Math.sign(wheelTotal));
-        wheelTotal = 0;
-      };
-
-      const onKeydown = (event) => {
-        if (!enabled || isTextInput(event.target)) return;
-        if (['ArrowDown', 'PageDown', ' '].includes(event.key)) {
-          event.preventDefault();
-          goTo(activeIndex + 1, 1);
-        } else if (['ArrowUp', 'PageUp'].includes(event.key)) {
-          event.preventDefault();
-          goTo(activeIndex - 1, -1);
-        } else if (event.key === 'Home') {
-          event.preventDefault();
-          goTo(0, -1);
-        } else if (event.key === 'End') {
-          event.preventDefault();
-          goTo(chapters.length - 1, 1);
-        }
-      };
-
-      const onTouchStart = (event) => {
-        if (!enabled || event.touches.length !== 1 || isInteractive(event.target)) return;
-        touchStartX = event.touches[0].clientX;
-        touchStartY = event.touches[0].clientY;
-      };
-
-      const onTouchEnd = (event) => {
-        if (!enabled || !touchStartY || event.changedTouches.length !== 1) return;
-        const deltaX = event.changedTouches[0].clientX - touchStartX;
-        const deltaY = event.changedTouches[0].clientY - touchStartY;
-        touchStartX = 0;
-        touchStartY = 0;
-        if (Math.abs(deltaY) < 58 || Math.abs(deltaY) <= Math.abs(deltaX)) return;
-        goTo(activeIndex + (deltaY < 0 ? 1 : -1), deltaY < 0 ? 1 : -1);
-      };
-
-      const onHashNavigation = (event) => {
-        const link = event.target.closest('a[href^="#"]');
-        if (!link || !enabled) return;
-        const destination = chapters.findIndex((chapter) => `#${chapter.id}` === link.getAttribute('href'));
-        if (destination < 0) return;
-        event.preventDefault();
-        const forwardDistance = (destination - activeIndex + chapters.length) % chapters.length;
-        const backwardDistance = (activeIndex - destination + chapters.length) % chapters.length;
-        goTo(destination, forwardDistance <= backwardDistance ? 1 : -1);
-      };
-
-      const enable = () => {
-        if (enabled || !desktopDeck.matches || window.Shopify?.designMode || document.querySelector('[data-nabz-entry]')) return;
-        enabled = true;
-        deck.dataset.nabzDeckReady = 'true';
-        document.body.classList.add('nabz-deck-active');
-        setInitialStates();
-        document.addEventListener('wheel', onWheel, { passive: false });
-        deck.addEventListener('touchstart', onTouchStart, { passive: true });
-        deck.addEventListener('touchend', onTouchEnd, { passive: true });
-        document.addEventListener('keydown', onKeydown);
-        document.addEventListener('click', onHashNavigation);
-      };
-
-      const disable = () => {
-        if (!enabled) return;
-        enabled = false;
-        document.body.classList.remove('nabz-deck-active');
-        chapters.forEach((chapter) => {
-          chapter.removeAttribute('data-deck-state');
-          chapter.removeAttribute('aria-hidden');
-          if ('inert' in chapter) chapter.inert = false;
-        });
-        document.removeEventListener('wheel', onWheel);
-        deck.removeEventListener('touchstart', onTouchStart);
-        deck.removeEventListener('touchend', onTouchEnd);
-        document.removeEventListener('keydown', onKeydown);
-        document.removeEventListener('click', onHashNavigation);
-      };
-
-      previousButton?.addEventListener('click', () => goTo(activeIndex - 1, -1));
-      nextButton?.addEventListener('click', () => goTo(activeIndex + 1, 1));
-      desktopDeck.addEventListener('change', () => {
-        if (desktopDeck.matches) enable();
-        else disable();
-      });
-
-      if (document.querySelector('[data-nabz-entry]')) {
-        document.addEventListener('nabz:intro-complete', enable, { once: true });
-      } else {
-        enable();
-      }
+      previous?.addEventListener('click', () => goTo(activeIndex - 1));
+      next?.addEventListener('click', () => goTo(activeIndex + 1));
+      window.addEventListener('scroll', requestUpdate, { passive: true });
+      window.addEventListener('resize', requestUpdate, { passive: true });
+      desktop.addEventListener?.('change', requestUpdate);
+      update();
     });
   };
 

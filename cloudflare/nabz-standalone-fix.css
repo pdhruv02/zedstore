@@ -1,6 +1,11 @@
 /* Shopify originally supplied #MainContent as the height-constrained deck parent.
    The standalone Cloudflare build does not have that wrapper, so recreate the
    same two-row viewport contract directly on body. */
+
+.nabz-mobile-deck-ui {
+  display: none;
+}
+
 @media (min-width: 961px) and (min-height: 620px) {
   html,
   body {
@@ -45,5 +50,88 @@
   body.nabz-deck-active > .nabz-clean-home[data-nabz-deck-ready="true"] .nabz-chapter__frame {
     height: 100% !important;
     min-height: 0 !important;
+  }
+}
+
+@media (max-width: 960px) {
+  .nabz-deck-ui {
+    display: none !important;
+  }
+
+  .nabz-mobile-deck-ui {
+    position: fixed;
+    z-index: 100;
+    right: 10px;
+    bottom: max(8px, env(safe-area-inset-bottom));
+    left: 10px;
+    display: grid;
+    width: auto;
+    height: 58px;
+    padding: 0;
+    grid-template-rows: 2px 1fr;
+    gap: 5px;
+    overflow: hidden;
+    color: #f1e6d7;
+    border: 1px solid rgba(238, 227, 216, .13);
+    border-radius: 18px;
+    background: rgba(14, 12, 10, .9);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .nabz-mobile-deck-ui .nabz-mobile-progress {
+    position: relative;
+    height: 2px;
+    background: rgba(238, 227, 216, .12);
+  }
+
+  .nabz-mobile-deck-ui .nabz-mobile-progress i {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 20%;
+    background: #a86642;
+    transition: transform .42s ease;
+  }
+
+  .nabz-mobile-deck-ui .nabz-mobile-dock {
+    display: grid;
+    height: 49px;
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  .nabz-mobile-deck-ui .nabz-mobile-dock button {
+    position: relative;
+    padding: 5px 2px 7px;
+    color: rgba(238, 227, 216, .48);
+    border: 0;
+    appearance: none;
+    background: transparent;
+    font-size: .55rem;
+    letter-spacing: .045em;
+    line-height: 1.05;
+  }
+
+  .nabz-mobile-deck-ui .nabz-mobile-dock button span {
+    display: block;
+    width: 4px;
+    height: 4px;
+    margin: 0 auto 5px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .nabz-mobile-deck-ui .nabz-mobile-dock button.is-active {
+    color: #f1e6d7;
+  }
+
+  .nabz-mobile-deck-ui .nabz-mobile-dock button.is-active::after {
+    position: absolute;
+    bottom: 3px;
+    left: 50%;
+    width: 18px;
+    height: 1px;
+    content: "";
+    background: #a86642;
+    transform: translateX(-50%);
   }
 }

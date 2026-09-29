@@ -1,0 +1,45 @@
+name: Verify NABZ Cloudflare build
+
+on:
+  push:
+    branches:
+      - cloudflare-static
+    paths:
+      - 'cloudflare/**'
+      - 'assets/nabz-base.css'
+      - 'assets/nabz-clean-home.css'
+      - 'assets/nabz-clean-home.js'
+      - 'assets/nabz-five-chapters-fix.css'
+      - 'nabz-clean-restart/assets/nabz-logo-embroidered-safe.png'
+      - '.github/workflows/verify-cloudflare-static.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Build standalone NABZ site
+        run: node cloudflare/build.mjs
+      - name: Verify required output
+        shell: bash
+        run: |
+          test -f dist/index.html
+          test -f dist/assets/nabz-base.css
+          test -f dist/assets/nabz-clean-home.css
+          test -f dist/assets/nabz-clean-home.js
+          test -f dist/assets/nabz-logo-embroidered-safe.png
+          test -f dist/assets/nabz-hero-self-contour-hq.webp
+          test -f dist/assets/nabz-hero-self-contour-macro-hq.webp
+          test -f dist/assets/nabz-hero-air-cable-hq.webp
+          for i in 1 2 3 4 5 6 7 8; do test -f "dist/assets/nabz-product-${i}-hq.webp"; done
+          test -f dist/assets/nabz-background-study-04.png
+          ! grep -R "{{\|{%" dist/index.html
+          echo "Standalone NABZ build verified."

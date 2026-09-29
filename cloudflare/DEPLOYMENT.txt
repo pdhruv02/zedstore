@@ -1,0 +1,3 @@
+NABZ standalone Cloudflare deployment branch.
+Source: Shopify theme preserved on main.
+Target: Cloudflare Pages.

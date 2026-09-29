@@ -88,6 +88,7 @@ const head = `<!doctype html>
   <link rel="stylesheet" href="/assets/nabz-base.css">
   <link rel="stylesheet" href="/assets/nabz-clean-home.css">
   <link rel="stylesheet" href="/assets/nabz-mobile-native.css">
+  <link rel="stylesheet" href="/assets/nabz-standalone-fix.css">
 </head>
 <body>`;
 const tail = `
@@ -104,6 +105,7 @@ for (const name of assetNames) {
 }
 await copyFile(join(root, 'cloudflare/nabz-mobile-native.css'), join(outAssets, 'nabz-mobile-native.css'));
 await copyFile(join(root, 'cloudflare/nabz-mobile-native.js'), join(outAssets, 'nabz-mobile-native.js'));
+await copyFile(join(root, 'cloudflare/nabz-standalone-fix.css'), join(outAssets, 'nabz-standalone-fix.css'));
 
 const optionalVideo = join(root, 'cloudflare/NABZ_brand_story_film_v3_1_portrait_fix_1080p.mp4');
 try {

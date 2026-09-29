@@ -31,13 +31,17 @@
       nav.className = 'nabz-mobile-fit-nav';
       nav.setAttribute('role', 'tablist');
       nav.setAttribute('aria-label', 'Fit explanation');
-      nav.innerHTML = '<button class="is-active" type="button" data-mobile-fit-tab="problem">Problem</button><button type="button" data-mobile-fit-tab="illustration">Illustration</button><button type="button" data-mobile-fit-tab="system">System</button>';
+      nav.innerHTML = '<button class="is-active" type="button" role="tab" aria-selected="true" data-mobile-fit-tab="problem">Problem</button><button type="button" role="tab" aria-selected="false" data-mobile-fit-tab="illustration">Illustration</button><button type="button" role="tab" aria-selected="false" data-mobile-fit-tab="system">System</button>';
       ledger.prepend(nav);
       const problem = ledger.querySelector('[data-fit-story-panel="problem"]');
       const solution = ledger.querySelector('[data-fit-story-panel="solution"]');
       const setState = (state) => {
         ledger.dataset.mobileFit = state;
-        nav.querySelectorAll('button').forEach((button) => button.classList.toggle('is-active', button.dataset.mobileFitTab === state));
+        nav.querySelectorAll('button').forEach((button) => {
+          const active = button.dataset.mobileFitTab === state;
+          button.classList.toggle('is-active', active);
+          button.setAttribute('aria-selected', String(active));
+        });
         if (!mobile.matches) return;
         if (problem) {
           problem.hidden = state !== 'problem';
@@ -58,7 +62,6 @@
         if (mobile.matches) setState(ledger.dataset.mobileFit || 'problem');
         else {
           delete ledger.dataset.mobileFit;
-          if (problem) problem.hidden = false;
           const activeDesktop = ledger.querySelector('[data-fit-story-tab].is-active')?.dataset.fitStoryTab || 'problem';
           if (problem) problem.hidden = activeDesktop !== 'problem';
           if (solution) solution.hidden = activeDesktop !== 'solution';
@@ -103,8 +106,7 @@
 
   const bootMobileDeck = () => {
     const deck = document.querySelector('[data-nabz-home]');
-    const ui = deck?.querySelector('[data-deck-ui]');
-    if (!deck || !ui) return;
+    if (!deck) return;
     const chapters = [...deck.querySelectorAll('[data-nabz-chapter]')];
     if (chapters.length !== 5) return;
     const names = ['Identity', 'Surface', 'Fit', 'Story', 'Contact'];
@@ -113,9 +115,17 @@
     let startY = 0;
     let enabled = false;
 
-    ui.innerHTML = `<div class="nabz-mobile-progress" aria-hidden="true"><i></i></div><div class="nabz-mobile-dock">${names.map((name, index) => `<button type="button" data-mobile-chapter="${index}"><span></span>${name}</button>`).join('')}</div>`;
-    const progress = ui.querySelector('.nabz-mobile-progress i');
-    const dockButtons = [...ui.querySelectorAll('[data-mobile-chapter]')];
+    let mobileUi = deck.querySelector('[data-mobile-deck-ui]');
+    if (!mobileUi) {
+      mobileUi = document.createElement('div');
+      mobileUi.className = 'nabz-mobile-deck-ui';
+      mobileUi.dataset.mobileDeckUi = '';
+      mobileUi.setAttribute('aria-label', 'Mobile chapter navigation');
+      mobileUi.innerHTML = `<div class="nabz-mobile-progress" aria-hidden="true"><i></i></div><div class="nabz-mobile-dock">${names.map((name, index) => `<button type="button" data-mobile-chapter="${index}"><span></span>${name}</button>`).join('')}</div>`;
+      deck.append(mobileUi);
+    }
+    const progress = mobileUi.querySelector('.nabz-mobile-progress i');
+    const dockButtons = [...mobileUi.querySelectorAll('[data-mobile-chapter]')];
 
     const apply = (announce = false) => {
       chapters.forEach((chapter, index) => {
@@ -126,8 +136,10 @@
         if ('inert' in chapter) chapter.inert = index !== active;
       });
       dockButtons.forEach((button, index) => {
-        button.classList.toggle('is-active', index === active);
-        button.setAttribute('aria-current', index === active ? 'true' : 'false');
+        const current = index === active;
+        button.classList.toggle('is-active', current);
+        if (current) button.setAttribute('aria-current', 'page');
+        else button.removeAttribute('aria-current');
       });
       if (progress) progress.style.transform = `translateX(${active * 100}%)`;
       if (history.replaceState) history.replaceState(null, '', `#${chapters[active].id}`);
@@ -149,11 +161,13 @@
       if (!enabled) return;
       enabled = false;
       document.body.classList.remove('nabz-mobile-deck-active');
-      chapters.forEach((chapter) => {
-        delete chapter.dataset.mobileState;
-        chapter.removeAttribute('aria-hidden');
-        if ('inert' in chapter) chapter.inert = false;
-      });
+      chapters.forEach((chapter) => delete chapter.dataset.mobileState);
+      if (deck.dataset.nabzDeckReady !== 'true') {
+        chapters.forEach((chapter) => {
+          chapter.removeAttribute('aria-hidden');
+          if ('inert' in chapter) chapter.inert = false;
+        });
+      }
       document.title = 'NABZ';
     };
 

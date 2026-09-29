@@ -1,4 +1,5 @@
 import { mkdir, rm, copyFile, readFile, writeFile, readdir, access } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 import { join } from 'node:path';
 
 const root = process.cwd();
@@ -76,6 +77,17 @@ const story = `
   </section>`;
 main = main.replace(/\s*<section class="nabz-chapter nabz-chapter--shoulders"[\s\S]*?<\/section>\s*(?=<section class="nabz-chapter nabz-chapter--contact")/, `\n${story}\n\n  `);
 
+const versionHash = createHash('sha256');
+for (const file of [
+  'assets/nabz-base.css',
+  'assets/nabz-clean-home.css',
+  'assets/nabz-clean-home.js',
+  'cloudflare/nabz-mobile-native.css',
+  'cloudflare/nabz-mobile-native.js',
+  'cloudflare/nabz-standalone-fix.css',
+]) versionHash.update(await readFile(join(root, file)));
+const assetVersion = versionHash.digest('hex').slice(0, 12);
+
 const head = `<!doctype html>
 <html lang="en">
 <head>
@@ -85,15 +97,15 @@ const head = `<!doctype html>
   <title>NABZ</title>
   <meta name="description" content="NABZ. India’s textile language, re-cut into everyday shirts.">
   <link rel="icon" href="/assets/nabz-favicon.png">
-  <link rel="stylesheet" href="/assets/nabz-base.css">
-  <link rel="stylesheet" href="/assets/nabz-clean-home.css">
-  <link rel="stylesheet" href="/assets/nabz-mobile-native.css">
-  <link rel="stylesheet" href="/assets/nabz-standalone-fix.css">
+  <link rel="stylesheet" href="/assets/nabz-base.css?v=${assetVersion}">
+  <link rel="stylesheet" href="/assets/nabz-clean-home.css?v=${assetVersion}">
+  <link rel="stylesheet" href="/assets/nabz-mobile-native.css?v=${assetVersion}">
+  <link rel="stylesheet" href="/assets/nabz-standalone-fix.css?v=${assetVersion}">
 </head>
 <body>`;
 const tail = `
-<script src="/assets/nabz-clean-home.js" defer></script>
-<script src="/assets/nabz-mobile-native.js" defer></script>
+<script src="/assets/nabz-clean-home.js?v=${assetVersion}" defer></script>
+<script src="/assets/nabz-mobile-native.js?v=${assetVersion}" defer></script>
 </body>
 </html>`;
 await writeFile(join(out, 'index.html'), `${head}\n${header}\n${main}\n${tail}`);
@@ -116,6 +128,6 @@ try {
   console.log('Story film media not present; final-frame poster will be shown until the original MP4 is restored.');
 }
 
-await writeFile(join(out, '_headers'), `/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n\n/assets/*\n  Cache-Control: public, max-age=31536000, immutable\n`);
+await writeFile(join(out, '_headers'), `/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n\n/assets/*\n  Cache-Control: public, max-age=3600, must-revalidate\n`);
 await writeFile(join(out, 'robots.txt'), 'User-agent: *\nAllow: /\n');
-console.log('NABZ Quiet Selvedge standalone build complete.');
+console.log(`NABZ Quiet Selvedge standalone build complete (${assetVersion}).`);

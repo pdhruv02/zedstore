@@ -1,0 +1,119 @@
+import { mkdir, rm, copyFile, readFile, writeFile, readdir, access } from 'node:fs/promises';
+import { join } from 'node:path';
+
+const root = process.cwd();
+const out = join(root, 'dist');
+const outAssets = join(out, 'assets');
+await rm(out, { recursive: true, force: true });
+await mkdir(outAssets, { recursive: true });
+
+const assetUrl = (source) => source.replace(/{{\s*'([^']+)'\s*\|\s*asset_url\s*}}/g, '/assets/$1');
+
+function expandProducts(source) {
+  const match = source.match(/{%\s*assign\s+product_assets\s*=\s*'([^']+)'\s*\|\s*split:\s*','\s*%}/);
+  if (!match) return source;
+  const products = match[1].split(',').map((item) => {
+    const [file, ...name] = item.split('|');
+    return { file, name: name.join('|') };
+  });
+  source = source.replace(match[0], '');
+  source = source.replace(/{%\s*for\s+product_asset\s+in\s+product_assets\s*%}([\s\S]*?){%\s*endfor\s*%}/g, (_, template) => products.map((product, index) => {
+    const first = index === 0;
+    let block = template.replace(/{%\s*assign\s+product_parts\s*=\s*product_asset\s*\|\s*split:\s*'\|'\s*%}/g, '');
+    block = block.replace(/{%\s*if\s+forloop\.first\s*%}([\s\S]*?){%\s*else\s*%}([\s\S]*?){%\s*endif\s*%}/g, first ? '$1' : '$2');
+    block = block.replace(/{%\s*if\s+forloop\.first\s*%}([\s\S]*?){%\s*endif\s*%}/g, first ? '$1' : '');
+    block = block.replace(/{{\s*product_parts\[0\]\s*\|\s*asset_url\s*}}/g, `/assets/${product.file}`);
+    block = block.replace(/{{\s*product_parts\[1\]\s*}}/g, product.name);
+    block = block.replace(/{{\s*forloop\.index0\s*}}/g, String(index));
+    block = block.replace(/{{\s*forloop\.index\s*\|\s*prepend:\s*'0'\s*\|\s*slice:\s*-2,\s*2\s*}}/g, String(index + 1).padStart(2, '0'));
+    return block;
+  }).join(''));
+  return source;
+}
+
+let header = await readFile(join(root, 'sections/nabz-site-header.liquid'), 'utf8');
+let main = await readFile(join(root, 'sections/nabz-clean-home.liquid'), 'utf8');
+
+header = header
+  .replace(/^{{[^\n]+stylesheet_tag[^\n]+}}\s*/m, '')
+  .replace(/{%\s*unless\s+request\.design_mode\s*%}|{%\s*endunless\s*%}/g, '')
+  .replace(/{{\s*routes\.root_url\s*}}/g, '/')
+  .replace(/{{\s*routes\.cart_url\s*}}/g, '#products')
+  .replace(/{{\s*cart\.item_count\s*}}/g, '0')
+  .replace('href="#shoulders">Shoulders</a>', 'href="#story">Story</a>')
+  .replace(/{%\s*schema\s*%}[\s\S]*?{%\s*endschema\s*%}/g, '');
+header = assetUrl(header);
+
+main = expandProducts(main)
+  .replace(/^{{[^\n]+stylesheet_tag[^\n]+}}\s*/m, '')
+  .replace(/^<script[^\n]+nabz-clean-home\.js[^\n]+<\/script>\s*/m, '')
+  .replace(/{%\s*form\s+'contact',\s*class:\s*'nabz-contact-atelier__form'\s*%}/g, '<form class="nabz-contact-atelier__form" data-static-contact-form>')
+  .replace(/{%\s*if\s+form\.posted_successfully\?\s*%}[\s\S]*?{%\s*endif\s*%}/g, '')
+  .replace(/{{\s*form\.errors\s*\|\s*default_errors\s*}}/g, '')
+  .replace(/{%\s*endform\s*%}/g, '</form>')
+  .replace(/{%\s*schema\s*%}[\s\S]*?{%\s*endschema\s*%}/g, '');
+main = assetUrl(main);
+
+const story = `
+  <section class="nabz-chapter nabz-chapter--story" id="story" data-nabz-chapter data-chapter-label="The story">
+    <div class="nabz-chapter__frame nabz-story">
+      <div class="nabz-story__heading">
+        <span class="nabz-folio-mark" aria-hidden="true">N / 04</span>
+        <span class="nabz-kicker">The story</span>
+        <h2>A new way to wear India.</h2>
+      </div>
+      <div class="nabz-story__film" data-story-film>
+        <video controls playsinline preload="metadata" data-story-video aria-label="NABZ brand story film">
+          <source src="/assets/NABZ_brand_story_film_v3_1_portrait_fix_1080p.mp4" type="video/mp4">
+        </video>
+        <div class="nabz-story__poster" data-story-poster aria-hidden="true">
+          <img src="/assets/nabz-wordmark.png" alt="" width="396" height="180">
+          <span></span>
+          <b>A NEW WAY TO WEAR INDIA</b>
+        </div>
+      </div>
+    </div>
+  </section>`;
+main = main.replace(/\s*<section class="nabz-chapter nabz-chapter--shoulders"[\s\S]*?<\/section>\s*(?=<section class="nabz-chapter nabz-chapter--contact")/, `\n${story}\n\n  `);
+
+const head = `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#12100e">
+  <title>NABZ</title>
+  <meta name="description" content="NABZ. India’s textile language, re-cut into everyday shirts.">
+  <link rel="icon" href="/assets/nabz-favicon.png">
+  <link rel="stylesheet" href="/assets/nabz-base.css">
+  <link rel="stylesheet" href="/assets/nabz-clean-home.css">
+  <link rel="stylesheet" href="/assets/nabz-mobile-native.css">
+</head>
+<body>`;
+const tail = `
+<script src="/assets/nabz-clean-home.js" defer></script>
+<script src="/assets/nabz-mobile-native.js" defer></script>
+</body>
+</html>`;
+await writeFile(join(out, 'index.html'), `${head}\n${header}\n${main}\n${tail}`);
+
+const assetNames = await readdir(join(root, 'assets'));
+for (const name of assetNames) {
+  if (!name.startsWith('nabz-')) continue;
+  try { await copyFile(join(root, 'assets', name), join(outAssets, name)); } catch {}
+}
+await copyFile(join(root, 'cloudflare/nabz-mobile-native.css'), join(outAssets, 'nabz-mobile-native.css'));
+await copyFile(join(root, 'cloudflare/nabz-mobile-native.js'), join(outAssets, 'nabz-mobile-native.js'));
+
+const optionalVideo = join(root, 'cloudflare/NABZ_brand_story_film_v3_1_portrait_fix_1080p.mp4');
+try {
+  await access(optionalVideo);
+  await copyFile(optionalVideo, join(outAssets, 'NABZ_brand_story_film_v3_1_portrait_fix_1080p.mp4'));
+  console.log('Story film restored.');
+} catch {
+  console.log('Story film media not present; final-frame poster will be shown until the original MP4 is restored.');
+}
+
+await writeFile(join(out, '_headers'), `/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n\n/assets/*\n  Cache-Control: public, max-age=31536000, immutable\n`);
+await writeFile(join(out, 'robots.txt'), 'User-agent: *\nAllow: /\n');
+console.log('NABZ Quiet Selvedge standalone build complete.');

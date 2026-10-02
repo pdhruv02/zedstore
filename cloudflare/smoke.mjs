@@ -1,4 +1,4 @@
-import { chromium, expect } from 'playwright';
+import { chromium, expect } from '@playwright/test';
 
 const base = process.env.NABZ_TEST_URL || 'http://127.0.0.1:4173';
 const browser = await chromium.launch({headless: true});
@@ -12,7 +12,7 @@ const viewports = [
 ];
 for (const viewport of viewports) {
   const mobile = viewport.width <= 960;
-  const page = await browser.newPage({viewport, isMobile: mobile, hasTouch: mobile});
+  const page = await browser.newPage({viewport: {width: viewport.width, height: viewport.height}, isMobile: mobile, hasTouch: mobile});
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
   page.on('response', response => {

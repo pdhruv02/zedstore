@@ -240,3 +240,12 @@
   .nabz-story__film { max-width: 540px; margin: auto; }
   .nabz-contact-atelier { grid-template-rows: auto minmax(300px, 1fr) !important; }
 }
+
+.nabz-archive__index button > img { display: none; }
+@media (max-width: 960px) {
+  .nabz-archive__index button > img { display: block; }
+}
+@media (min-width: 961px) and (max-width: 1200px) {
+  .nabz-archive { grid-template-columns: minmax(220px, .7fr) minmax(0, 1fr) minmax(150px, .4fr); }
+  .nabz-fit-ledger { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); }
+}

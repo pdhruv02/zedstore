@@ -41,6 +41,8 @@ for (const viewport of viewports) {
     await expect(select).toHaveAttribute('aria-pressed', 'true');
     const card = page.locator(`[data-product-card][data-product-index="${i}"]`);
     await expect(card).toHaveClass(/is-active/);
+    await expect(card).toHaveCSS('opacity', '1');
+    if (mobile) await expect.poll(() => active.evaluate(chapter => chapter.getBoundingClientRect().top)).toBeGreaterThanOrEqual(60);
     await expect.poll(() => card.locator('img').evaluate(img => img.complete && img.naturalWidth > 0)).toBe(true);
     await expect(active).toHaveAttribute('id', 'products');
   }
@@ -50,11 +52,13 @@ for (const viewport of viewports) {
     await page.getByRole('tab', {name: 'System', exact: true}).click();
     await expect(page.locator('[data-fit-story-panel="solution"]')).toBeVisible();
     await expect(page.locator('[data-fit-story-panel="solution"]')).toHaveAttribute('aria-hidden', 'false');
+    await expect(page.locator('[data-fit-story-panel="solution"]')).toHaveCSS('opacity', '1');
     await page.screenshot({path: `nabz-${viewport.name}-system.png`});
     await page.getByRole('tab', {name: 'Illustration', exact: true}).click();
   } else {
     await page.getByRole('tab', {name: 'The system', exact: true}).click();
     await expect(page.locator('[data-fit-story-panel="solution"]')).toBeVisible();
+    await expect(page.locator('[data-fit-story-panel="problem"]')).toBeHidden();
   }
   await page.locator('[data-size="L"]').click();
   await page.locator('[data-length="Extended"]').click();

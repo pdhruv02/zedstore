@@ -262,3 +262,5 @@ body.nabz-mobile-deck-active .nabz-chapter { overflow: clip !important; }
   .nabz-fit-ledger__chart th:first-child { width: 16%; }
   .nabz-fit-ledger__chart th:nth-child(2) { width: 30%; }
 }
+
+[data-fit-story-panel][hidden] { display: none !important; }

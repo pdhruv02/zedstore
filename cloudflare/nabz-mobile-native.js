@@ -112,7 +112,11 @@
     touch = null;
     if (mode === 'native' || event.touches.length !== 1 || event.target.closest('button,a,input,textarea,select,video,.nabz-archive__index')) return;
     const point = event.touches[0];
-    touch = {x: point.clientX, y: point.clientY, target: event.target};
+    const scrolls = [];
+    for (let node = event.target; node && node !== deck; node = node.parentElement) {
+      if (/(auto|scroll)/.test(getComputedStyle(node).overflowY)) scrolls.push({top: node.scrollTop, maximum: node.scrollHeight - node.clientHeight});
+    }
+    touch = {x: point.clientX, y: point.clientY, target: event.target, scrolls};
   }, {passive: true});
   deck.addEventListener('touchend', event => {
     const start = touch;
@@ -120,7 +124,7 @@
     if (!start || event.changedTouches.length !== 1) return;
     const dx = event.changedTouches[0].clientX - start.x;
     const dy = event.changedTouches[0].clientY - start.y;
-    if (Math.abs(dy) < 60 || Math.abs(dy) <= Math.abs(dx) * 1.2 || canScroll(start.target, -dy)) return;
+    if (Math.abs(dy) < 60 || Math.abs(dy) <= Math.abs(dx) * 1.2 || start.scrolls.some(scroll => dy < 0 ? scroll.top < scroll.maximum - 2 : scroll.top > 2)) return;
     go(active + (dy < 0 ? 1 : -1));
   }, {passive: true});
   deck.addEventListener('touchcancel', () => touch = null, {passive: true});

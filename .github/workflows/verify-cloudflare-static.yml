@@ -33,7 +33,7 @@ jobs:
       - name: Install Playwright browser
         run: |
           npm install --no-save @playwright/test@1.55.0
-          npx playwright install --with-deps chromium
+          npx playwright install --with-deps chrome
       - name: Start local site
         run: |
           python3 -m http.server 4173 --directory dist >/tmp/nabz-http.log 2>&1 &

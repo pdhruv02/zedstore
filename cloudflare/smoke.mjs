@@ -1,7 +1,7 @@
 import { chromium, expect } from '@playwright/test';
 
 const base = process.env.NABZ_TEST_URL || 'http://127.0.0.1:4173';
-const browser = await chromium.launch({headless: true});
+const browser = await chromium.launch({channel: 'chrome', headless: true});
 const names = ['hero', 'products', 'fit', 'story', 'contact'];
 const viewports = [
   {name: 'desktop', width: 1600, height: 900},
@@ -65,6 +65,8 @@ for (const viewport of viewports) {
   await page.screenshot({path: `nabz-${viewport.name}-fit.png`});
   await navigate(3);
   const video = page.locator('[data-story-video]');
+  await page.screenshot({path: `nabz-${viewport.name}-story.png`});
+  console.log(viewport.name, 'video', await video.evaluate(video => ({error: video.error?.message, src: video.currentSrc, support: video.canPlayType('video/mp4')})));
   await expect.poll(() => video.evaluate(video => video.readyState)).toBeGreaterThanOrEqual(1);
   await page.getByRole('button', {name: 'Play NABZ brand film'}).click();
   await expect.poll(() => video.evaluate(video => video.currentTime)).toBeGreaterThan(0);

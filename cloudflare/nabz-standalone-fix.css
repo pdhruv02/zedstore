@@ -135,3 +135,108 @@
     transform: translateX(-50%);
   }
 }
+
+.nabz-story__film video { display: block !important; }
+.nabz-story__play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 23px;
+  border: 1px solid rgba(238, 231, 218, .5);
+  border-radius: 32px;
+  color: var(--nabz-cotton);
+  background: rgba(16, 23, 36, .85);
+  backdrop-filter: blur(12px);
+  font-size: 13px;
+}
+.nabz-story__play[hidden], .nabz-story__error[hidden] { display: none; }
+.nabz-story__error {
+  position: absolute;
+  inset: auto 12px 45px;
+  padding: 12px;
+  color: var(--nabz-cotton);
+  background: var(--nabz-indigo-deep);
+  font-size: 12px;
+}
+.nabz-story__error a { text-decoration: underline; }
+.nabz-static-form-note { grid-column: 1 / -1; }
+
+@media (max-width: 960px) {
+  .nabz-chapter__frame { overflow-y: auto !important; overscroll-behavior-y: contain; }
+  .nabz-identity__portrait { clip-path: none; }
+  .nabz-archive { grid-template-columns: minmax(0, 1fr) !important; }
+  .nabz-archive__stage { grid-column: 1 !important; grid-row: 2 !important; margin: 0 !important; }
+  .nabz-archive__index { grid-column: 1 !important; grid-row: 3 !important; }
+  .nabz-archive__index button:not(.is-active) { display: block !important; }
+  .nabz-archive__index button { display: block !important; min-height: 62px !important; }
+  .nabz-archive-card__image { overflow: hidden !important; }
+  .nabz-mobile-fit-nav button { min-height: 40px; font-size: .65rem; }
+  .nabz-fit-ledger__editorial {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+  }
+  .nabz-fit-ledger__editorial > .nabz-folio-mark { display: none; }
+  .nabz-fit-ledger__story {
+    display: block !important;
+    min-height: 0 !important;
+    height: auto !important;
+    padding: 0 !important;
+    border: 0;
+  }
+  .nabz-fit-ledger__story-body { overflow: visible !important; }
+  .nabz-fit-ledger__problem, .nabz-fit-ledger__solution {
+    position: static !important;
+    transform: none !important;
+  }
+  .nabz-fit-ledger__problem[hidden], .nabz-fit-ledger__solution[hidden] { display: none !important; }
+  .nabz-fit-ledger[data-mobile-fit="system"] .nabz-fit-ledger__editorial { display: block !important; }
+  .nabz-fit-ledger__chart { max-height: none !important; overflow: visible !important; }
+  .nabz-fit-ledger[data-mobile-fit="illustration"] .nabz-fit-ledger__instrument {
+    min-height: 300px !important;
+    height: calc(100% - 52px) !important;
+    padding: 8px !important;
+  }
+  .nabz-fit-ledger__control button { min-height: 36px; }
+  .nabz-fit-ledger__instrument-head > span:last-child { max-width: 50%; }
+  .nabz-story__film { overflow: hidden; }
+  .nabz-story__play { font-size: 12px; padding: 12px 18px; }
+  .nabz-contact-atelier {
+    min-height: 0 !important;
+    grid-template-rows: auto minmax(250px, 1fr) !important;
+    gap: 16px !important;
+  }
+  .nabz-contact-atelier__intro {
+    min-height: 0 !important;
+    padding: 0 !important;
+    overflow: visible;
+  }
+  .nabz-contact-atelier__topics { margin: 0 !important; }
+  .nabz-contact-atelier__topics span { padding: 5px; grid-template-columns: 20px 1fr; }
+  .nabz-contact-atelier__form {
+    grid-template-columns: minmax(0, 1fr) !important;
+    margin: 0 !important;
+    padding: 12px !important;
+    height: 100% !important;
+    box-shadow: 4px 4px 0 var(--nabz-madder);
+  }
+  .nabz-static-form-note { position: absolute; inset: auto 8px 48px; padding: 8px; background: var(--nabz-cotton); font-size: 12px !important; }
+  .nabz-mobile-dock button, .nabz-mobile-deck-ui .nabz-mobile-dock button { font-size: .63rem; }
+}
+
+@media (max-width: 960px) and (max-height: 550px) {
+  .nabz-identity { grid-template-columns: 1fr 1fr !important; grid-template-rows: minmax(230px, 1fr) !important; }
+  .nabz-identity__copy { grid-column: 1 !important; grid-row: 1 !important; align-self: center !important; }
+  .nabz-identity__portrait { grid-column: 2 !important; grid-row: 1 !important; }
+  .nabz-identity__copy h1 { font-size: clamp(1.8rem, 4.5vw, 2.8rem) !important; }
+  .nabz-archive { grid-template-rows: auto minmax(200px, 1fr) auto !important; }
+  .nabz-story { grid-template-rows: auto auto !important; }
+  .nabz-story__heading h2 { font-size: 2rem !important; }
+  .nabz-story__film { max-width: 540px; margin: auto; }
+  .nabz-contact-atelier { grid-template-rows: auto minmax(300px, 1fr) !important; }
+}

@@ -1,7 +1,7 @@
 name: Verify NABZ Cloudflare build
 on:
   push:
-    branches: [cloudflare-static]
+    branches: [cloudflare-static, fix/nabz-cloudflare-restore]
   workflow_dispatch:
 jobs:
   build:
@@ -23,6 +23,8 @@ jobs:
           test -f dist/assets/nabz-standalone-fix.css
           test -f dist/assets/nabz-hero-air-cable.webp
           test -f dist/assets/nabz-product-phulkari-pixels.webp
+          test -f dist/assets/nabz-story.mp4
+          test -f dist/assets/nabz-story-poster.webp
           ! grep -q "{%" dist/index.html
           ! grep -q "{{" dist/index.html
           grep -q 'id="story"' dist/index.html
@@ -45,6 +47,5 @@ jobs:
         with:
           name: nabz-render-smoke
           path: |
-            nabz-desktop-smoke.png
-            nabz-mobile-smoke.png
+            nabz-*.png
           if-no-files-found: ignore

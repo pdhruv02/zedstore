@@ -1,208 +1,217 @@
 (() => {
-  const mobile = window.matchMedia('(max-width: 960px)');
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  const enhanceProductRail = () => {
-    document.querySelectorAll('[data-product-archive]').forEach((archive) => {
-      const cards = [...archive.querySelectorAll('[data-product-card]')];
-      const buttons = [...archive.querySelectorAll('[data-product-select]')];
-      buttons.forEach((button, index) => {
-        if (button.querySelector('img')) return;
-        const source = cards[index]?.querySelector('img')?.getAttribute('src');
-        if (!source) return;
-        const thumb = document.createElement('img');
-        thumb.src = source;
-        thumb.alt = '';
-        thumb.loading = 'lazy';
-        thumb.setAttribute('aria-hidden', 'true');
-        button.prepend(thumb);
-      });
-      buttons.forEach((button) => button.addEventListener('click', () => {
-        if (!mobile.matches) return;
-        button.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', inline: 'center', block: 'nearest' });
-      }));
+  const mobile = matchMedia('(max-width: 960px)');
+  const desktop = matchMedia('(min-width: 961px) and (min-height: 620px)');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const deck = document.querySelector('[data-nabz-home]');
+  if (!deck) return;
+  const chapters = [...deck.querySelectorAll('[data-nabz-chapter]')];
+  const names = ['Identity', 'Surface', 'Fit', 'Story', 'Contact'];
+  let active = Math.max(0, chapters.findIndex(chapter => `#${chapter.id}` === location.hash));
+  let mode = 'native';
+  let touch = null;
+  let wheel = 0;
+  let wheelTimer;
+  let wheelLock = 0;
+  const dock = document.createElement('nav');
+  dock.className = 'nabz-mobile-deck-ui';
+  dock.dataset.mobileDeckUi = '';
+  dock.setAttribute('aria-label', 'Mobile chapter navigation');
+  dock.innerHTML = `<div class="nabz-mobile-progress" aria-hidden="true"><i></i></div><div class="nabz-mobile-dock">${names.map((name, i) => `<button type="button" data-mobile-chapter="${i}" aria-label="${name} chapter"><span></span>${name}</button>`).join('')}</div>`;
+  deck.append(dock);
+  const dockButtons = [...dock.querySelectorAll('button')];
+  const progress = dock.querySelector('i');
+  const count = deck.querySelector('[data-deck-count]');
+  const live = deck.querySelector('[data-deck-live]');
+  const setStates = () => {
+    chapters.forEach((chapter, i) => {
+      const state = i === active ? 'active' : i < active ? 'past' : 'future';
+      delete chapter.dataset.deckState;
+      delete chapter.dataset.mobileState;
+      if (mode !== 'native') chapter.dataset[mode === 'mobile' ? 'mobileState' : 'deckState'] = state;
+      chapter.classList.toggle('is-active', i === active);
+      chapter.inert = mode !== 'native' && i !== active;
+      if (mode === 'native') chapter.removeAttribute('aria-hidden');
+      else chapter.setAttribute('aria-hidden', String(i !== active));
+      if (i !== active) chapter.querySelectorAll('video').forEach(video => video.pause());
     });
-  };
-
-  const enhanceFit = () => {
-    document.querySelectorAll('[data-fit-selector]').forEach((ledger) => {
-      if (ledger.querySelector('.nabz-mobile-fit-nav')) return;
-      const nav = document.createElement('div');
-      nav.className = 'nabz-mobile-fit-nav';
-      nav.setAttribute('role', 'tablist');
-      nav.setAttribute('aria-label', 'Fit explanation');
-      nav.innerHTML = '<button class="is-active" type="button" role="tab" aria-selected="true" data-mobile-fit-tab="problem">Problem</button><button type="button" role="tab" aria-selected="false" data-mobile-fit-tab="illustration">Illustration</button><button type="button" role="tab" aria-selected="false" data-mobile-fit-tab="system">System</button>';
-      ledger.prepend(nav);
-      const problem = ledger.querySelector('[data-fit-story-panel="problem"]');
-      const solution = ledger.querySelector('[data-fit-story-panel="solution"]');
-      const setState = (state) => {
-        ledger.dataset.mobileFit = state;
-        nav.querySelectorAll('button').forEach((button) => {
-          const active = button.dataset.mobileFitTab === state;
-          button.classList.toggle('is-active', active);
-          button.setAttribute('aria-selected', String(active));
-        });
-        if (!mobile.matches) return;
-        if (problem) {
-          problem.hidden = state !== 'problem';
-          problem.classList.toggle('is-active', state === 'problem');
-        }
-        if (solution) {
-          solution.hidden = state !== 'system';
-          solution.classList.toggle('is-active', state === 'system');
-        }
-      };
-      nav.addEventListener('click', (event) => {
-        const button = event.target.closest('[data-mobile-fit-tab]');
-        if (!button) return;
-        setState(button.dataset.mobileFitTab);
-      });
-      setState('problem');
-      mobile.addEventListener('change', () => {
-        if (mobile.matches) setState(ledger.dataset.mobileFit || 'problem');
-        else {
-          delete ledger.dataset.mobileFit;
-          const activeDesktop = ledger.querySelector('[data-fit-story-tab].is-active')?.dataset.fitStoryTab || 'problem';
-          if (problem) problem.hidden = activeDesktop !== 'problem';
-          if (solution) solution.hidden = activeDesktop !== 'solution';
-        }
-      });
+    dockButtons.forEach((button, i) => {
+      button.classList.toggle('is-active', i === active);
+      if (i === active) button.setAttribute('aria-current', 'page');
+      else button.removeAttribute('aria-current');
     });
+    progress.style.transform = `translateX(${active * 100}%)`;
+    if (count) count.textContent = `${String(active + 1).padStart(2, '0')} / ${String(chapters.length).padStart(2, '0')}`;
   };
-
-  const enhanceStory = () => {
-    document.querySelectorAll('[data-story-film]').forEach((film) => {
-      const video = film.querySelector('video');
-      if (!video) return;
-      const source = video.querySelector('source');
-      const playable = () => film.classList.add('is-playable');
-      const unavailable = () => film.classList.remove('is-playable');
-      video.addEventListener('loadedmetadata', playable, { once: true });
-      video.addEventListener('canplay', playable, { once: true });
-      video.addEventListener('error', unavailable);
-      source?.addEventListener('error', unavailable);
-      video.addEventListener('play', () => film.classList.add('is-playing'));
-      video.addEventListener('pause', () => film.classList.remove('is-playing'));
-      video.addEventListener('ended', () => film.classList.remove('is-playing'));
-    });
+  const go = (index, updateHash = true) => {
+    const next = (index + chapters.length) % chapters.length;
+    if (next === active) return;
+    const previous = chapters[active];
+    const hadFocus = previous.contains(document.activeElement);
+    active = next;
+    setStates();
+    if (updateHash) history.replaceState(null, '', `#${chapters[active].id}`);
+    if (mode === 'native') chapters[active].scrollIntoView({behavior: reduced ? 'instant' : 'smooth'});
+    if (hadFocus) chapters[active].focus({preventScroll: true});
+    if (live) live.textContent = `Chapter ${active + 1} of ${chapters.length}: ${names[active]}`;
   };
-
-  const enhanceStaticForm = () => {
-    document.querySelectorAll('[data-static-contact-form]').forEach((form) => {
-      if (form.dataset.staticBound === 'true') return;
-      form.dataset.staticBound = 'true';
-      const note = document.createElement('p');
-      note.className = 'nabz-static-form-note';
-      note.hidden = true;
-      note.setAttribute('role', 'status');
-      form.append(note);
-      form.addEventListener('submit', (event) => {
-        event.preventDefault();
-        note.hidden = false;
-        note.textContent = 'The contact form is temporarily offline while NABZ is hosted independently.';
-      });
-    });
+  const resize = () => {
+    mode = mobile.matches ? 'mobile' : desktop.matches ? 'desktop' : 'native';
+    document.body.classList.toggle('nabz-mobile-deck-active', mode === 'mobile');
+    document.body.classList.toggle('nabz-deck-active', mode === 'desktop');
+    if (mode === 'desktop') deck.dataset.nabzDeckReady = 'true';
+    else delete deck.dataset.nabzDeckReady;
+    setStates();
+    syncFit();
+    if (mode !== 'native') window.scrollTo(0, 0);
   };
-
-  const bootMobileDeck = () => {
-    const deck = document.querySelector('[data-nabz-home]');
-    if (!deck) return;
-    const chapters = [...deck.querySelectorAll('[data-nabz-chapter]')];
-    if (chapters.length !== 5) return;
-    const names = ['Identity', 'Surface', 'Fit', 'Story', 'Contact'];
-    let active = Math.max(0, chapters.findIndex((chapter) => `#${chapter.id}` === location.hash));
-    let startX = 0;
-    let startY = 0;
-    let enabled = false;
-
-    let mobileUi = deck.querySelector('[data-mobile-deck-ui]');
-    if (!mobileUi) {
-      mobileUi = document.createElement('div');
-      mobileUi.className = 'nabz-mobile-deck-ui';
-      mobileUi.dataset.mobileDeckUi = '';
-      mobileUi.setAttribute('aria-label', 'Mobile chapter navigation');
-      mobileUi.innerHTML = `<div class="nabz-mobile-progress" aria-hidden="true"><i></i></div><div class="nabz-mobile-dock">${names.map((name, index) => `<button type="button" data-mobile-chapter="${index}"><span></span>${name}</button>`).join('')}</div>`;
-      deck.append(mobileUi);
+  const canScroll = (target, delta) => {
+    for (let node = target instanceof Element ? target : null; node && node !== deck; node = node.parentElement) {
+      if (!/(auto|scroll)/.test(getComputedStyle(node).overflowY)) continue;
+      if (delta > 0 && node.scrollTop + node.clientHeight < node.scrollHeight - 2) return true;
+      if (delta < 0 && node.scrollTop > 2) return true;
     }
-    const progress = mobileUi.querySelector('.nabz-mobile-progress i');
-    const dockButtons = [...mobileUi.querySelectorAll('[data-mobile-chapter]')];
+    return false;
+  };
+  chapters.forEach(chapter => chapter.tabIndex = -1);
+  dockButtons.forEach((button, i) => button.addEventListener('click', () => go(i)));
+  deck.querySelector('[data-deck-previous]')?.addEventListener('click', () => go(active - 1));
+  deck.querySelector('[data-deck-next]')?.addEventListener('click', () => go(active + 1));
+  document.addEventListener('click', event => {
+    const link = event.target.closest('a[href^="#"]');
+    if (!link) return;
+    const index = chapters.findIndex(chapter => `#${chapter.id}` === link.getAttribute('href'));
+    if (index < 0 || mode === 'native') return;
+    event.preventDefault();
+    go(index);
+  });
+  window.addEventListener('hashchange', () => {
+    const index = chapters.findIndex(chapter => `#${chapter.id}` === location.hash);
+    if (index >= 0) go(index, false);
+  });
+  document.addEventListener('keydown', event => {
+    if (mode === 'native' || event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
+    if (event.target.closest('button,a,input,textarea,select,video,[contenteditable="true"]')) return;
+    const keys = {ArrowDown: active + 1, PageDown: active + 1, ArrowUp: active - 1, PageUp: active - 1, Home: 0, End: chapters.length - 1};
+    if (!(event.key in keys)) return;
+    event.preventDefault();
+    go(keys[event.key]);
+  });
+  document.addEventListener('wheel', event => {
+    if (mode !== 'desktop' || Math.abs(event.deltaX) >= Math.abs(event.deltaY) || canScroll(event.target, event.deltaY)) return;
+    event.preventDefault();
+    if (performance.now() < wheelLock) return;
+    wheel += event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? innerHeight : 1);
+    clearTimeout(wheelTimer);
+    wheelTimer = setTimeout(() => wheel = 0, 180);
+    if (Math.abs(wheel) < 60) return;
+    go(active + Math.sign(wheel));
+    wheel = 0;
+    wheelLock = performance.now() + (reduced ? 100 : 650);
+  }, {passive: false});
+  deck.addEventListener('touchstart', event => {
+    touch = null;
+    if (mode === 'native' || event.touches.length !== 1 || event.target.closest('button,a,input,textarea,select,video,.nabz-archive__index')) return;
+    const point = event.touches[0];
+    touch = {x: point.clientX, y: point.clientY, target: event.target};
+  }, {passive: true});
+  deck.addEventListener('touchend', event => {
+    const start = touch;
+    touch = null;
+    if (!start || event.changedTouches.length !== 1) return;
+    const dx = event.changedTouches[0].clientX - start.x;
+    const dy = event.changedTouches[0].clientY - start.y;
+    if (Math.abs(dy) < 60 || Math.abs(dy) <= Math.abs(dx) * 1.2 || canScroll(start.target, -dy)) return;
+    go(active + (dy < 0 ? 1 : -1));
+  }, {passive: true});
+  deck.addEventListener('touchcancel', () => touch = null, {passive: true});
 
-    const apply = (announce = false) => {
-      chapters.forEach((chapter, index) => {
-        const state = index === active ? 'active' : index < active ? 'past' : 'future';
-        chapter.dataset.mobileState = state;
-        chapter.classList.toggle('is-active', index === active);
-        chapter.setAttribute('aria-hidden', String(index !== active));
-        if ('inert' in chapter) chapter.inert = index !== active;
+  document.querySelectorAll('[data-product-archive]').forEach(archive => {
+    const cards = [...archive.querySelectorAll('[data-product-card]')];
+    archive.querySelectorAll('[data-product-select]').forEach((button, i) => {
+      const thumb = document.createElement('img');
+      thumb.src = cards[i].querySelector('img').src;
+      thumb.alt = '';
+      thumb.loading = 'lazy';
+      button.prepend(thumb);
+      button.addEventListener('click', () => {
+        if (!mobile.matches) return;
+        const rail = button.parentElement;
+        rail.scrollTo({left: button.offsetLeft - rail.offsetLeft - (rail.clientWidth - button.clientWidth) / 2, behavior: reduced ? 'instant' : 'smooth'});
       });
-      dockButtons.forEach((button, index) => {
-        const current = index === active;
-        button.classList.toggle('is-active', current);
-        if (current) button.setAttribute('aria-current', 'page');
-        else button.removeAttribute('aria-current');
-      });
-      if (progress) progress.style.transform = `translateX(${active * 100}%)`;
-      if (history.replaceState) history.replaceState(null, '', `#${chapters[active].id}`);
-      if (announce) document.title = `NABZ · ${names[active]}`;
-    };
-
-    const go = (index) => {
-      if (!enabled) return;
-      active = (index + chapters.length) % chapters.length;
-      apply(true);
-    };
-    const enable = () => {
-      if (enabled || !mobile.matches) return;
-      enabled = true;
-      document.body.classList.add('nabz-mobile-deck-active');
-      apply(false);
-    };
-    const disable = () => {
-      if (!enabled) return;
-      enabled = false;
-      document.body.classList.remove('nabz-mobile-deck-active');
-      chapters.forEach((chapter) => delete chapter.dataset.mobileState);
-      if (deck.dataset.nabzDeckReady !== 'true') {
-        chapters.forEach((chapter) => {
-          chapter.removeAttribute('aria-hidden');
-          if ('inert' in chapter) chapter.inert = false;
-        });
-      }
-      document.title = 'NABZ';
-    };
-
-    dockButtons.forEach((button) => button.addEventListener('click', () => go(Number(button.dataset.mobileChapter))));
-    deck.addEventListener('touchstart', (event) => {
-      if (!enabled || event.touches.length !== 1) return;
-      if (event.target.closest('button,a,input,textarea,select,video,.nabz-archive__index,.nabz-fit-ledger__controls')) return;
-      startX = event.touches[0].clientX;
-      startY = event.touches[0].clientY;
-    }, { passive: true });
-    deck.addEventListener('touchend', (event) => {
-      if (!enabled || !startY || event.changedTouches.length !== 1) return;
-      const dx = event.changedTouches[0].clientX - startX;
-      const dy = event.changedTouches[0].clientY - startY;
-      startX = 0;
-      startY = 0;
-      if (Math.abs(dy) < 48 || Math.abs(dy) <= Math.abs(dx) * 1.1) return;
-      go(active + (dy < 0 ? 1 : -1));
-    }, { passive: true });
-    document.addEventListener('keydown', (event) => {
-      if (!enabled || event.target.matches('input,textarea,select,[contenteditable="true"]')) return;
-      if (['ArrowDown', 'PageDown'].includes(event.key)) { event.preventDefault(); go(active + 1); }
-      if (['ArrowUp', 'PageUp'].includes(event.key)) { event.preventDefault(); go(active - 1); }
     });
-    mobile.addEventListener('change', () => mobile.matches ? enable() : disable());
-    enable();
-  };
+  });
 
-  const boot = () => {
-    enhanceProductRail();
-    enhanceFit();
-    enhanceStory();
-    enhanceStaticForm();
-    bootMobileDeck();
-  };
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
-  else boot();
+  const fits = [...document.querySelectorAll('[data-fit-selector]')];
+  fits.forEach(ledger => {
+    const nav = document.createElement('div');
+    nav.className = 'nabz-mobile-fit-nav';
+    nav.setAttribute('role', 'tablist');
+    nav.setAttribute('aria-label', 'Fit explanation');
+    nav.innerHTML = ['problem', 'illustration', 'system'].map((name, i) => `<button type="button" role="tab" data-mobile-fit-tab="${name}" aria-selected="${i === 0}" aria-controls="${name === 'illustration' ? 'NabzFitIllustration' : name === 'system' ? 'NabzFitSystem' : 'NabzFitProblem'}">${name[0].toUpperCase() + name.slice(1)}</button>`).join('');
+    ledger.prepend(nav);
+    const instrument = ledger.querySelector('.nabz-fit-ledger__instrument');
+    instrument.id = 'NabzFitIllustration';
+    ledger.dataset.mobileFit = 'problem';
+    nav.addEventListener('click', event => {
+      const button = event.target.closest('button');
+      if (!button) return;
+      ledger.dataset.mobileFit = button.dataset.mobileFitTab;
+      syncFit();
+    });
+    nav.addEventListener('keydown', event => {
+      if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+      event.preventDefault();
+      const buttons = [...nav.querySelectorAll('button')];
+      const index = (buttons.indexOf(event.target) + (event.key === 'ArrowRight' ? 1 : -1) + 3) % 3;
+      buttons[index].click();
+      buttons[index].focus();
+    });
+  });
+  function syncFit() {
+    fits.forEach(ledger => {
+      const state = ledger.dataset.mobileFit || 'problem';
+      ledger.querySelectorAll('[data-mobile-fit-tab]').forEach(button => {
+        const selected = button.dataset.mobileFitTab === state;
+        button.classList.toggle('is-active', selected);
+        button.setAttribute('aria-selected', String(selected));
+        button.tabIndex = selected ? 0 : -1;
+      });
+      const selected = mobile.matches ? (state === 'system' ? 'solution' : state) : ledger.querySelector('[data-fit-story-tab].is-active')?.dataset.fitStoryTab || 'problem';
+      ledger.querySelectorAll('[data-fit-story-panel]').forEach(panel => {
+        const visible = panel.dataset.fitStoryPanel === selected;
+        panel.hidden = !visible;
+        panel.classList.toggle('is-active', visible);
+        panel.setAttribute('aria-hidden', String(!visible));
+      });
+    });
+  }
+  document.querySelectorAll('[data-story-film]').forEach(film => {
+    const video = film.querySelector('video');
+    const play = film.querySelector('[data-story-play]');
+    const error = film.querySelector('[data-story-error]');
+    const showError = () => { error.hidden = false; play.hidden = true; };
+    video.addEventListener('error', showError);
+    video.querySelector('source')?.addEventListener('error', showError);
+    play.addEventListener('click', async () => {
+      try { await video.play(); } catch { error.hidden = false; }
+    });
+    video.addEventListener('play', () => { play.hidden = true; error.hidden = true; });
+    video.addEventListener('pause', () => { play.hidden = false; });
+    video.addEventListener('ended', () => { play.hidden = false; });
+  });
+  document.querySelectorAll('[data-static-contact-form]').forEach(form => {
+    const note = document.createElement('p');
+    note.className = 'nabz-static-form-note';
+    note.hidden = true;
+    note.setAttribute('role', 'status');
+    form.append(note);
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      note.hidden = false;
+      note.textContent = 'Message delivery is currently unavailable. Your message has not been sent.';
+    });
+  });
+  mobile.addEventListener('change', resize);
+  desktop.addEventListener('change', resize);
+  resize();
 })();

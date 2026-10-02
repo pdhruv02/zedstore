@@ -1,10 +1,13 @@
-import { mkdir, rm, copyFile, readFile, writeFile, readdir, access } from 'node:fs/promises';
+import { mkdir, rm, copyFile, readFile, writeFile, readdir, stat } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { join } from 'node:path';
 
 const root = process.cwd();
 const out = join(root, 'dist');
 const outAssets = join(out, 'assets');
+const film = Buffer.concat(await Promise.all(['001', '002'].map(part => readFile(join(root, `cloudflare/media/nabz-story.${part}`)))));
+if (createHash('sha256').update(film).digest('hex') !== '03ed290ab32b98b14580c4669715f91c0237455409265b4317eb41272fffc411') throw new Error('NABZ story film is incomplete or corrupted.');
+if (film.length > 25 * 1024 * 1024) throw new Error('NABZ story film exceeds the Cloudflare asset limit.');
 await rm(out, { recursive: true, force: true });
 await mkdir(outAssets, { recursive: true });
 
@@ -21,8 +24,10 @@ function expandProducts(source) {
   source = source.replace(/{%\s*for\s+product_asset\s+in\s+product_assets\s*%}([\s\S]*?){%\s*endfor\s*%}/g, (_, template) => products.map((product, index) => {
     const first = index === 0;
     let block = template.replace(/{%\s*assign\s+product_parts\s*=\s*product_asset\s*\|\s*split:\s*'\|'\s*%}/g, '');
-    block = block.replace(/{%\s*if\s+forloop\.first\s*%}([\s\S]*?){%\s*else\s*%}([\s\S]*?){%\s*endif\s*%}/g, first ? '$1' : '$2');
-    block = block.replace(/{%\s*if\s+forloop\.first\s*%}([\s\S]*?){%\s*endif\s*%}/g, first ? '$1' : '');
+    block = block.replace(/{%\s*if\s+forloop\.first\s*%}([\s\S]*?){%\s*endif\s*%}/g, (_, body) => {
+      const [whenFirst, whenOther = ''] = body.split(/{%\s*else\s*%}/);
+      return first ? whenFirst : whenOther;
+    });
     block = block.replace(/{{\s*product_parts\[0\]\s*\|\s*asset_url\s*}}/g, `/assets/${product.file}`);
     block = block.replace(/{{\s*product_parts\[1\]\s*}}/g, product.name);
     block = block.replace(/{{\s*forloop\.index0\s*}}/g, String(index));
@@ -42,6 +47,7 @@ header = header
   .replace(/{{\s*routes\.cart_url\s*}}/g, '#products')
   .replace(/{{\s*cart\.item_count\s*}}/g, '0')
   .replace('href="#shoulders">Shoulders</a>', 'href="#story">Story</a>')
+  .replace('href="/" aria-label="NABZ home"', 'href="#hero" aria-label="NABZ home"')
   .replace(/{%\s*schema\s*%}[\s\S]*?{%\s*endschema\s*%}/g, '');
 header = assetUrl(header);
 
@@ -64,14 +70,11 @@ const story = `
         <h2>A new way to wear India.</h2>
       </div>
       <div class="nabz-story__film" data-story-film>
-        <video controls playsinline preload="metadata" data-story-video aria-label="NABZ brand story film">
-          <source src="/assets/NABZ_brand_story_film_v3_1_portrait_fix_1080p.mp4" type="video/mp4">
+        <video controls playsinline preload="metadata" poster="/assets/nabz-story-poster.webp" data-story-video aria-label="NABZ brand story film">
+          <source src="/assets/nabz-story.mp4" type="video/mp4">
         </video>
-        <div class="nabz-story__poster" data-story-poster aria-hidden="true">
-          <img src="/assets/nabz-wordmark.png" alt="" width="396" height="180">
-          <span></span>
-          <b>A NEW WAY TO WEAR INDIA</b>
-        </div>
+        <button class="nabz-story__play" type="button" data-story-play aria-label="Play NABZ brand film"><span aria-hidden="true">▶</span>Play the film</button>
+        <p class="nabz-story__error" data-story-error role="status" hidden>The film could not load. <a href="/assets/nabz-story.mp4">Open the film</a></p>
       </div>
     </div>
   </section>`;
@@ -108,26 +111,27 @@ const tail = `
 <script src="/assets/nabz-mobile-native.js?v=${assetVersion}" defer></script>
 </body>
 </html>`;
-await writeFile(join(out, 'index.html'), `${head}\n${header}\n${main}\n${tail}`);
+const html = `${head}\n${header}\n${main}\n${tail}`;
+if (/{[{%]/.test(html)) throw new Error('Unconverted Liquid remains in the standalone HTML.');
+if ((html.match(/data-product-card/g) || []).length !== 6) throw new Error('The gallery must render all six product cards.');
+if ((html.match(/data-product-select=/g) || []).length !== 6) throw new Error('The gallery must render all six selectors.');
+await writeFile(join(out, 'index.html'), html);
 
 const assetNames = await readdir(join(root, 'assets'));
 for (const name of assetNames) {
   if (!name.startsWith('nabz-')) continue;
-  try { await copyFile(join(root, 'assets', name), join(outAssets, name)); } catch {}
+  await copyFile(join(root, 'assets', name), join(outAssets, name));
 }
+const runtime = (await readFile(join(root, 'assets/nabz-clean-home.js'), 'utf8')).replace('    bootChapterDeck(root);', '');
+await writeFile(join(outAssets, 'nabz-clean-home.js'), runtime);
 await copyFile(join(root, 'cloudflare/nabz-mobile-native.css'), join(outAssets, 'nabz-mobile-native.css'));
 await copyFile(join(root, 'cloudflare/nabz-mobile-native.js'), join(outAssets, 'nabz-mobile-native.js'));
 await copyFile(join(root, 'cloudflare/nabz-standalone-fix.css'), join(outAssets, 'nabz-standalone-fix.css'));
 
-const optionalVideo = join(root, 'cloudflare/NABZ_brand_story_film_v3_1_portrait_fix_1080p.mp4');
-try {
-  await access(optionalVideo);
-  await copyFile(optionalVideo, join(outAssets, 'NABZ_brand_story_film_v3_1_portrait_fix_1080p.mp4'));
-  console.log('Story film restored.');
-} catch {
-  console.log('Story film media not present; final-frame poster will be shown until the original MP4 is restored.');
-}
+await writeFile(join(outAssets, 'nabz-story.mp4'), film);
+console.log('Original NABZ story film restored.');
 
 await writeFile(join(out, '_headers'), `/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n\n/assets/*\n  Cache-Control: public, max-age=3600, must-revalidate\n`);
 await writeFile(join(out, 'robots.txt'), 'User-agent: *\nAllow: /\n');
+for (const match of html.matchAll(/(?:src|href|poster)="(\/assets\/[^"?]+)(?:\?[^" ]*)?"/g)) await stat(join(out, match[1]));
 console.log(`NABZ Quiet Selvedge standalone build complete (${assetVersion}).`);

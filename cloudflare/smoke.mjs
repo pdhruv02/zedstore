@@ -101,6 +101,7 @@ const fallback=await browser.newPage({viewport:{width:390,height:844},javaScript
 await fallback.goto(base,{waitUntil:'networkidle'});
 await expect(fallback.locator('h1')).toBeVisible();
 await expect(fallback.locator('video')).toHaveAttribute('controls','');
+await expect(fallback.locator('[data-story-play]')).toBeHidden();
 await expect(fallback.locator('.story-heading')).toHaveCSS('opacity','1');
 await fallback.close();
 await browser.close();

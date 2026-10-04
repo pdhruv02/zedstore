@@ -22,6 +22,12 @@ main{padding-top:var(--header)}.chapter{padding:76px var(--gutter) 0;position:re
 @media(max-height:500px) and (min-width:701px){.portrait{height:480px}.identity h1{font-size:62px}.chapter-nav{display:none}}
 @media(hover:none){.identity-photo:hover .portrait>img,.product-card button:hover img{transform:none}.macro:hover{transform:rotate(3deg)}}
 .gallery-controls button{width:44px;height:44px;flex:none}
-.chapter{scroll-margin-top:0;min-height:calc(100svh - var(--header))}
+.brand img{filter:brightness(.58) saturate(.8)}
+.film-play{display:none}.has-film-player .film-play{display:flex}
+@media(min-width:961px){.chapter-nav>a{width:44px;height:44px}.chapter-nav b{right:52px}}
+.chapter{scroll-margin-top:0}.contact{min-height:calc(100svh - var(--header))}
+.contact-card h3{font-size:clamp(44px,4.4vw,72px);line-height:.99;margin-top:38px}.contact-card h3 em{color:var(--madder)}.contact-card-copy{max-width:300px;font-size:13px;color:var(--muted);line-height:1.8;margin-top:28px}.contact-card .contact-unavailable{margin:36px 0 0;padding-top:22px;border-top:1px solid var(--line)}
+@media(max-width:960px){.contact h2{font-size:clamp(65px,8.7vw,95px)}}
+@media(max-width:700px){.contact h2{font-size:clamp(73px,18vw,126px)}.contact-card h3{font-size:52px}}
 @media(max-width:375px){.gallery-caption{flex-wrap:wrap;gap:20px}.gallery-controls{margin-left:auto}.gallery-caption h3{font-size:30px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.identity-thread path{stroke-dashoffset:0}.is-enhanced [data-reveal]{opacity:1!important;transform:none!important}}

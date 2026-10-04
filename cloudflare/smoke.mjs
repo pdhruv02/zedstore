@@ -8,7 +8,7 @@ for(const [name,width,height]of views){
   const errors=[];
   page.on('pageerror',e=>errors.push(e.message));
   page.on('response',r=>{if(r.url().startsWith(base+'/assets/')&&r.status()>=400)errors.push(`${r.status()} ${r.url()}`);});
-  await page.goto(base,{waitUntil:'networkidle'});
+  await page.goto(base,{waitUntil:'domcontentloaded'});
   await page.evaluate(()=>document.fonts.ready);
   await expect(page.locator('h1')).toBeVisible();
   await expect(page.locator('[data-chapter]')).toHaveCount(5);
@@ -79,7 +79,7 @@ for(const [name,width,height]of views){
   await expect(page.locator('[data-story-play]')).toBeHidden();
   await navigate('contact');
   await expect.poll(()=>video.evaluate(v=>v.paused)).toBe(true);
-  await expect(page.locator('.contact-submit')).toBeDisabled();
+  await expect(page.locator('.contact-card form,.contact-card button')).toHaveCount(0);
   await expect(page.locator('.contact-unavailable')).toContainText('paused');
   await page.locator('.contact-card').scrollIntoViewIfNeeded();
   await expect(page.locator('.contact-card')).toHaveCSS('opacity','1');
@@ -93,13 +93,16 @@ for(const [name,width,height]of views){
   await page.close();
 }
 const reduced=await browser.newPage({viewport:{width:390,height:844},reducedMotion:'reduce'});
-await reduced.goto(base,{waitUntil:'networkidle'});
+await reduced.goto(base,{waitUntil:'domcontentloaded'});
+await reduced.evaluate(()=>document.fonts.ready);
+await expect.poll(()=>reduced.locator('.portrait img').evaluate(i=>i.complete&&i.naturalWidth>0)).toBe(true);
 await expect(reduced.locator('html')).not.toHaveClass(/is-enhanced/);
 await expect(reduced.locator('.surface-copy')).toHaveCSS('opacity','1');
 await reduced.screenshot({path:'nabz-reduced-motion.png'});
 await reduced.close();
 const fallback=await browser.newPage({viewport:{width:390,height:844},javaScriptEnabled:false});
-await fallback.goto(base,{waitUntil:'networkidle'});
+await fallback.goto(base,{waitUntil:'domcontentloaded'});
+await fallback.evaluate(()=>document.fonts.ready);
 await expect(fallback.locator('h1')).toBeVisible();
 await expect(fallback.locator('video')).toHaveAttribute('controls','');
 await expect(fallback.locator('[data-story-play]')).toBeHidden();

@@ -16,19 +16,23 @@ jobs:
       - name: Verify output
         run: |
           test -f dist/index.html
-          test -f dist/assets/nabz-atelier.css
-          test -f dist/assets/nabz-atelier.js
-          test -f dist/assets/nabz-cormorant.woff2
-          test -f dist/assets/nabz-manrope.woff2
+          test -f dist/assets/nabz-clean-home.css
+          test -f dist/assets/nabz-clean-home.js
+          test -f dist/assets/nabz-mobile-native.css
+          test -f dist/assets/nabz-mobile-native.js
+          test -f dist/assets/nabz-standalone-fix.css
           test -f dist/assets/nabz-hero-air-cable.webp
           test -f dist/assets/nabz-product-phulkari-pixels.webp
           test -f dist/assets/nabz-story.mp4
           test -f dist/assets/nabz-film-cover.webp
+          test -f dist/assets/nabz-deck-polish.css
+          node --check dist/assets/nabz-clean-home.js
+          node --check dist/assets/nabz-mobile-native.js
           ! grep -q "{%" dist/index.html
           ! grep -q "{{" dist/index.html
           grep -q 'id="story"' dist/index.html
-          node --check dist/assets/nabz-atelier.js
-          grep -q 'nabz-atelier.css' dist/index.html
+          grep -q 'data-mobile-chapter' dist/assets/nabz-mobile-native.js
+          grep -q 'nabz-standalone-fix.css' dist/index.html
       - name: Install Playwright browser
         run: |
           npm install --no-save @playwright/test@1.55.0

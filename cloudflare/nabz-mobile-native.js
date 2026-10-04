@@ -1,6 +1,6 @@
 (() => {
   const mobile = matchMedia('(max-width: 960px)');
-  const desktop = matchMedia('(min-width: 961px) and (min-height: 620px)');
+  const desktop = matchMedia('(min-width: 961px)');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const deck = document.querySelector('[data-nabz-home]');
   if (!deck) return;
@@ -12,6 +12,8 @@
   let wheel = 0;
   let wheelTimer;
   let wheelLock = 0;
+  let wheelConsumed = false;
+  let lastWheel = 0;
   const dock = document.createElement('nav');
   dock.className = 'nabz-mobile-deck-ui';
   dock.dataset.mobileDeckUi = '';
@@ -34,6 +36,7 @@
       else chapter.setAttribute('aria-hidden', String(i !== active));
       if (i !== active) chapter.querySelectorAll('video').forEach(video => video.pause());
     });
+    document.querySelectorAll('.nabz-site-header__nav a').forEach(link=>{if(link.hash==='#'+chapters[active].id)link.setAttribute('aria-current','page');else link.removeAttribute('aria-current');});
     dockButtons.forEach((button, i) => {
       button.classList.toggle('is-active', i === active);
       if (i === active) button.setAttribute('aria-current', 'page');
@@ -44,7 +47,7 @@
   };
   const go = (index, updateHash = true) => {
     const next = (index + chapters.length) % chapters.length;
-    if (next === active) return;
+    if (next === active || document.body.classList.contains('nabz-intro-pending')) return;
     const previous = chapters[active];
     const hadFocus = previous.contains(document.activeElement);
     active = next;
@@ -97,17 +100,23 @@
     go(keys[event.key]);
   });
   document.addEventListener('wheel', event => {
-    if (mode !== 'desktop' || Math.abs(event.deltaX) >= Math.abs(event.deltaY) || canScroll(event.target, event.deltaY)) return;
+    if (mode === 'native' || Math.abs(event.deltaX) >= Math.abs(event.deltaY)) return;
+    if (document.body.classList.contains('nabz-intro-pending')) { event.preventDefault(); return; }
+    if (canScroll(event.target,event.deltaY)) return;
     event.preventDefault();
-    if (performance.now() < wheelLock) return;
-    wheel += event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? innerHeight : 1);
+    const now=performance.now();
+    if(now-lastWheel>200){wheelConsumed=false;wheel=0;}
+    lastWheel=now;
     clearTimeout(wheelTimer);
-    wheelTimer = setTimeout(() => wheel = 0, 180);
-    if (Math.abs(wheel) < 60) return;
-    go(active + Math.sign(wheel));
-    wheel = 0;
-    wheelLock = performance.now() + (reduced ? 100 : 650);
-  }, {passive: false});
+    wheelTimer=setTimeout(()=>{wheel=0;wheelConsumed=false;},220);
+    if(wheelConsumed||now<wheelLock)return;
+    wheel+=event.deltaY*(event.deltaMode===1?16:event.deltaMode===2?innerHeight:1);
+    if(Math.abs(wheel)<60)return;
+    const next=Math.max(0,Math.min(chapters.length-1,active+Math.sign(wheel)));
+    if(next!==active)go(next);
+    wheelConsumed=true;wheel=0;
+    wheelLock=now+(reduced?80:920);
+  },{passive:false});
   deck.addEventListener('touchstart', event => {
     touch = null;
     if (mode === 'native' || event.touches.length !== 1 || event.target.closest('button,a,input,textarea,select,video,.nabz-archive__index')) return;
@@ -121,11 +130,12 @@
   deck.addEventListener('touchend', event => {
     const start = touch;
     touch = null;
-    if (!start || event.changedTouches.length !== 1) return;
+    if (!start || event.changedTouches.length !== 1 || document.body.classList.contains('nabz-intro-pending') || performance.now()<wheelLock) return;
     const dx = event.changedTouches[0].clientX - start.x;
     const dy = event.changedTouches[0].clientY - start.y;
     if (Math.abs(dy) < 60 || Math.abs(dy) <= Math.abs(dx) * 1.2 || start.scrolls.some(scroll => dy < 0 ? scroll.top < scroll.maximum - 2 : scroll.top > 2)) return;
-    go(active + (dy < 0 ? 1 : -1));
+    go(Math.max(0,Math.min(chapters.length-1,active+(dy<0?1:-1))));
+    wheelLock=performance.now()+(reduced?80:920);
   }, {passive: true});
   deck.addEventListener('touchcancel', () => touch = null, {passive: true});
 
@@ -193,28 +203,25 @@
     const video = film.querySelector('video');
     const play = film.querySelector('[data-story-play]');
     const error = film.querySelector('[data-story-error]');
-    const showError = () => { error.hidden = false; play.hidden = true; };
+    video.controls=false;film.classList.add('has-film-player');
+    const showError = () => { error.hidden = false; play.hidden = true; video.controls=true; };
     video.addEventListener('error', showError);
     video.querySelector('source')?.addEventListener('error', showError);
     play.addEventListener('click', async () => {
-      try { await video.play(); } catch { error.hidden = false; }
+      try { video.controls=true; await video.play(); } catch { showError(); }
     });
     video.addEventListener('play', () => { play.hidden = true; error.hidden = true; });
-    video.addEventListener('pause', () => { play.hidden = false; });
+    video.addEventListener('pause', () => { if(video.currentTime===0)play.hidden=false; });
     video.addEventListener('ended', () => { play.hidden = false; });
   });
-  document.querySelectorAll('[data-static-contact-form]').forEach(form => {
-    const note = document.createElement('p');
-    note.className = 'nabz-static-form-note';
-    note.hidden = true;
-    note.setAttribute('role', 'status');
-    form.append(note);
-    form.addEventListener('submit', event => {
-      event.preventDefault();
-      note.hidden = false;
-      note.textContent = 'Message delivery is currently unavailable. Your message has not been sent.';
-    });
+  document.querySelectorAll('[data-static-contact-form]').forEach(form=>{
+    const note=document.createElement('p');note.className='nabz-static-form-note';note.setAttribute('role','status');
+    note.textContent='Online enquiries are currently paused.';form.prepend(note);
+    form.querySelectorAll('input,textarea,button').forEach(field=>field.disabled=true);
+    const button=form.querySelector('button');button.firstChild.textContent='Enquiries paused ';
+    form.addEventListener('submit',event=>event.preventDefault());
   });
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)document.querySelectorAll('video').forEach(video=>video.pause());});
   mobile.addEventListener('change', resize);
   desktop.addEventListener('change', resize);
   resize();

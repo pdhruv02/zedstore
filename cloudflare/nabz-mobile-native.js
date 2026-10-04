@@ -105,10 +105,10 @@
     if (canScroll(event.target,event.deltaY)) return;
     event.preventDefault();
     const now=performance.now();
-    if(now-lastWheel>200){wheelConsumed=false;wheel=0;}
+    if(now-lastWheel>500){wheelConsumed=false;wheel=0;}
     lastWheel=now;
     clearTimeout(wheelTimer);
-    wheelTimer=setTimeout(()=>{wheel=0;wheelConsumed=false;},220);
+    wheelTimer=setTimeout(()=>{wheel=0;wheelConsumed=false;},520);
     if(wheelConsumed||now<wheelLock)return;
     wheel+=event.deltaY*(event.deltaMode===1?16:event.deltaMode===2?innerHeight:1);
     if(Math.abs(wheel)<60)return;

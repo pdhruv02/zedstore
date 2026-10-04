@@ -88,6 +88,7 @@ for (const viewport of viewports) {
     await expect(page.locator('[data-fit-story-panel="solution"]')).toHaveCSS('opacity', '1');
     await page.screenshot({path: `nabz-${viewport.name}-system.png`});
     await page.getByRole('tab', {name: 'Illustration', exact: true}).click();
+    await expect.poll(()=>page.locator('.nabz-fit-ledger__diagram').evaluate(el=>el.getBoundingClientRect().height)).toBeGreaterThanOrEqual(220);
   } else {
     await page.getByRole('tab', {name: 'The system', exact: true}).click();
     await expect(page.locator('[data-fit-story-panel="solution"]')).toBeVisible();

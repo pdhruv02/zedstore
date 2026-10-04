@@ -12,6 +12,10 @@
 .nabz-identity__macro figcaption{font-size:10px;letter-spacing:.08em}
 .nabz-chapter__frame{box-shadow:0 18px 48px rgba(8,6,13,.24)}
 .nabz-site-header__nav a,.nabz-site-header__bag{font-size:11px;letter-spacing:.1em;min-height:44px}
+.nabz-site-header__bar{grid-template-rows:minmax(0,1fr)}
+.nabz-site-header__brand{min-height:0;height:100%;overflow:hidden}
+.nabz-site-header__brand img{min-height:0;height:100%;object-fit:contain}
+.nabz-deck-ui__count{font-size:10px}
 .nabz-site-header__nav a{position:relative}
 .nabz-site-header__nav a[aria-current]:after{position:absolute;content:'';height:1px;background:var(--nabz-brass);bottom:8px;left:0;right:0}
 .nabz-folio-mark,.nabz-kicker{font-size:10px;letter-spacing:.14em}

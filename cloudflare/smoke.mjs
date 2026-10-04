@@ -47,9 +47,19 @@ for (const viewport of viewports) {
     for(let burst=0;burst<12;burst++){await page.mouse.wheel(0,120);await page.waitForTimeout(60);}
     await expect(active).toHaveAttribute('id','products');
     await page.waitForTimeout(1000);
+    await page.mouse.wheel(0,120);
+    await expect(active).toHaveAttribute('id','fit');
     await navigate(0);
     await page.locator('#hero').focus();
     await page.keyboard.press('PageDown');
+    await expect(active).toHaveAttribute('id','products');
+    await navigate(0);
+  }
+  if(viewport.name==='mobile'){
+    const input=await page.context().newCDPSession(page);
+    await input.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:100,y:570}]});
+    await input.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:100,y:420}]});
+    await input.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
     await expect(active).toHaveAttribute('id','products');
     await navigate(0);
   }

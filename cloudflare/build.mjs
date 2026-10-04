@@ -1,137 +1,33 @@
-import { mkdir, rm, copyFile, readFile, writeFile, readdir, stat } from 'node:fs/promises';
-import { createHash } from 'node:crypto';
-import { join } from 'node:path';
-
-const root = process.cwd();
-const out = join(root, 'dist');
-const outAssets = join(out, 'assets');
-const film = Buffer.concat(await Promise.all(['001', '002'].map(part => readFile(join(root, `cloudflare/media/nabz-story.${part}`)))));
-if (createHash('sha256').update(film).digest('hex') !== '03ed290ab32b98b14580c4669715f91c0237455409265b4317eb41272fffc411') throw new Error('NABZ story film is incomplete or corrupted.');
-if (film.length > 25 * 1024 * 1024) throw new Error('NABZ story film exceeds the Cloudflare asset limit.');
-await rm(out, { recursive: true, force: true });
-await mkdir(outAssets, { recursive: true });
-
-const assetUrl = (source) => source.replace(/{{\s*'([^']+)'\s*\|\s*asset_url\s*}}/g, '/assets/$1');
-
-function expandProducts(source) {
-  const match = source.match(/{%\s*assign\s+product_assets\s*=\s*'([^']+)'\s*\|\s*split:\s*','\s*%}/);
-  if (!match) return source;
-  const products = match[1].split(',').map((item) => {
-    const [file, ...name] = item.split('|');
-    return { file, name: name.join('|') };
-  });
-  source = source.replace(match[0], '');
-  source = source.replace(/{%\s*for\s+product_asset\s+in\s+product_assets\s*%}([\s\S]*?){%\s*endfor\s*%}/g, (_, template) => products.map((product, index) => {
-    const first = index === 0;
-    let block = template.replace(/{%\s*assign\s+product_parts\s*=\s*product_asset\s*\|\s*split:\s*'\|'\s*%}/g, '');
-    block = block.replace(/{%\s*if\s+forloop\.first\s*%}([\s\S]*?){%\s*endif\s*%}/g, (_, body) => {
-      const [whenFirst, whenOther = ''] = body.split(/{%\s*else\s*%}/);
-      return first ? whenFirst : whenOther;
-    });
-    block = block.replace(/{{\s*product_parts\[0\]\s*\|\s*asset_url\s*}}/g, `/assets/${product.file}`);
-    block = block.replace(/{{\s*product_parts\[1\]\s*}}/g, product.name);
-    block = block.replace(/{{\s*forloop\.index0\s*}}/g, String(index));
-    block = block.replace(/{{\s*forloop\.index\s*\|\s*prepend:\s*'0'\s*\|\s*slice:\s*-2,\s*2\s*}}/g, String(index + 1).padStart(2, '0'));
-    return block;
-  }).join(''));
-  return source;
-}
-
-let header = await readFile(join(root, 'sections/nabz-site-header.liquid'), 'utf8');
-let main = await readFile(join(root, 'sections/nabz-clean-home.liquid'), 'utf8');
-
-header = header
-  .replace(/^{{[^\n]+stylesheet_tag[^\n]+}}\s*/m, '')
-  .replace(/{%\s*unless\s+request\.design_mode\s*%}|{%\s*endunless\s*%}/g, '')
-  .replace(/{{\s*routes\.root_url\s*}}/g, '/')
-  .replace(/{{\s*routes\.cart_url\s*}}/g, '#products')
-  .replace(/{{\s*cart\.item_count\s*}}/g, '0')
-  .replace('href="#shoulders">Shoulders</a>', 'href="#story">Story</a>')
-  .replace('href="/" aria-label="NABZ home"', 'href="#hero" aria-label="NABZ home"')
-  .replace(/{%\s*schema\s*%}[\s\S]*?{%\s*endschema\s*%}/g, '');
-header = assetUrl(header);
-
-main = expandProducts(main)
-  .replace(/^{{[^\n]+stylesheet_tag[^\n]+}}\s*/m, '')
-  .replace(/^<script[^\n]+nabz-clean-home\.js[^\n]+<\/script>\s*/m, '')
-  .replace(/{%\s*form\s+'contact',\s*class:\s*'nabz-contact-atelier__form'\s*%}/g, '<form class="nabz-contact-atelier__form" data-static-contact-form>')
-  .replace(/{%\s*if\s+form\.posted_successfully\?\s*%}[\s\S]*?{%\s*endif\s*%}/g, '')
-  .replace(/{{\s*form\.errors\s*\|\s*default_errors\s*}}/g, '')
-  .replace(/{%\s*endform\s*%}/g, '</form>')
-  .replace(/{%\s*schema\s*%}[\s\S]*?{%\s*endschema\s*%}/g, '');
-main = assetUrl(main);
-
-const story = `
-  <section class="nabz-chapter nabz-chapter--story" id="story" data-nabz-chapter data-chapter-label="The story">
-    <div class="nabz-chapter__frame nabz-story">
-      <div class="nabz-story__heading">
-        <span class="nabz-folio-mark" aria-hidden="true">N / 04</span>
-        <span class="nabz-kicker">The story</span>
-        <h2>A new way to wear India.</h2>
-      </div>
-      <div class="nabz-story__film" data-story-film>
-        <video controls playsinline preload="metadata" poster="/assets/nabz-story-poster.webp" data-story-video aria-label="NABZ brand story film">
-          <source src="/assets/nabz-story.mp4" type="video/mp4">
-        </video>
-        <button class="nabz-story__play" type="button" data-story-play aria-label="Play NABZ brand film"><span aria-hidden="true">▶</span>Play the film</button>
-        <p class="nabz-story__error" data-story-error role="status" hidden>The film could not load. <a href="/assets/nabz-story.mp4">Open the film</a></p>
-      </div>
-    </div>
-  </section>`;
-main = main.replace(/\s*<section class="nabz-chapter nabz-chapter--shoulders"[\s\S]*?<\/section>\s*(?=<section class="nabz-chapter nabz-chapter--contact")/, `\n${story}\n\n  `);
-
-const versionHash = createHash('sha256');
-for (const file of [
-  'assets/nabz-base.css',
-  'assets/nabz-clean-home.css',
-  'assets/nabz-clean-home.js',
-  'cloudflare/nabz-mobile-native.css',
-  'cloudflare/nabz-mobile-native.js',
-  'cloudflare/nabz-standalone-fix.css',
-]) versionHash.update(await readFile(join(root, file)));
-const assetVersion = versionHash.digest('hex').slice(0, 12);
-
-const head = `<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#12100e">
-  <title>NABZ</title>
-  <meta name="description" content="NABZ. India’s textile language, re-cut into everyday shirts.">
-  <link rel="icon" href="/assets/nabz-favicon.png">
-  <link rel="stylesheet" href="/assets/nabz-base.css?v=${assetVersion}">
-  <link rel="stylesheet" href="/assets/nabz-clean-home.css?v=${assetVersion}">
-  <link rel="stylesheet" href="/assets/nabz-mobile-native.css?v=${assetVersion}">
-  <link rel="stylesheet" href="/assets/nabz-standalone-fix.css?v=${assetVersion}">
-</head>
-<body>`;
-const tail = `
-<script src="/assets/nabz-clean-home.js?v=${assetVersion}" defer></script>
-<script src="/assets/nabz-mobile-native.js?v=${assetVersion}" defer></script>
-</body>
-</html>`;
-const html = `${head}\n${header}\n${main}\n${tail}`;
-if (/{[{%]/.test(html)) throw new Error('Unconverted Liquid remains in the standalone HTML.');
-if ((html.match(/data-product-card/g) || []).length !== 6) throw new Error('The gallery must render all six product cards.');
-if ((html.match(/data-product-select=/g) || []).length !== 6) throw new Error('The gallery must render all six selectors.');
-await writeFile(join(out, 'index.html'), html);
-
-const assetNames = await readdir(join(root, 'assets'));
-for (const name of assetNames) {
-  if (!name.startsWith('nabz-')) continue;
-  await copyFile(join(root, 'assets', name), join(outAssets, name));
-}
-const runtime = (await readFile(join(root, 'assets/nabz-clean-home.js'), 'utf8')).replace('    bootChapterDeck(root);', '');
-await writeFile(join(outAssets, 'nabz-clean-home.js'), runtime);
-await copyFile(join(root, 'cloudflare/nabz-mobile-native.css'), join(outAssets, 'nabz-mobile-native.css'));
-await copyFile(join(root, 'cloudflare/nabz-mobile-native.js'), join(outAssets, 'nabz-mobile-native.js'));
-await copyFile(join(root, 'cloudflare/nabz-standalone-fix.css'), join(outAssets, 'nabz-standalone-fix.css'));
-
-await writeFile(join(outAssets, 'nabz-story.mp4'), film);
-console.log('Original NABZ story film restored.');
-
-await writeFile(join(out, '_headers'), `/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n\n/assets/*\n  Cache-Control: public, max-age=3600, must-revalidate\n`);
-await writeFile(join(out, 'robots.txt'), 'User-agent: *\nAllow: /\n');
-for (const match of html.matchAll(/(?:src|href|poster)="(\/assets\/[^"?]+)(?:\?[^" ]*)?"/g)) await stat(join(out, match[1]));
-console.log(`NABZ Quiet Selvedge standalone build complete (${assetVersion}).`);
+import {mkdir, rm, copyFile, readFile, writeFile, readdir, stat} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+import {join} from 'node:path';
+const root=process.cwd(),out=join(root,'dist'),assets=join(out,'assets');
+const film=Buffer.concat(await Promise.all(['001','002'].map(part=>readFile(join(root,`cloudflare/media/nabz-story.${part}`)))));
+if(createHash('sha256').update(film).digest('hex')!=='03ed290ab32b98b14580c4669715f91c0237455409265b4317eb41272fffc411')throw new Error('NABZ story film is incomplete or corrupted.');
+if(film.length>25*1024*1024)throw new Error('NABZ film exceeds the Cloudflare asset limit.');
+await rm(out,{recursive:true,force:true});await mkdir(assets,{recursive:true});
+const products=[['phulkari-pixels','Phulkari Pixels',1024,1536],['moire','Moiré in Motion',1023,1537],['jali-air','Jali Air',1003,1568],['body-map','Body Map',1003,1568],['dissolving-oxford','Dissolving Oxford',1003,1568],['fault-line','Fault Line',1003,1568]];
+const two=v=>String(v).padStart(2,'0');
+const figures=products.map(([file,name,width,height],i)=>`<figure class="product-card" data-product-card data-product-index="${i}" ${i?'hidden':''}><button type="button" data-view-image aria-label="View ${name} details"><img src="/assets/nabz-product-${file}.webp" alt="${name} embroidered shirt shown from the front, in detail, and from the back" width="${width}" height="${height}" loading="lazy" decoding="async"><span class="image-open" aria-hidden="true">+</span></button></figure>`).join('\n');
+const selectors=products.map(([file,name],i)=>`<button type="button" data-product-select="${i}" aria-pressed="${i===0}"><img src="/assets/nabz-product-${file}.webp" alt="" width="78" height="70" loading="lazy"><span>${two(i+1)}</span><b>${name}</b><i aria-hidden="true"></i></button>`).join('\n');
+const source=await readFile(join(root,'sections/nabz-clean-home.liquid'),'utf8');
+const svg=source.match(/<svg viewBox="0 0 460 390"[\s\S]*?<\/svg>/)?.[0];
+if(!svg)throw new Error('The original NABZ fit illustration is missing.');
+const oldRuntime=await readFile(join(root,'assets/nabz-clean-home.js'),'utf8');
+const fitStart=oldRuntime.indexOf('  const bootFitSelector ='),fitEnd=oldRuntime.indexOf('  const bootChapterDeck =');
+if(fitStart<0||fitEnd<fitStart)throw new Error('The verified fit calculation is missing.');
+const fitRuntime=`(() => {\nconst reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;\nconst formatLength=value=>Number(value).toString()+'"';\n${oldRuntime.slice(fitStart,fitEnd)}\nbootFitSelector(document);\n})();\n`;
+const script=fitRuntime+await readFile(join(root,'cloudflare/nabz-atelier.js'),'utf8');
+const css=await readFile(join(root,'cloudflare/nabz-atelier.css'),'utf8'),template=await readFile(join(root,'cloudflare/atelier.html'),'utf8');
+const version=createHash('sha256').update(template+css+script).digest('hex').slice(0,12);
+const html=template.replace('__FIGURES__',figures).replace('__SELECTORS__',selectors).replace('__FIT_SVG__',svg.replace('fill="#b58b50"','fill="#884638"')).replaceAll('__VERSION__',version);
+if(/{[{%]|__[A-Z_]+__/.test(html))throw new Error('Unresolved content remains in the standalone page.');
+if((html.match(/data-product-card/g)||[]).length!==6||(html.match(/data-product-select=/g)||[]).length!==6)throw new Error('All six textile studies must render.');
+for(const name of await readdir(join(root,'assets')))if(name.startsWith('nabz-')&&/\.(webp|png)$/.test(name))await copyFile(join(root,'assets',name),join(assets,name));
+for(const name of ['cormorant','cormorant-italic','manrope'])await copyFile(join(root,`cloudflare/fonts/${name}.woff2`),join(assets,`nabz-${name}.woff2`));
+await copyFile(join(root,'cloudflare/fonts/Cormorant-OFL.txt'),join(assets,'nabz-cormorant-license.txt'));await copyFile(join(root,'cloudflare/fonts/Manrope-OFL.txt'),join(assets,'nabz-manrope-license.txt'));
+await writeFile(join(assets,'nabz-atelier.js'),script);await writeFile(join(assets,'nabz-atelier.css'),css);await writeFile(join(assets,'nabz-story.mp4'),film);await writeFile(join(out,'index.html'),html);
+await writeFile(join(out,'robots.txt'),'User-agent: *\nAllow: /\n');
+await writeFile(join(out,'_headers'),'/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n\n/assets/*\n  Cache-Control: public, max-age=3600, must-revalidate\n');
+for(const match of html.matchAll(/(?:src|href|poster)="(\/assets\/[^"?]+)(?:\?[^" ]*)?"/g))await stat(join(out,match[1]));
+console.log(`NABZ atelier build complete (${version}). Six studies, self-hosted fonts, exact fit data and original film verified.`);

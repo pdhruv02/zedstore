@@ -1,107 +1,107 @@
-import { chromium, expect } from '@playwright/test';
-
-const base = process.env.NABZ_TEST_URL || 'http://127.0.0.1:4173';
-const browser = await chromium.launch({channel: 'chrome', headless: true});
-const names = ['hero', 'products', 'fit', 'story', 'contact'];
-const viewports = [
-  {name: 'desktop', width: 1600, height: 900},
-  {name: 'laptop', width: 1366, height: 768},
-  {name: 'mobile', width: 390, height: 844},
-  {name: 'small-mobile', width: 375, height: 667},
-  {name: 'landscape', width: 844, height: 390},
-];
-for (const viewport of viewports) {
-  const mobile = viewport.width <= 960;
-  const page = await browser.newPage({viewport: {width: viewport.width, height: viewport.height}, isMobile: mobile, hasTouch: mobile});
-  const errors = [];
-  page.on('pageerror', error => errors.push(error.message));
-  page.on('response', response => {
-    if (response.url().startsWith(base + '/assets/') && response.status() >= 400) errors.push(`${response.status()} ${response.url()}`);
-  });
-  await page.goto(base, {waitUntil: 'networkidle'});
-  await expect(page.locator('[data-nabz-entry]')).toHaveCount(0);
-  const active = page.locator(`[data-${mobile ? 'mobile' : 'deck'}-state="active"]`);
-  const navigate = async index => {
-    if (mobile) await page.locator(`[data-mobile-chapter="${index}"]`).click();
-    else if (index === 0) await page.getByRole('link', {name: 'NABZ home'}).click();
-    else await page.locator(`.nabz-site-header__nav a[href="#${names[index]}"]`).click();
-    await expect(active).toHaveAttribute('id', names[index]);
-    await expect(active).toHaveCSS('opacity', '1');
+import {chromium,expect} from '@playwright/test';
+import {readFile} from 'node:fs/promises';
+const base=process.env.NABZ_TEST_URL||'http://127.0.0.1:4173';
+const browser=await chromium.launch({channel:'chrome',headless:true});
+const views=[['desktop',1600,1000],['laptop',1366,768],['wide',1920,1080],['tablet',820,1180],['tablet-landscape',1024,768],['mobile',390,844],['small-mobile',375,667],['android',360,800],['narrow',320,568],['landscape',844,390]];
+for(const [name,width,height]of views){
+  const page=await browser.newPage({viewport:{width,height},hasTouch:width<=960,isMobile:width<=700});
+  const errors=[];
+  page.on('pageerror',e=>errors.push(e.message));
+  page.on('response',r=>{if(r.url().startsWith(base+'/assets/')&&r.status()>=400)errors.push(`${r.status()} ${r.url()}`);});
+  await page.goto(base,{waitUntil:'networkidle'});
+  await page.evaluate(()=>document.fonts.ready);
+  await expect(page.locator('h1')).toBeVisible();
+  await expect(page.locator('[data-chapter]')).toHaveCount(5);
+  await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(1);
+  await expect(page.locator('.portrait img')).toBeVisible();
+  await expect.poll(()=>page.locator('.portrait img').evaluate(i=>i.complete&&i.naturalWidth>0)).toBe(true);
+  await page.screenshot({path:`nabz-${name}-hero.png`});
+  const navigate=async id=>{
+    if(id==='hero')await page.getByRole('link',{name:'NABZ home'}).click();
+    else await page.locator(`${width>700?'.header-nav':'.chapter-nav'} a[href="#${id}"]`).click();
+    await expect.poll(()=>page.locator(`.chapter-nav a[href="#${id}"]`).getAttribute('aria-current')).toBe('location');
+    await expect.poll(()=>page.locator('#'+id).evaluate(e=>Math.abs(e.getBoundingClientRect().top-document.querySelector('.site-header').offsetHeight))).toBeLessThan(3);
+    const reveals=page.locator('#'+id+' [data-reveal]');
+    if(await reveals.count())await expect(reveals.first()).toHaveCSS('opacity','1');
+    await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(1);
   };
-  await expect(active).toHaveAttribute('id', 'hero');
-  await expect(page.locator('.nabz-identity h1')).toBeVisible();
-  const box = await active.boundingBox();
-  if (box.height < 180 || box.width < 300) throw new Error(`${viewport.name}: collapsed chapter`);
-  await navigate(1);
+  await navigate('products');
   await expect(page.locator('[data-product-card]')).toHaveCount(6);
   await expect(page.locator('[data-product-select]')).toHaveCount(6);
-  for (let i = 0; i < 6; i++) {
-    const select = page.locator(`[data-product-select="${i}"]`);
-    await select.click();
-    await expect(select).toHaveAttribute('aria-pressed', 'true');
-    const card = page.locator(`[data-product-card][data-product-index="${i}"]`);
-    await expect(card).toHaveClass(/is-active/);
-    await expect(card).toHaveCSS('opacity', '1');
-    if (mobile) await expect.poll(() => active.evaluate(chapter => chapter.getBoundingClientRect().top)).toBeGreaterThanOrEqual(60);
-    await expect.poll(() => card.locator('img').evaluate(img => img.complete && img.naturalWidth > 0)).toBe(true);
-    await expect(active).toHaveAttribute('id', 'products');
+  for(let i=0;i<6;i++){
+    await page.locator(`[data-product-select="${i}"]`).click();
+    await expect(page.locator(`[data-product-select="${i}"]`)).toHaveAttribute('aria-pressed','true');
+    await expect(page.locator('[data-product-card]:visible')).toHaveCount(1);
+    await expect.poll(()=>page.locator(`[data-product-index="${i}"] img`).evaluate(img=>img.complete&&img.naturalWidth>0)).toBe(true);
   }
-  await page.screenshot({path: `nabz-${viewport.name}-surface.png`});
-  await navigate(2);
-  if (mobile) {
-    await page.getByRole('tab', {name: 'System', exact: true}).click();
-    await expect(page.locator('[data-fit-story-panel="solution"]')).toBeVisible();
-    await expect(page.locator('[data-fit-story-panel="solution"]')).toHaveAttribute('aria-hidden', 'false');
-    await expect(page.locator('[data-fit-story-panel="solution"]')).toHaveCSS('opacity', '1');
-    await page.screenshot({path: `nabz-${viewport.name}-system.png`});
-    await page.getByRole('tab', {name: 'Illustration', exact: true}).click();
-  } else {
-    await page.getByRole('tab', {name: 'The system', exact: true}).click();
-    await expect(page.locator('[data-fit-story-panel="solution"]')).toBeVisible();
-    await expect(page.locator('[data-fit-story-panel="problem"]')).toBeHidden();
-  }
-  await page.locator('[data-size="L"]').click();
-  await page.locator('[data-length="Extended"]').click();
+  await page.locator('.gallery').scrollIntoViewIfNeeded();
+  await expect(page.locator('.gallery')).toHaveCSS('opacity','1');
+  await page.screenshot({path:`nabz-${name}-surface.png`});
+  await page.locator('#products').screenshot({path:`nabz-${name}-surface-full.png`});
+  await page.getByRole('button',{name:'View Fault Line details'}).click();
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await expect(page.locator('#viewer-title')).toHaveText('Fault Line');
+  await page.getByRole('button',{name:'Next study',exact:true}).click();
+  await expect(page.locator('#viewer-title')).toHaveText('Phulkari Pixels');
+  await expect.poll(()=>page.locator('.viewer-image img').evaluate(i=>i.complete&&i.naturalWidth>0)).toBe(true);
+  await page.screenshot({path:`nabz-${name}-viewer.png`});
+  await page.getByRole('button',{name:'Close image viewer'}).press('Escape');
+  await expect(page.getByRole('dialog')).toBeHidden();
+  await expect(page.locator('[data-product-index="0"] button')).toBeFocused();
+  await navigate('fit');
+  await page.getByRole('tab',{name:'The system',exact:true}).click();
+  await expect(page.locator('#fit-system')).toBeVisible();
+  await expect(page.locator('#fit-problem')).toBeHidden();
+  await page.getByRole('tab',{name:'The system',exact:true}).press('ArrowLeft');
+  await expect(page.getByRole('tab',{name:'The problem',exact:true})).toBeFocused();
+  await expect(page.locator('#fit-problem')).toBeVisible();
+  await page.getByRole('tab',{name:'The system',exact:true}).click();
+  await page.locator('[data-size="L"]').click();await page.locator('[data-length="Extended"]').click();
   await expect(page.locator('[data-fit-output]')).toHaveText('L · Extended · 29.25"');
   await page.locator('[data-size="S"]').click();
   await expect(page.locator('[data-length="Extended"]')).toBeDisabled();
   await expect(page.locator('[data-fit-output]')).toHaveText('S · Standard · 26.75"');
-  await page.screenshot({path: `nabz-${viewport.name}-fit.png`});
-  await navigate(3);
-  const video = page.locator('[data-story-video]');
-  await page.screenshot({path: `nabz-${viewport.name}-story.png`});
-  console.log(viewport.name, 'video', await video.evaluate(video => ({error: video.error?.message, src: video.currentSrc, support: video.canPlayType('video/mp4')})));
-  await expect.poll(() => video.evaluate(video => video.readyState)).toBeGreaterThanOrEqual(1);
-  await page.getByRole('button', {name: 'Play NABZ brand film'}).click();
-  await expect.poll(() => video.evaluate(video => video.currentTime)).toBeGreaterThan(0);
+  await expect(page.locator('[data-fit-table-body] tr')).toHaveCount(4);
+  await page.locator('.fit-instrument').scrollIntoViewIfNeeded();
+  await expect(page.locator('.fit-instrument')).toHaveCSS('opacity','1');
+  await page.screenshot({path:`nabz-${name}-fit.png`});
+  await page.locator('#fit').screenshot({path:`nabz-${name}-fit-full.png`});
+  await navigate('story');
+  await page.locator('.film').scrollIntoViewIfNeeded();
+  await expect(page.locator('.film')).toHaveCSS('opacity','1');
+  await page.screenshot({path:`nabz-${name}-story.png`});
+  await page.locator('#story').screenshot({path:`nabz-${name}-story-full.png`});
+  const video=page.locator('video');
+  await expect.poll(()=>video.evaluate(v=>v.readyState)).toBeGreaterThanOrEqual(1);
+  await page.getByRole('button',{name:'Play NABZ brand film'}).click();
+  await expect.poll(()=>video.evaluate(v=>v.currentTime)).toBeGreaterThan(.2);
   await expect(page.locator('[data-story-play]')).toBeHidden();
-  await navigate(4);
-  await expect.poll(() => video.evaluate(video => video.paused)).toBe(true);
-  await page.locator('input[name="contact[name]"]').fill('Render test');
-  await page.locator('input[name="contact[email]"]').fill('render-test@example.com');
-  await page.locator('textarea').fill('Local render verification.');
-  await page.getByRole('button', {name: /Send message/}).click();
-  await expect(page.locator('.nabz-static-form-note')).toContainText('has not been sent');
-  await page.screenshot({path: `nabz-${viewport.name}-contact.png`});
-  await navigate(0);
-  await page.screenshot({path: `nabz-${viewport.name}-smoke.png`});
-  if (!mobile) {
-    await page.getByRole('button', {name: 'Previous chapter'}).click();
-    await expect(active).toHaveAttribute('id', 'contact');
-    await page.getByRole('button', {name: 'Next chapter'}).click();
-    await expect(active).toHaveAttribute('id', 'hero');
-    await page.setViewportSize({width: 390, height: 844});
-    await page.locator('[data-mobile-chapter="3"]').click();
-    await expect(page.locator('[data-mobile-state="active"]')).toHaveAttribute('id', 'story');
-    await page.setViewportSize({width: viewport.width, height: viewport.height});
-    await expect(page.locator('[data-deck-state="active"]')).toHaveAttribute('id', 'story');
-    await page.setViewportSize({width: 1366, height: 560});
-    await expect(page.locator('[data-nabz-chapter][inert]')).toHaveCount(0);
-    await expect(page.locator('[data-deck-state]')).toHaveCount(0);
-  }
-  if (errors.length) throw new Error(`${viewport.name}: ${errors.join('; ')}`);
-  console.log(`${viewport.name}: navigation, six products, fit, video, contact, and responsive state passed`);
+  await navigate('contact');
+  await expect.poll(()=>video.evaluate(v=>v.paused)).toBe(true);
+  await expect(page.locator('.contact-submit')).toBeDisabled();
+  await expect(page.locator('.contact-unavailable')).toContainText('paused');
+  await page.locator('.contact-card').scrollIntoViewIfNeeded();
+  await expect(page.locator('.contact-card')).toHaveCSS('opacity','1');
+  await page.screenshot({path:`nabz-${name}-contact.png`});
+  await page.locator('.closing').scrollIntoViewIfNeeded();
+  await expect(page.locator('.closing')).toHaveCSS('opacity','1');
+  await page.locator('#contact').screenshot({path:`nabz-${name}-contact-full.png`});
+  await navigate('hero');
+  if(errors.length)throw new Error(`${name}: ${errors.join('; ')}`);
+  console.log(`${name}: fonts, layout, all six products, image viewer, exact fit, film playback and chapter navigation passed`);
   await page.close();
 }
+const reduced=await browser.newPage({viewport:{width:390,height:844},reducedMotion:'reduce'});
+await reduced.goto(base,{waitUntil:'networkidle'});
+await expect(reduced.locator('html')).not.toHaveClass(/is-enhanced/);
+await expect(reduced.locator('.surface-copy')).toHaveCSS('opacity','1');
+await reduced.screenshot({path:'nabz-reduced-motion.png'});
+await reduced.close();
+const fallback=await browser.newPage({viewport:{width:390,height:844},javaScriptEnabled:false});
+await fallback.goto(base,{waitUntil:'networkidle'});
+await expect(fallback.locator('h1')).toBeVisible();
+await expect(fallback.locator('video')).toHaveAttribute('controls','');
+await expect(fallback.locator('.story-heading')).toHaveCSS('opacity','1');
+await fallback.close();
 await browser.close();
-console.log('NABZ browser checks passed.');
+console.log('NABZ atelier browser checks passed.');

@@ -15,6 +15,7 @@ for(const [name,width,height]of views){
   await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(1);
   await expect(page.locator('.portrait img')).toBeVisible();
   await expect.poll(()=>page.locator('.portrait img').evaluate(i=>i.complete&&i.naturalWidth>0)).toBe(true);
+  await expect.poll(()=>page.locator('.macro img').evaluate(i=>Math.abs(i.clientHeight/i.clientWidth-1))).toBeLessThan(.02);
   await page.screenshot({path:`nabz-${name}-hero.png`});
   const navigate=async id=>{
     if(id==='hero')await page.getByRole('link',{name:'NABZ home'}).click();
@@ -37,7 +38,7 @@ for(const [name,width,height]of views){
   await page.locator('.gallery').scrollIntoViewIfNeeded();
   await expect(page.locator('.gallery')).toHaveCSS('opacity','1');
   await page.screenshot({path:`nabz-${name}-surface.png`});
-  await page.locator('#products').screenshot({path:`nabz-${name}-surface-full.png`});
+  await page.locator('#products').screenshot({path:`nabz-${name}-surface-full.png`,style:'.site-header,.chapter-nav,.skip-link{visibility:hidden}'});
   await page.getByRole('button',{name:'View Fault Line details'}).click();
   await expect(page.getByRole('dialog')).toBeVisible();
   await expect(page.locator('#viewer-title')).toHaveText('Fault Line');
@@ -65,12 +66,12 @@ for(const [name,width,height]of views){
   await page.locator('.fit-instrument').scrollIntoViewIfNeeded();
   await expect(page.locator('.fit-instrument')).toHaveCSS('opacity','1');
   await page.screenshot({path:`nabz-${name}-fit.png`});
-  await page.locator('#fit').screenshot({path:`nabz-${name}-fit-full.png`});
+  await page.locator('#fit').screenshot({path:`nabz-${name}-fit-full.png`,style:'.site-header,.chapter-nav,.skip-link{visibility:hidden}'});
   await navigate('story');
   await page.locator('.film').scrollIntoViewIfNeeded();
   await expect(page.locator('.film')).toHaveCSS('opacity','1');
   await page.screenshot({path:`nabz-${name}-story.png`});
-  await page.locator('#story').screenshot({path:`nabz-${name}-story-full.png`});
+  await page.locator('#story').screenshot({path:`nabz-${name}-story-full.png`,style:'.site-header,.chapter-nav,.skip-link{visibility:hidden}'});
   const video=page.locator('video');
   await expect.poll(()=>video.evaluate(v=>v.readyState)).toBeGreaterThanOrEqual(1);
   await page.getByRole('button',{name:'Play NABZ brand film'}).click();
@@ -85,7 +86,7 @@ for(const [name,width,height]of views){
   await page.screenshot({path:`nabz-${name}-contact.png`});
   await page.locator('.closing').scrollIntoViewIfNeeded();
   await expect(page.locator('.closing')).toHaveCSS('opacity','1');
-  await page.locator('#contact').screenshot({path:`nabz-${name}-contact-full.png`});
+  await page.locator('#contact').screenshot({path:`nabz-${name}-contact-full.png`,style:'.site-header,.chapter-nav,.skip-link{visibility:hidden}'});
   await navigate('hero');
   if(errors.length)throw new Error(`${name}: ${errors.join('; ')}`);
   console.log(`${name}: fonts, layout, all six products, image viewer, exact fit, film playback and chapter navigation passed`);

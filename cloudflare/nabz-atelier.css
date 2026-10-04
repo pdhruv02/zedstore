@@ -23,6 +23,8 @@ main{padding-top:var(--header)}.chapter{padding:76px var(--gutter) 0;position:re
 @media(hover:none){.identity-photo:hover .portrait>img,.product-card button:hover img{transform:none}.macro:hover{transform:rotate(3deg)}}
 .gallery-controls button{width:44px;height:44px;flex:none}
 .brand img{filter:brightness(.58) saturate(.8)}
+.macro img{height:auto;aspect-ratio:1}
+@media(max-width:700px){.product-index button{width:92px;min-height:120px}.product-index button>img{width:92px;height:80px}.product-index button>b{font-size:10px;max-width:92px}.fit-controls button{font-size:12px}.chapter-nav>a>b{font-size:11px}}
 .film-play{display:none}.has-film-player .film-play{display:flex}
 @media(min-width:961px){.chapter-nav>a{width:44px;height:44px}.chapter-nav b{right:52px}}
 .chapter{scroll-margin-top:0}.contact{min-height:calc(100svh - var(--header))}

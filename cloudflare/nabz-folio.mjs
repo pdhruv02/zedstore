@@ -20,5 +20,7 @@ export function composeFolio(main, header) {
   main = main.replace('<p class="nabz-contact-atelier__support">Whatever it is, we’re here to respond.</p>', '<p class="nabz-contact-atelier__support">Promote NABZ. Give feedback. Just talk.</p>');
   main = main.replace(/<form class="nabz-contact-atelier__form" data-static-contact-form>[\s\S]*?<\/form>/, `<div class="nabz-contact-note"><span class="nabz-kicker">A note to NABZ</span><h3>Good things begin<br>with <em>a conversation.</em></h3><p>Online enquiries are currently paused.</p><a class="nabz-text-link" href="#hero">Back to the beginning <span aria-hidden="true">↑</span></a></div>`);
   main = main.replace('<span class="nabz-deck-ui__count" data-deck-count>', '<span class="nabz-deck-cue">Scroll to unfold <span aria-hidden="true">↓</span></span><span class="nabz-deck-ui__count" data-deck-count>');
+  main=main.replace('<div class="nabz-clean-home" data-nabz-home>', '<main class="nabz-clean-home" id="NabzMain" tabindex="-1" data-nabz-home>').replace(/<\/div>\s*$/, '</main>');
+  header='<a class="nabz-skip" href="#NabzMain">Skip to content</a>'+header;
   return {main,header};
 }

@@ -43,6 +43,8 @@ jobs:
           python3 -m http.server 4173 --directory dist >/tmp/nabz-http.log 2>&1 &
           echo $! > /tmp/nabz-http.pid
           sleep 1
+      - name: Render every chapter for design review
+        run: node cloudflare/render.mjs
       - name: Browser smoke test
         run: node cloudflare/smoke.mjs
       - name: Upload rendered screenshots

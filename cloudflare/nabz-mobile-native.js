@@ -24,7 +24,7 @@
   dock.dataset.mobileDeckUi = '';
   dock.setAttribute('aria-label', 'Mobile chapter navigation');
   dock.innerHTML = `<div class="nabz-mobile-progress" aria-hidden="true"><i></i></div><div class="nabz-mobile-dock">${names.map((name, i) => `<button type="button" data-mobile-chapter="${i}" aria-label="${name} chapter"><span></span>${name}</button>`).join('')}</div>`;
-  deck.append(dock);
+  document.body.append(dock);
   const dockButtons = [...dock.querySelectorAll('button')];
   const progress = dock.querySelector('i');
   const count = deck.querySelector('[data-deck-count]');
@@ -86,6 +86,8 @@
   dockButtons.forEach((button, i) => button.addEventListener('click', () => go(i)));
   deck.querySelector('[data-deck-previous]')?.addEventListener('click', () => go(active - 1));
   deck.querySelector('[data-deck-next]')?.addEventListener('click', () => go(active + 1));
+  const desktopUI=deck.querySelector('[data-deck-ui]');
+  if(desktopUI)document.body.append(desktopUI);
   document.addEventListener('click', event => {
     const link = event.target.closest('a[href^="#"]');
     if (!link) return;

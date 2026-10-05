@@ -48,6 +48,8 @@ for (const viewport of viewports) {
   await page.getByRole('button',{name:'Back to the shirt'}).click();
   await expect(page.locator('#NabzThreadDetail')).toBeHidden();
   if(!mobile){
+    await page.evaluate(()=>document.addEventListener('wheel',event=>console.log('wheel-debug',Math.round(performance.now()),event.deltaY,document.querySelector('[data-deck-state="active"]')?.id),{passive:true}));
+    page.on('console',message=>{if(message.text().startsWith('wheel-debug'))console.log(viewport.name,message.text());});
     await page.mouse.move(viewport.width*.75,viewport.height*.5);
     for(let burst=0;burst<12;burst++){await page.mouse.wheel(0,120);await page.waitForTimeout(60);}
     await expect(active).toHaveAttribute('id','products');

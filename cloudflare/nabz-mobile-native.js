@@ -111,14 +111,16 @@
   document.addEventListener('wheel', event => {
     if (mode === 'native' || Math.abs(event.deltaX) >= Math.abs(event.deltaY)) return;
     if (document.body.classList.contains('nabz-intro-pending')) { event.preventDefault(); return; }
-    if (canScroll(event.target,event.deltaY)) return;
-    event.preventDefault();
     const now=performance.now();
     if(now-lastWheel>500){wheelConsumed=false;wheel=0;}
     lastWheel=now;
     clearTimeout(wheelTimer);
     wheelTimer=setTimeout(()=>{wheel=0;wheelConsumed=false;},520);
-    if(wheelConsumed||now<wheelLock)return;
+    // Track every event, including those over a scrollable incoming chapter.
+    // Otherwise its native overflow creates a false pause in one gesture.
+    if(wheelConsumed||now<wheelLock){event.preventDefault();return;}
+    if(canScroll(event.target,event.deltaY))return;
+    event.preventDefault();
     wheel+=event.deltaY*(event.deltaMode===1?16:event.deltaMode===2?innerHeight:1);
     if(Math.abs(wheel)<60)return;
     const next=Math.max(0,Math.min(chapters.length-1,active+Math.sign(wheel)));
@@ -181,6 +183,7 @@
       ledger.dataset.mobileFit = button.dataset.mobileFitTab;
       syncFit();
     });
+    ledger.querySelector('[data-fit-invitation]')?.addEventListener('click',()=>{ledger.dataset.mobileFit='illustration';syncFit();ledger.scrollTop=0;nav.querySelector('[data-mobile-fit-tab="illustration"]').focus({preventScroll:true});});
     nav.addEventListener('keydown', event => {
       if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
       event.preventDefault();

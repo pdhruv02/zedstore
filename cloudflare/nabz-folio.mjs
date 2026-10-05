@@ -6,14 +6,15 @@ export function composeFolio(main, header) {
         <img src="/assets/nabz-embroidery-close-up.webp" alt="The Air Cable embroidery and cotton, seen close up" width="476" height="496">
         <figcaption><span>Air Cable / Embroidery study</span><span>A closer look changes everything.</span></figcaption>
       </figure>
-      <span class="nabz-identity__caption">Air Cable · Embroidery study 01</span>`);
+      <span class="nabz-identity__caption">Air Cable / Study 01</span>`);
   main = main.replace('<em>The space between.</em>', '<em>The space<br>between.</em>');
   main = main.replace('<span class="nabz-folio-mark" aria-hidden="true">N / 01</span>', '<span class="nabz-folio-mark">01 / Identity</span>');
   main = main.replace('<span class="nabz-folio-mark" aria-hidden="true">N / 02</span>', '<span class="nabz-folio-mark">02 / Surface</span>');
   main = main.replace('<span class="nabz-folio-mark" aria-hidden="true">N / 03</span>', '<span class="nabz-folio-mark">03 / Fit</span>');
   main = main.replace('<span class="nabz-folio-mark" aria-hidden="true">N / 04</span>', '<span class="nabz-folio-mark">04 / Story</span>');
   main = main.replace('<span class="nabz-folio-mark" aria-hidden="true">N / 05</span>', '<span class="nabz-folio-mark">05 / Contact</span>');
-  main = main.replace(/<h2>\s*<span>India’s textile language, re-cut into everyday shirts\.<\/span>\s*<em>Clean from a distance\. Unforgettable up close\.<\/em>\s*<\/h2>/, '<h2>Clean from<br>a distance.<em>Unforgettable<br>up close.</em></h2><p class="nabz-archive__description">India’s textile language,<br>re-cut into everyday shirts.</p>');
+  main = main.replace(/<h2>\s*<span>India’s textile language, re-cut into everyday shirts\.<\/span>\s*<em>Clean from a distance\. Unforgettable up close\.<\/em>\s*<\/h2>/, '<h2>Clean from<br> a distance.<em>Unforgettable<br> up close.</em></h2><p class="nabz-archive__description">India’s textile language,<br>re-cut into everyday shirts.</p>');
+  main=main.replace('<p>That extra length can make your body look shorter and throw off the proportion.</p>', '<p>That extra length can make your body look shorter and throw off the proportion.</p><button class="nabz-fit-invitation" type="button" data-fit-invitation><span>Build your proportion</span><span aria-hidden="true">↗</span></button>');
   main = main.replace('<h2>A new way to wear India.</h2>', '<h2>A new way<br>to <em>wear India.</em></h2><p class="nabz-story__description">The space between, in motion.</p>');
   main = main.replace('<span aria-hidden="true">▶</span>Play the film', '<span class="nabz-play-disc" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 5L19 12L9 19Z"></path></svg></span><span>Play the film<small>01:12 / Sound on</small></span>');
   main = main.replace('<h2>The line is open.</h2>', '<h2>For the<br>next <em>chapter.</em></h2>');

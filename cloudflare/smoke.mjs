@@ -44,12 +44,11 @@ for (const viewport of viewports) {
   await page.screenshot({path:`nabz-${viewport.name}-hero.png`});
   await page.getByRole('button',{name:'Thread, seen closer'}).click();
   await expect(page.locator('#NabzThreadDetail')).toBeVisible();
+  await expect(page.locator('[data-detail-toggle]')).toHaveCSS('color','rgb(20, 33, 43)');
   await page.screenshot({path:`nabz-${viewport.name}-detail.png`});
   await page.getByRole('button',{name:'Back to the shirt'}).click();
   await expect(page.locator('#NabzThreadDetail')).toBeHidden();
   if(!mobile){
-    await page.evaluate(()=>document.addEventListener('wheel',event=>console.log('wheel-debug',Math.round(performance.now()),event.deltaY,document.querySelector('[data-deck-state="active"]')?.id),{passive:true}));
-    page.on('console',message=>{if(message.text().startsWith('wheel-debug'))console.log(viewport.name,message.text());});
     await page.mouse.move(viewport.width*.75,viewport.height*.5);
     for(let burst=0;burst<12;burst++){await page.mouse.wheel(0,120);await page.waitForTimeout(60);}
     await expect(active).toHaveAttribute('id','products');
@@ -82,6 +81,10 @@ for (const viewport of viewports) {
     const card = page.locator(`[data-product-card][data-product-index="${i}"]`);
     await expect(card).toHaveClass(/is-active/);
     await expect(card).toHaveCSS('opacity', '1');
+    const imageBox=await card.locator('.nabz-archive-card__image').boundingBox();
+    const captionBox=await card.locator('figcaption').boundingBox();
+    if(imageBox.y+imageBox.height>captionBox.y+1)throw new Error(`${viewport.name}: product image overlaps its caption`);
+    if(mobile&&viewport.height>480){const rail=await page.locator('.nabz-archive__index').boundingBox();if(imageBox.y+imageBox.height>rail.y+1)throw new Error(`${viewport.name}: product image overlaps the selector rail`);}
     if (mobile) await expect.poll(() => page.evaluate(()=>document.querySelector('[data-mobile-state="active"]').getBoundingClientRect().top-document.querySelector('[data-nabz-header]').getBoundingClientRect().bottom)).toBeGreaterThanOrEqual(-1);
     await expect.poll(() => card.locator('img').evaluate(img => img.complete && img.naturalWidth > 0)).toBe(true);
     await expect(active).toHaveAttribute('id', 'products');

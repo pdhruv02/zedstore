@@ -32,7 +32,8 @@ jobs:
           ! grep -q "{{" dist/index.html
           grep -q 'id="story"' dist/index.html
           grep -q 'data-mobile-chapter' dist/assets/nabz-mobile-native.js
-          grep -q 'nabz-standalone-fix.css' dist/index.html
+          grep -q 'nabz-folio.css' dist/index.html
+          test -f dist/assets/nabz-cormorant.woff2
       - name: Install Playwright browser
         run: |
           npm install --no-save @playwright/test@1.55.0

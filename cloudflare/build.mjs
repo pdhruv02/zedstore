@@ -1,6 +1,7 @@
 import { mkdir, rm, copyFile, readFile, writeFile, readdir, stat } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { join } from 'node:path';
+import { composeFolio } from './nabz-folio.mjs';
 
 const root = process.cwd();
 const out = join(root, 'dist');
@@ -80,6 +81,7 @@ const story = `
     </div>
   </section>`;
 main = main.replace(/\s*<section class="nabz-chapter nabz-chapter--shoulders"[\s\S]*?<\/section>\s*(?=<section class="nabz-chapter nabz-chapter--contact")/, `\n${story}\n\n  `);
+({main,header}=composeFolio(main,header));
 
 const versionHash = createHash('sha256');
 for (const file of [
@@ -89,8 +91,9 @@ for (const file of [
   'cloudflare/nabz-mobile-native.css',
   'cloudflare/nabz-mobile-native.js',
   'cloudflare/nabz-standalone-fix.css',
-  'cloudflare/nabz-deck-polish.css',
+  'cloudflare/nabz-folio.css',
   'cloudflare/nabz-entry.js',
+  'cloudflare/nabz-folio.mjs',
 ]) versionHash.update(await readFile(join(root, file)));
 const assetVersion = versionHash.digest('hex').slice(0, 12);
 
@@ -99,16 +102,15 @@ const head = `<!doctype html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#12100e">
-  <title>NABZ</title>
+  <meta name="theme-color" content="#f3efe7">
+  <title>NABZ — The space between.</title>
   <meta name="description" content="NABZ. India’s textile language, re-cut into everyday shirts.">
+  <script>document.documentElement.classList.add('nabz-js')</script>
   <link rel="preload" href="/assets/nabz-manrope.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/nabz-cormorant.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/nabz-cormorant-italic.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="icon" href="/assets/nabz-favicon.png">
-  <link rel="stylesheet" href="/assets/nabz-base.css?v=${assetVersion}">
-  <link rel="stylesheet" href="/assets/nabz-clean-home.css?v=${assetVersion}">
-  <link rel="stylesheet" href="/assets/nabz-mobile-native.css?v=${assetVersion}">
-  <link rel="stylesheet" href="/assets/nabz-standalone-fix.css?v=${assetVersion}">
-  <link rel="stylesheet" href="/assets/nabz-deck-polish.css?v=${assetVersion}">
+  <link rel="stylesheet" href="/assets/nabz-folio.css?v=${assetVersion}">
 </head>
 <body>`;
 const tail = `
@@ -136,8 +138,12 @@ await copyFile(join(root, 'cloudflare/nabz-mobile-native.js'), join(outAssets, '
 await copyFile(join(root, 'cloudflare/nabz-standalone-fix.css'), join(outAssets, 'nabz-standalone-fix.css'));
 
 await copyFile(join(root,'cloudflare/nabz-deck-polish.css'),join(outAssets,'nabz-deck-polish.css'));
+await copyFile(join(root,'cloudflare/nabz-folio.css'),join(outAssets,'nabz-folio.css'));
 await copyFile(join(root,'cloudflare/fonts/manrope.woff2'),join(outAssets,'nabz-manrope.woff2'));
 await copyFile(join(root,'cloudflare/fonts/Manrope-OFL.txt'),join(outAssets,'nabz-manrope-license.txt'));
+await copyFile(join(root,'cloudflare/fonts/cormorant.woff2'),join(outAssets,'nabz-cormorant.woff2'));
+await copyFile(join(root,'cloudflare/fonts/cormorant-italic.woff2'),join(outAssets,'nabz-cormorant-italic.woff2'));
+await copyFile(join(root,'cloudflare/fonts/Cormorant-OFL.txt'),join(outAssets,'nabz-cormorant-license.txt'));
 for(const name of ['nabz-clean-home.css','nabz-standalone-fix.css']){const path=join(outAssets,name);await writeFile(path,(await readFile(path,'utf8')).replaceAll('(min-width: 961px) and (min-height: 620px)','(min-width: 961px)'));}
 await writeFile(join(outAssets, 'nabz-story.mp4'), film);
 console.log('Original NABZ story film restored.');

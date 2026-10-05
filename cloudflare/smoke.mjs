@@ -42,6 +42,11 @@ for (const viewport of viewports) {
   await expect(page.locator('.nabz-identity h1')).toHaveCSS('opacity','1');
   await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(1);
   await page.screenshot({path:`nabz-${viewport.name}-hero.png`});
+  await page.getByRole('button',{name:'Thread, seen closer'}).click();
+  await expect(page.locator('#NabzThreadDetail')).toBeVisible();
+  await page.screenshot({path:`nabz-${viewport.name}-detail.png`});
+  await page.getByRole('button',{name:'Back to the shirt'}).click();
+  await expect(page.locator('#NabzThreadDetail')).toBeHidden();
   if(!mobile){
     await page.mouse.move(viewport.width*.75,viewport.height*.5);
     for(let burst=0;burst<12;burst++){await page.mouse.wheel(0,120);await page.waitForTimeout(60);}
@@ -75,7 +80,7 @@ for (const viewport of viewports) {
     const card = page.locator(`[data-product-card][data-product-index="${i}"]`);
     await expect(card).toHaveClass(/is-active/);
     await expect(card).toHaveCSS('opacity', '1');
-    if (mobile) await expect.poll(() => active.evaluate(chapter => chapter.getBoundingClientRect().top)).toBeGreaterThanOrEqual(60);
+    if (mobile) await expect.poll(() => page.evaluate(()=>document.querySelector('[data-mobile-state="active"]').getBoundingClientRect().top-document.querySelector('[data-nabz-header]').getBoundingClientRect().bottom)).toBeGreaterThanOrEqual(-1);
     await expect.poll(() => card.locator('img').evaluate(img => img.complete && img.naturalWidth > 0)).toBe(true);
     await expect(active).toHaveAttribute('id', 'products');
   }
@@ -111,8 +116,7 @@ for (const viewport of viewports) {
   await expect(page.locator('[data-story-play]')).toBeHidden();
   await navigate(4);
   await expect.poll(() => video.evaluate(video => video.paused)).toBe(true);
-  await expect(page.locator('input[name="contact[name]"]')).toBeDisabled();
-  await expect(page.locator('.nabz-static-form-note')).toContainText('currently paused');
+  await expect(page.locator('.nabz-contact-note')).toContainText('currently paused');
   await page.screenshot({path: `nabz-${viewport.name}-contact.png`});
   await navigate(0);
   await page.screenshot({path: `nabz-${viewport.name}-smoke.png`});
@@ -142,6 +146,7 @@ await reduced.close();
 const fallback=await browser.newPage({viewport:{width:390,height:844},javaScriptEnabled:false});
 await fallback.goto(base,{waitUntil:'domcontentloaded'});
 await expect(fallback.locator('video')).toHaveAttribute('controls','');
+await expect(fallback.locator('video')).toBeVisible();
 await expect(fallback.locator('[data-story-play]')).toBeHidden();
 await fallback.close();
 await browser.close();

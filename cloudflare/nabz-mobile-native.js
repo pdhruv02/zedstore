@@ -6,6 +6,11 @@
   if (!deck) return;
   const chapters = [...deck.querySelectorAll('[data-nabz-chapter]')];
   const names = ['Identity', 'Surface', 'Fit', 'Story', 'Contact'];
+  const detailToggle=document.querySelector('[data-detail-toggle]');
+  const detail=document.querySelector('#NabzThreadDetail');
+  const closeDetail=()=>{if(!detailToggle)return;detailToggle.setAttribute('aria-expanded','false');detail.hidden=true;document.querySelector('.nabz-identity').classList.remove('is-detail');detailToggle.firstElementChild.textContent='Thread, seen closer';};
+  detailToggle?.addEventListener('click',()=>{const open=detailToggle.getAttribute('aria-expanded')!=='true';detailToggle.setAttribute('aria-expanded',String(open));detail.hidden=!open;document.querySelector('.nabz-identity').classList.toggle('is-detail',open);detailToggle.firstElementChild.textContent=open?'Back to the shirt':'Thread, seen closer';});
+  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&detailToggle?.getAttribute('aria-expanded')==='true'){closeDetail();detailToggle.focus();}});
   let active = Math.max(0, chapters.findIndex(chapter => `#${chapter.id}` === location.hash));
   let mode = 'native';
   let touch = null;
@@ -49,6 +54,7 @@
     const next = (index + chapters.length) % chapters.length;
     if (next === active || document.body.classList.contains('nabz-intro-pending')) return;
     const previous = chapters[active];
+    closeDetail();
     const hadFocus = previous.contains(document.activeElement);
     active = next;
     setStates();
@@ -58,6 +64,7 @@
     if (live) live.textContent = `Chapter ${active + 1} of ${chapters.length}: ${names[active]}`;
   };
   const resize = () => {
+    closeDetail();
     mode = mobile.matches ? 'mobile' : desktop.matches ? 'desktop' : 'native';
     document.body.classList.toggle('nabz-mobile-deck-active', mode === 'mobile');
     document.body.classList.toggle('nabz-deck-active', mode === 'desktop');
